@@ -78,6 +78,7 @@
     }
 
     #answersList {
+      display: none; /* Hidden until user submits */
       margin-top: 20px;
       padding: 15px;
       border-radius: 10px;
@@ -129,6 +130,7 @@
 
     const predictionInput = document.getElementById("prediction-input");
     const submitBtn = document.getElementById("submit-btn");
+    const answersListDiv = document.getElementById("answersList");
     const answersList = document.getElementById("answers");
     const yourAnswerDiv = document.getElementById("your-answer");
 
@@ -139,18 +141,20 @@
         userId = user.uid;
         document.getElementById("userStatus").innerText = `Bienvenue : ${user.email}`;
 
-        const userRef = doc(db, "users", userId);
-        const userSnap = await getDoc(userRef);
+        // Check if already answered
+        const predRef = doc(db, "Prediction1", userId);
+        const predSnap = await getDoc(predRef);
 
-        if (!userSnap.exists()) {
-          await setDoc(userRef, { UserEmail: user.email });
-        } else if (userSnap.data().prediction) {
+        if (predSnap.exists()) {
+          const data = predSnap.data();
           predictionInput.style.display = "none";
           submitBtn.style.display = "none";
-          yourAnswerDiv.innerText = `Votre pronostic : ${userSnap.data().prediction}`;
-        }
+          yourAnswerDiv.innerText = `Votre pronostic : ${data.prediction}`;
 
-        loadOtherAnswers();
+          // Show others only after answered
+          answersListDiv.style.display = "block";
+          loadOtherAnswers();
+        }
       } else {
         window.location.href = "login.html";
       }
@@ -163,14 +167,23 @@
         return;
       }
 
-      const userRef = doc(db, "users", userId);
-      const userSnap = await getDoc(userRef);
+      const predRef = doc(db, "Prediction1", userId);
+      const predSnap = await getDoc(predRef);
 
-      if (!userSnap.exists() || !userSnap.data().prediction) {
-        await setDoc(userRef, { ...userSnap.data(), prediction: prediction }, { merge: true });
+      if (!predSnap.exists()) {
+        await setDoc(predRef, {
+          userId: userId,
+          UserEmail: auth.currentUser.email,
+          prediction: prediction,
+          timestamp: new Date()
+        });
+
         predictionInput.style.display = "none";
         submitBtn.style.display = "none";
         yourAnswerDiv.innerText = `Votre pronostic : ${prediction}`;
+
+        // Now show other answers
+        answersListDiv.style.display = "block";
         loadOtherAnswers();
       } else {
         alert("Vous avez déjà soumis un pronostic.");
@@ -179,10 +192,10 @@
 
     async function loadOtherAnswers() {
       answersList.innerHTML = "";
-      const usersSnap = await getDocs(collection(db, "users"));
-      usersSnap.forEach((docSnap) => {
+      const predsSnap = await getDocs(collection(db, "Prediction1"));
+      predsSnap.forEach((docSnap) => {
         const data = docSnap.data();
-        if (docSnap.id !== userId && data.prediction) {
+        if (docSnap.id !== userId) {
           const li = document.createElement("li");
           li.innerText = `${data.UserEmail || "Anonyme"} : ${data.prediction}`;
           answersList.appendChild(li);
