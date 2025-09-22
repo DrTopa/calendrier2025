@@ -152,12 +152,13 @@
   <button id="logout-btn">Déconnexion</button>
 
   <!-- Firebase Authentication and Logic -->
-  <script defer type="module">
-    // Import Firebase SDKs
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+<script defer type="module">
+  // Import Firebase SDKs
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-    // Firebase configuration
+  // Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
     authDomain: "calendrier2025-3185f.firebaseapp.com",
@@ -167,42 +168,72 @@
     appId: "1:846792576145:web:59028ccef4ffd5c8010330",
     measurementId: "G-L62L4JSYMF"
   };
-    
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
 
-    // Ensure user is logged in, otherwise redirect to login page
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = 'login.html';  // Redirect to login if not logged in
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // Create a div to display tokens
+  const tokenDiv = document.createElement('div');
+  tokenDiv.id = 'tokenCount';
+  tokenDiv.style.position = 'absolute';
+  tokenDiv.style.top = '10px';
+  tokenDiv.style.left = '10px';
+  tokenDiv.style.fontSize = '1.2em';
+  tokenDiv.style.color = '#ff9800';
+  tokenDiv.style.fontWeight = 'bold';
+  tokenDiv.style.background = 'rgba(255, 255, 255, 0.8)';
+  tokenDiv.style.padding = '5px 10px';
+  tokenDiv.style.borderRadius = '5px';
+  tokenDiv.style.boxShadow = '0px 4px 8px rgba(0,0,0,0.2)';
+  document.body.appendChild(tokenDiv);
+
+  // Ensure user is logged in
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      window.location.href = 'login.html';
+    } else {
+      document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
+
+      // Firestore: check if user document exists
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        // User exists → show jetons
+        const data = userSnap.data();
+        tokenDiv.innerText = `Jetons : ${data.jetons || 0}`;
       } else {
-        document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
+        // User doesn't exist → create document with jetons = 0
+        await setDoc(userRef, { jetons: 0 });
+        tokenDiv.innerText = 'Jetons : 0';
       }
-    });
+    }
+  });
 
-    // Log out functionality
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      signOut(auth).then(() => {
-        window.location.href = 'login.html';  // Redirect to login after logout
-      }).catch((error) => {
-        console.error('Erreur de déconnexion :', error);  // Log any errors during logout
-      });
+  // Log out functionality
+  document.getElementById('logout-btn').addEventListener('click', () => {
+    signOut(auth).then(() => {
+      window.location.href = 'login.html';
+    }).catch((error) => {
+      console.error('Erreur de déconnexion :', error);
     });
+  });
 
-    // Add click event listeners to all game boxes
-    const boxes = document.querySelectorAll('.box');
-    boxes.forEach(box => {
-      box.addEventListener('click', () => {
-        const gameNumber = box.getAttribute('data-game');
-        window.location.href = `game${gameNumber}.html`;  // Redirect to the corresponding game page
-      });
+  // Add click event listeners to all game boxes
+  const boxes = document.querySelectorAll('.box');
+  boxes.forEach(box => {
+    box.addEventListener('click', () => {
+      const gameNumber = box.getAttribute('data-game');
+      window.location.href = `game${gameNumber}.html`;
     });
+  });
 
-    // Leaderboard button event
-    document.getElementById('leaderboard').addEventListener('click', () => {
-      window.location.href = 'leaderboard.html';  // Redirect to the leaderboard page
-    });
-  </script>
+  // Leaderboard button event
+  document.getElementById('leaderboard').addEventListener('click', () => {
+    window.location.href = 'leaderboard.html';
+  });
+</script>
 
 </body>
 </html>
