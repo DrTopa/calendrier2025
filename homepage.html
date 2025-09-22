@@ -205,7 +205,10 @@
         tokenDiv.innerText = `Jetons : ${data.jetons || 0}`;
       } else {
         // User doesn't exist → create document with jetons = 0
-        await setDoc(userRef, { jetons: 0 });
+         await setDoc(userRef, { 
+          jetons: 0,
+          email: user.email
+        });
         tokenDiv.innerText = 'Jetons : 0';
       }
     }
