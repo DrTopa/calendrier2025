@@ -1,251 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bebe Romain Snooze </title>
-    <style>
-        /* General body styling */
-        body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            background-color: #ffebcd;
-            background-image: url('https://www.transparenttextures.com/patterns/snow.png');
-            margin: 0;
-            overflow-y: auto;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pari 1 - Pronostic</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background-color: #ffebcd;
+      background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+      margin: 0;
+      padding: 20px;
+    }
 
-        /* Christmas themed title */
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            color: #d32f2f;
-            font-family: 'Comic Sans MS', cursive;
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-        }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: #d32f2f;
+      font-family: 'Comic Sans MS', cursive;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
 
-        /* User status */
-        #userStatus {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1.2em;
-            color: #a23636;
-        }
+    #userStatus {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.2em;
+      color: #a23636;
+    }
 
-        /* Instructions section */
-        #instructions {
-            background: rgba(255, 255, 255, 0.8);
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px;
-            text-align: center;
-            max-width: 1000px;
-            font-size: 1.2em;
-            color: #333;
-            overflow-y: auto;  /* Added for scrolling if needed */
-            max-height: 300px; /* Set a maximum height */
-        }
+    #instructions {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      margin-bottom: 20px;
+      text-align: center;
+      max-width: 1000px;
+      font-size: 1.2em;
+      color: #333;
+    }
 
-        /* Centered game area */
-        #gameArea {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-            background: rgba(255, 255, 255, 0.8);
-            border: 2px solid #b71c1c;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-        }
+    #predictionArea {
+      background: rgba(255, 255, 255, 0.8);
+      border: 2px solid #b71c1c;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+      margin-top: 20px;
+      text-align: center;
+    }
 
-        /* Button styles */
-        #start-btn, #click-btn {
-            padding: 10px 20px;
-            margin: 10px;
-            font-size: 1.5em;
-            cursor: pointer;
-            background-color: #388e3c;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
+    #prediction-input {
+      padding: 10px;
+      font-size: 1.2em;
+      margin-right: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
 
-        #click-btn:disabled {
-            background-color: #757575;
-            cursor: not-allowed;
-        }
+    #submit-btn {
+      padding: 10px 20px;
+      font-size: 1.2em;
+      cursor: pointer;
+      background-color: #388e3c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
 
-        #start-btn:hover, #click-btn:hover:not([disabled]) {
-            background-color: #2e7d32;
-        }
+    #submit-btn:hover {
+      background-color: #2e7d32;
+    }
 
-        /* Timer and score styling */
-        #timer, #score {
-            font-size: 1.8em;
-            margin: 15px;
-            color: #1565c0;
-        }
-
-       .decoration {
-    position: relative; /* Change to relative */
-    display: flex; /* Use flexbox for centering */
-    justify-content: center; /* Horizontally center */
-    align-items: center; /* Vertically center */
-    height: 100vh; /* Full viewport height to center */
-    padding: 20px 0;
-}
-
-#santa {
-    height: 400px;
-    width: auto;
-}
-
-    </style>
+    #answersList {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      max-height: 300px;
+      overflow-y: auto;
+    }
+  </style>
 </head>
 <body>
-    <h1>🎄 Bebe Romain Snooze 🎄</h1>
-    
-    <!-- Game instructions -->
-    <div id="instructions">
-        <p> Ah Décembre est enfin là, et cela ne peut signifier qu’une chose : l’atelier du Père Noël Adrien, que tout le monde appelle Topapa, est en effervescence. Fidèle à sa réputation, Topapa s’enfile une grande tasse de café. "Elle a meilleur goût quand c'est l'autre Dudley qui me la prépare" se dit-il et puis il s'élance dans l’atelier pour réveiller ses lutins. Ces derniers, encore en pyjama, s’étirent maladroitement alors que Topapa secoue une vieille ceinture de cuir devant eux.</p>
-        <p>« Allez, allez ! Au boulot, petits fainéants ! » dit-il d’une voix joviale. Mais il sentit que les lutins de Noël traînaient au lit, bien décidés à ne pas se lever. Devant leur obstination, il comprit qu'il allait devoir employer les grands moyens. Il retira son bonnet avec un sourire déterminé, et d'un seul coup, un éclat lumineux envahit la pièce. La surface lisse et parfaitement polie de son crâne chauve reflétait le moindre rayon de lumière qui passait à travers le rideau, transformant la pièce en un véritable phare. 
-        « Merci pour la technique, Zizou », se dit-il, ravi du résultat.
-        </p>
-        <p>Soudain, un cri fluet se fait entendre : « Graoumpf… » Les bébés Romain, aveuglés par cette lumière divine et encore enroulés dans leurs couvertures, ouvraient un œil en fronçant leur gros sourcil, perturbés dans leur douce sieste. Tout endormis, ils tentent d’appuyer en vain sur le bouton Snooze de leur réveil, espérant grappiller quelques minutes de sommeil supplémentaires. Mais leurs petites mains glissent et ratent à chaque tentative, provoquant des petits bruits de frustration.</p>
-        <p>Topapa, amusé, décide d'intervenir pour motiver ses petits nains : « Allez, allez, les nains ! On enfile les chaussures de sécurité. Décembre ne va pas attendre que vous vous réveilliez ! »</p>
-        <p>Explication jeu : Vous disposez de  10 essais pour améliorer votre score. Après avoir lancé le jeu, appuyer sur le bouton Snooze le plus de fois possibles en 10 secondes. Après 10 essais, vous pourrez toujours jouer à ce jeu passionnant.</p>
-        <p>Déconseillé sur Smartphone.</p>
-    </div>
-    
-     <!-- Christmas Tree and Santa Images -->
-    <img id="santa" class="decoration" src="https://i.imgur.com/yld0RO7.png" alt="Santa Claus">
+  <h1>🎄 Pari 1 🎄</h1>
 
-    
-    <div id="userStatus"></div>
-    <div id="gameArea">
-        <button id="start-btn">Start Game</button>
-        <button id="click-btn" disabled>Snooze!</button>
-        <div id="timer">Temps restant: 10s</div>
-        <div id="score">Score actuel: 0</div>
-        <div id="highest-score">Meilleur score: 0</div>
-        <div id="total-play-count">Jeux joués: 0</div>
-    </div>
+  <div id="instructions">
+    <p>Entrez votre pronostic : <b>Paris</b>, <b>Marseille</b> ou <b>Nul</b>.</p>
+  </div>
 
-   
+  <div id="userStatus"></div>
 
+  <div id="predictionArea">
+    <input id="prediction-input" type="text" placeholder="Votre choix...">
+    <button id="submit-btn">Soumettre</button>
+    <div id="your-answer"></div>
+  </div>
 
-    <script defer type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  <div id="answersList">
+    <h3>Réponses des autres :</h3>
+    <ul id="answers"></ul>
+  </div>
 
-        // Firebase configuration
-      const firebaseConfig = {
-        apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
-        authDomain: "calendrier2025-3185f.firebaseapp.com",
-        projectId: "calendrier2025-3185f",
-        storageBucket: "calendrier2025-3185f.firebasestorage.app",
-        messagingSenderId: "846792576145",
-        appId: "1:846792576145:web:59028ccef4ffd5c8010330",
-        measurementId: "G-L62L4JSYMF"
-      };
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+    const firebaseConfig = {
+      apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+      authDomain: "calendrier2025-3185f.firebaseapp.com",
+      projectId: "calendrier2025-3185f",
+      storageBucket: "calendrier2025-3185f.firebasestorage.app",
+      messagingSenderId: "846792576145",
+      appId: "1:846792576145:web:59028ccef4ffd5c8010330",
+      measurementId: "G-L62L4JSYMF"
+    };
 
-        let userId = '';
-        let clickCount = 0;
-        let playCount = 0;
-        let totalPlayCountGame1 = 0;
-        let highestScore = 0;
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-        const startBtn = document.getElementById('start-btn');
-        const clickBtn = document.getElementById('click-btn');
-        const timerDisplay = document.getElementById('timer');
-        const scoreDisplay = document.getElementById('score');
-        const highestScoreDisplay = document.getElementById('highest-score');
-        const totalPlayCountDisplay = document.getElementById('total-play-count');
+    const predictionInput = document.getElementById("prediction-input");
+    const submitBtn = document.getElementById("submit-btn");
+    const answersList = document.getElementById("answers");
+    const yourAnswerDiv = document.getElementById("your-answer");
 
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                userId = user.uid;
-                document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
+    let userId = "";
 
-                const userRef = doc(db, 'users', userId);
-                const docSnap = await getDoc(userRef);
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        userId = user.uid;
+        document.getElementById("userStatus").innerText = `Bienvenue : ${user.email}`;
 
-                if (!docSnap.exists()) {
-                    await setDoc(userRef, { userId: userId, totalPlayCountGame1: 0, highestScoreGame1: 0, UserEmail: user.email });
-                } else {
-                    const userData = docSnap.data();
-                    totalPlayCountGame1 = userData.totalPlayCountGame1 || 0;
-                    highestScore = userData.highestScoreGame1 || 0;
-                    playCount = totalPlayCountGame1 + 1;
-                    if (!userData.UserEmail) {
-                await updateDoc(userRef, { UserEmail: user.email });
-            }
-                    
-                    highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`;
-                    totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame1}`;
-                    
-                    
-                }
-            } else {
-                window.location.href = 'login.html';
-            }
-        });
+        const userRef = doc(db, "users", userId);
+        const userSnap = await getDoc(userRef);
 
-        startBtn.addEventListener('click', async () => {
-            clickCount = 0;
-            scoreDisplay.innerText = `Score actuel: ${clickCount}`;
-            playCount = totalPlayCountGame1 + 1;
-
-            clickBtn.disabled = false;
-            let timeLeft = 10;
-            timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
-            const timer = setInterval(() => {
-                timeLeft -= 1;
-                timerDisplay.innerText = `Temps restant: ${timeLeft}s`;
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    clickBtn.disabled = true;
-                    saveScore(clickCount);
-                }
-            }, 1000);
-
-            totalPlayCountGame1 += 1;
-            await updateDoc(doc(db, 'users', userId), { totalPlayCountGame1: totalPlayCountGame1 });
-            totalPlayCountDisplay.innerText = `Jeux joués: ${totalPlayCountGame1}`;  // Update display for total play count
-        });
-
-        clickBtn.addEventListener('click', () => {
-            clickCount += 1;
-            scoreDisplay.innerText = `Score actuel: ${clickCount}`;
-        });
-
-        async function saveScore(score) {
-            try {
-                const gameData = { score: score, playCount: playCount, timestamp: new Date() };
-                await addDoc(collection(db, 'users', userId, 'Game1'), gameData);
-
-                const userRef = doc(db, 'users', userId);
-                if (totalPlayCountGame1 <= 10 && score > highestScore) {
-                    highestScore = score;
-                    await updateDoc(userRef, { highestScoreGame1: highestScore });
-                    highestScoreDisplay.innerText = `Meilleur score: ${highestScore}`; // Update display for highest score
-                }
-            } catch (error) {
-                console.error("Error saving score:", error);
-            }
+        if (!userSnap.exists()) {
+          await setDoc(userRef, { UserEmail: user.email });
+        } else if (userSnap.data().prediction) {
+          predictionInput.style.display = "none";
+          submitBtn.style.display = "none";
+          yourAnswerDiv.innerText = `Votre pronostic : ${userSnap.data().prediction}`;
         }
-    </script>
+
+        loadOtherAnswers();
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+
+    submitBtn.addEventListener("click", async () => {
+      const prediction = predictionInput.value.trim().toLowerCase();
+      if (!["paris", "marseille", "nul"].includes(prediction)) {
+        alert("Veuillez entrer Paris, Marseille ou Nul");
+        return;
+      }
+
+      const userRef = doc(db, "users", userId);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists() || !userSnap.data().prediction) {
+        await setDoc(userRef, { ...userSnap.data(), prediction: prediction }, { merge: true });
+        predictionInput.style.display = "none";
+        submitBtn.style.display = "none";
+        yourAnswerDiv.innerText = `Votre pronostic : ${prediction}`;
+        loadOtherAnswers();
+      } else {
+        alert("Vous avez déjà soumis un pronostic.");
+      }
+    });
+
+    async function loadOtherAnswers() {
+      answersList.innerHTML = "";
+      const usersSnap = await getDocs(collection(db, "users"));
+      usersSnap.forEach((docSnap) => {
+        const data = docSnap.data();
+        if (docSnap.id !== userId && data.prediction) {
+          const li = document.createElement("li");
+          li.innerText = `${data.UserEmail || "Anonyme"} : ${data.prediction}`;
+          answersList.appendChild(li);
+        }
+      });
+    }
+  </script>
 </body>
 </html>
