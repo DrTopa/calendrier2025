@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accueil - Calendrier de l'Avent 2025</title>
+  <style>
+    /* Page Background and Layout */
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+      color: #2e7d32;
+      text-align: center;
+      background-color: #ffebcd;
+      background-image: url('https://www.transparenttextures.com/patterns/giftly.png');
+    }
+
+    /* Title Styling */
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: #d32f2f;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      font-family: 'Comic Sans MS', cursive;
+    }
+
+    /* User Status Display */
+    #userStatus {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.2em;
+      color: #388e3c;
+      font-weight: bold;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 5px 10px;
+      border-radius: 5px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Box Grid Styling */
+    .box-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 100px);
+      gap: 10px;
+    }
+
+    /* Calendar Boxes Styling */
+    .box {
+      width: 100px;
+      height: 100px;
+      background-color: #007BFF;
+      color: white;
+      font-size: 1.5em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: transform 0.3s, background-color 0.3s;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .box:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+
+    /* Leaderboard Button Styling */
+    #leaderboard {
+      width: 320px;
+      height: 50px;
+      margin-top: 20px;
+      background-color: #2e7d32;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 1.5em;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    #leaderboard:hover {
+      background-color: darkgreen;
+    }
+
+    /* Logout Button Styling */
+    #logout-btn {
+      margin-top: 20px;
+      padding: 12px 24px;
+      background-color: red;
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      transition: background-color 0.3s, transform 0.2s;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    #logout-btn:hover {
+      background-color: darkred;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎄 Calendrier de l'Avent 2025! Qui completera la collection? 🎄</h1>
+  <div id="userStatus">Bienvenue :</div>
+
+  <!-- Box Grid -->
+  <div class="box-grid">
+    <div class="box" data-game="1">1</div>
+    <div class="box" data-game="2">2</div>
+    <div class="box" data-game="3">3</div>
+    <div class="box" data-game="4">4</div>
+    <div class="box" data-game="5">5</div>
+    <div class="box" data-game="6">6</div>
+    <div class="box" data-game="7">7</div>
+    <div class="box" data-game="8">8</div>
+    <div class="box" data-game="9">9</div>
+    <div class="box" data-game="10">10</div>
+    <div class="box" data-game="11">11</div>
+    <div class="box" data-game="12">12</div>
+    <div class="box" data-game="13">13</div>
+    <div class="box" data-game="14">14</div>
+    <div class="box" data-game="15">15</div>
+    <div class="box" data-game="16">16</div>
+    <div class="box" data-game="17">17</div>
+    <div class="box" data-game="18">18</div>
+    <div class="box" data-game="19">19</div>
+    <div class="box" data-game="20">20</div>
+    <div class="box" data-game="21">21</div>
+    <div class="box" data-game="22">22</div>
+    <div class="box" data-game="23">23</div>
+    <div class="box" data-game="24">24</div>
+  </div>
+
+  <!-- Leaderboard Button -->
+  <div id="leaderboard">Collection</div>
+
+  <!-- Logout Button -->
+  <button id="logout-btn">Déconnexion</button>
+
+  <!-- Firebase Authentication and Logic -->
+  <script defer type="module">
+    // Import Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    // Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+    authDomain: "calendrier2025-3185f.firebaseapp.com",
+    projectId: "calendrier2025-3185f",
+    storageBucket: "calendrier2025-3185f.firebasestorage.app",
+    messagingSenderId: "846792576145",
+    appId: "1:846792576145:web:59028ccef4ffd5c8010330",
+    measurementId: "G-L62L4JSYMF"
+  };
+    
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Ensure user is logged in, otherwise redirect to login page
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = 'login.html';  // Redirect to login if not logged in
+      } else {
+        document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
+      }
+    });
+
+    // Log out functionality
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      signOut(auth).then(() => {
+        window.location.href = 'login.html';  // Redirect to login after logout
+      }).catch((error) => {
+        console.error('Erreur de déconnexion :', error);  // Log any errors during logout
+      });
+    });
+
+    // Add click event listeners to all game boxes
+    const boxes = document.querySelectorAll('.box');
+    boxes.forEach(box => {
+      box.addEventListener('click', () => {
+        const gameNumber = box.getAttribute('data-game');
+        window.location.href = `game${gameNumber}.html`;  // Redirect to the corresponding game page
+      });
+    });
+
+    // Leaderboard button event
+    document.getElementById('leaderboard').addEventListener('click', () => {
+      window.location.href = 'leaderboard.html';  // Redirect to the leaderboard page
+    });
+  </script>
+
+</body>
+</html>
