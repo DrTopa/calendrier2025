@@ -136,6 +136,7 @@
 
   <h1>🎄 Calendrier de l'Avent 2025! Qui completera la collection? 🎄</h1>
   <div id="userStatus">Bienvenue :</div>
+  <div id="userTokens">Jetons : 0</div>
 
   <!-- Box Grid -->
   <div class="box-grid">
@@ -246,6 +247,15 @@
       
       // Vérifier et initialiser les données pour ce user
       await initializeUserData(user);
+              // Abonnement en temps réel pour afficher les jetons
+        const userRef = doc(db, "users", user.uid);
+        onSnapshot(userRef, (docSnap) => {
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            document.getElementById('userTokens').innerText = `Jetons : ${data.jetons ?? 0}`;
+          }
+        });
+    
     }
   });
 
