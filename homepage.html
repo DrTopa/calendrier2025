@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Accueil - Calendrier de l'Avent 2025</title>
   <style>
-    /* Page Background and Layout */
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
       display: flex;
@@ -20,7 +19,6 @@
       background-image: url('https://www.transparenttextures.com/patterns/giftly.png');
     }
 
-    /* Title Styling */
     h1 {
       font-size: 2.5em;
       margin-bottom: 20px;
@@ -29,28 +27,31 @@
       font-family: 'Comic Sans MS', cursive;
     }
 
-    /* User Status Display */
-    #userStatus {
+    /* User info block (Bienvenue + Jetons) */
+    #userInfo {
       position: absolute;
       top: 10px;
       right: 10px;
-      font-size: 1.2em;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 10px 15px;
+      border-radius: 8px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      text-align: right;
+      font-size: 1.1em;
       color: #388e3c;
       font-weight: bold;
-      background: rgba(255, 255, 255, 0.8);
-      padding: 5px 10px;
-      border-radius: 5px;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     }
 
-    /* Box Grid Styling */
+    #userInfo div {
+      margin: 3px 0;
+    }
+
     .box-grid {
       display: grid;
       grid-template-columns: repeat(8, 100px);
       gap: 10px;
     }
 
-    /* Calendar Boxes Styling */
     .box {
       width: 100px;
       height: 100px;
@@ -71,7 +72,6 @@
       transform: scale(1.05);
     }
 
-    /* Leaderboard Button Styling */
     #leaderboard {
       width: 320px;
       height: 50px;
@@ -93,26 +93,25 @@
     }
 
     #pack-btn {
-  width: 320px;
-  height: 50px;
-  margin-top: 10px; /* un petit espace sous Collection */
-  background-color: #ff9800;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  font-size: 1.5em;
-  border-radius: 8px;
-  transition: background-color 0.3s;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-}
+      width: 320px;
+      height: 50px;
+      margin-top: 10px;
+      background-color: #ff9800;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 1.5em;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    }
 
-#pack-btn:hover {
-  background-color: darkorange;
-}
+    #pack-btn:hover {
+      background-color: darkorange;
+    }
 
-    /* Logout Button Styling */
     #logout-btn {
       margin-top: 20px;
       padding: 12px 24px;
@@ -135,8 +134,12 @@
 <body>
 
   <h1>🎄 Calendrier de l'Avent 2025! Qui completera la collection? 🎄</h1>
-  <div id="userStatus">Bienvenue :</div>
-  <div id="userTokens">Jetons : 0</div>
+
+  <!-- User Info Block -->
+  <div id="userInfo">
+    <div id="userStatus">Bienvenue :</div>
+    <div id="userTokens">Jetons : 0</div>
+  </div>
 
   <!-- Box Grid -->
   <div class="box-grid">
@@ -166,88 +169,56 @@
     <div class="box" data-game="24">24</div>
   </div>
 
-  <!-- Leaderboard Button -->
+  <!-- Buttons -->
   <div id="leaderboard">Collection</div>
-
   <div id="pack-btn">Ouverture de paquets</div>
-
-  <!-- Logout Button -->
   <button id="logout-btn">Déconnexion</button>
 
-  <!-- Firebase Authentication and Logic -->
-<script defer type="module">
-  // Import Firebase SDKs
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  <!-- Firebase Script -->
+  <script defer type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-  // Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
-    authDomain: "calendrier2025-3185f.firebaseapp.com",
-    projectId: "calendrier2025-3185f",
-    storageBucket: "calendrier2025-3185f.firebasestorage.app",
-    messagingSenderId: "846792576145",
-    appId: "1:846792576145:web:59028ccef4ffd5c8010330",
-    measurementId: "G-L62L4JSYMF"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+      authDomain: "calendrier2025-3185f.firebaseapp.com",
+      projectId: "calendrier2025-3185f",
+      storageBucket: "calendrier2025-3185f.firebasestorage.app",
+      messagingSenderId: "846792576145",
+      appId: "1:846792576145:web:59028ccef4ffd5c8010330",
+      measurementId: "G-L62L4JSYMF"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  // Fonction pour initialiser les champs Picture1 ... Picture92 + email + jetons
-  async function initializeUserData(user) {
-    const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
+    async function initializeUserData(user) {
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
 
-    if (!userSnap.exists()) {
-      // Si le document n'existe pas -> on le crée avec toutes les données
-      let initialData = {
-        email: user.email,
-        jetons: 0,
-      };
-
-      // Ajouter les 92 champs Picture
-      for (let i = 1; i <= 92; i++) {
-        initialData[`Picture${i}`] = false;
-      }
-
-      await setDoc(userRef, initialData);
-      console.log("Document utilisateur créé avec email, jetons et toutes les pictures.");
-    } else {
-      // Si le document existe, on complète les champs manquants
-      let updates = {};
-      const data = userSnap.data();
-
-      if (!("email" in data)) updates.email = user.email;
-      if (!("jetons" in data)) updates.jetons = 0;
-
-      for (let i = 1; i <= 92; i++) {
-        if (!( `Picture${i}` in data)) {
-          updates[`Picture${i}`] = false;
-        }
-      }
-
-      if (Object.keys(updates).length > 0) {
-        await updateDoc(userRef, updates);
-        console.log("Champs manquants ajoutés :", updates);
+      if (!userSnap.exists()) {
+        let initialData = { email: user.email, jetons: 0 };
+        for (let i = 1; i <= 92; i++) initialData[`Picture${i}`] = false;
+        await setDoc(userRef, initialData);
       } else {
-        console.log("Toutes les données utilisateur existent déjà.");
+        let updates = {};
+        const data = userSnap.data();
+        if (!("email" in data)) updates.email = user.email;
+        if (!("jetons" in data)) updates.jetons = 0;
+        for (let i = 1; i <= 92; i++) if (!( `Picture${i}` in data)) updates[`Picture${i}`] = false;
+        if (Object.keys(updates).length > 0) await updateDoc(userRef, updates);
       }
     }
-  }
 
-  // Vérification utilisateur
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      window.location.href = 'login.html';  // Redirige vers login si non connecté
-    } else {
-      document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
-      
-      // Vérifier et initialiser les données pour ce user
-      await initializeUserData(user);
-              // Abonnement en temps réel pour afficher les jetons
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = 'login.html';
+      } else {
+        document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
+        await initializeUserData(user);
+
         const userRef = doc(db, "users", user.uid);
         onSnapshot(userRef, (docSnap) => {
           if (docSnap.exists()) {
@@ -255,38 +226,27 @@
             document.getElementById('userTokens').innerText = `Jetons : ${data.jetons ?? 0}`;
           }
         });
-    
-    }
-  });
-
-  // Log out functionality
-  document.getElementById('logout-btn').addEventListener('click', () => {
-    signOut(auth).then(() => {
-      window.location.href = 'login.html';
-    }).catch((error) => {
-      console.error('Erreur de déconnexion :', error);
+      }
     });
-  });
 
-  // Add click event listeners to all game boxes
-  const boxes = document.querySelectorAll('.box');
-  boxes.forEach(box => {
-    box.addEventListener('click', () => {
-      const gameNumber = box.getAttribute('data-game');
-      window.location.href = `game${gameNumber}.html`;
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      signOut(auth).then(() => window.location.href = 'login.html');
     });
-  });
 
-  // Leaderboard button event
-  document.getElementById('leaderboard').addEventListener('click', () => {
-    window.location.href = 'leaderboard.html';
-  });
+    document.querySelectorAll('.box').forEach(box => {
+      box.addEventListener('click', () => {
+        const gameNumber = box.getAttribute('data-game');
+        window.location.href = `game${gameNumber}.html`;
+      });
+    });
 
-  // Pack Opening button event
-  document.getElementById('pack-btn').addEventListener('click', () => {
-    window.location.href = 'packs.html';
-  });
-</script>
+    document.getElementById('leaderboard').addEventListener('click', () => {
+      window.location.href = 'leaderboard.html';
+    });
 
+    document.getElementById('pack-btn').addEventListener('click', () => {
+      window.location.href = 'packs.html';
+    });
+  </script>
 </body>
 </html>
