@@ -178,7 +178,7 @@
   // Import Firebase SDKs
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   // Firebase configuration
   const firebaseConfig = {
@@ -195,44 +195,57 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // Create a div to display tokens
-  const tokenDiv = document.createElement('div');
-  tokenDiv.id = 'tokenCount';
-  tokenDiv.style.position = 'absolute';
-  tokenDiv.style.top = '10px';
-  tokenDiv.style.left = '10px';
-  tokenDiv.style.fontSize = '1.2em';
-  tokenDiv.style.color = '#ff9800';
-  tokenDiv.style.fontWeight = 'bold';
-  tokenDiv.style.background = 'rgba(255, 255, 255, 0.8)';
-  tokenDiv.style.padding = '5px 10px';
-  tokenDiv.style.borderRadius = '5px';
-  tokenDiv.style.boxShadow = '0px 4px 8px rgba(0,0,0,0.2)';
-  document.body.appendChild(tokenDiv);
+  // Fonction pour initialiser les champs Picture1 ... Picture92 + email + jetons
+  async function initializeUserData(user) {
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
 
-  // Ensure user is logged in
+    if (!userSnap.exists()) {
+      // Si le document n'existe pas -> on le crée avec toutes les données
+      let initialData = {
+        email: user.email,
+        jetons: 0,
+      };
+
+      // Ajouter les 92 champs Picture
+      for (let i = 1; i <= 92; i++) {
+        initialData[`Picture${i}`] = false;
+      }
+
+      await setDoc(userRef, initialData);
+      console.log("Document utilisateur créé avec email, jetons et toutes les pictures.");
+    } else {
+      // Si le document existe, on complète les champs manquants
+      let updates = {};
+      const data = userSnap.data();
+
+      if (!("email" in data)) updates.email = user.email;
+      if (!("jetons" in data)) updates.jetons = 0;
+
+      for (let i = 1; i <= 92; i++) {
+        if (!( `Picture${i}` in data)) {
+          updates[`Picture${i}`] = false;
+        }
+      }
+
+      if (Object.keys(updates).length > 0) {
+        await updateDoc(userRef, updates);
+        console.log("Champs manquants ajoutés :", updates);
+      } else {
+        console.log("Toutes les données utilisateur existent déjà.");
+      }
+    }
+  }
+
+  // Vérification utilisateur
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
-      window.location.href = 'login.html';
+      window.location.href = 'login.html';  // Redirige vers login si non connecté
     } else {
       document.getElementById('userStatus').innerText = `Bienvenue : ${user.email}`;
-
-      // Firestore: check if user document exists
-      const userRef = doc(db, "users", user.uid);
-      const userSnap = await getDoc(userRef);
-
-      if (userSnap.exists()) {
-        // User exists → show jetons
-        const data = userSnap.data();
-        tokenDiv.innerText = `Jetons : ${data.jetons || 0}`;
-      } else {
-        // User doesn't exist → create document with jetons = 0
-         await setDoc(userRef, { 
-          jetons: 0,
-          email: user.email
-        });
-        tokenDiv.innerText = 'Jetons : 0';
-      }
+      
+      // Vérifier et initialiser les données pour ce user
+      await initializeUserData(user);
     }
   });
 
@@ -260,10 +273,9 @@
   });
 
   // Pack Opening button event
-document.getElementById('pack-btn').addEventListener('click', () => {
-  window.location.href = 'packs.html';  // Redirige vers la page des paquets
-});
-  
+  document.getElementById('pack-btn').addEventListener('click', () => {
+    window.location.href = 'packs.html';
+  });
 </script>
 
 </body>
