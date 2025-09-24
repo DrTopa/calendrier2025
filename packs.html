@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,19 +33,7 @@
       color: #a23636;
     }
 
-    #instructions {
-      background: rgba(255, 255, 255, 0.8);
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-      margin-bottom: 20px;
-      text-align: center;
-      max-width: 1000px;
-      font-size: 1.2em;
-      color: #333;
-    }
-
-    #predictionArea {
+    #packArea {
       background: rgba(255, 255, 255, 0.8);
       border: 2px solid #b71c1c;
       border-radius: 12px;
@@ -55,41 +43,155 @@
       text-align: center;
     }
 
-    #prediction-input {
-      padding: 10px;
-      font-size: 1.2em;
-      margin-right: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    #submit-btn {
-      padding: 10px 20px;
-      font-size: 1.2em;
+    #openPackBtn {
+      padding: 12px 25px;
+      font-size: 1.3em;
       cursor: pointer;
       background-color: #388e3c;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
+      margin-bottom: 20px;
     }
 
-    #submit-btn:hover {
+    #openPackBtn:hover {
       background-color: #2e7d32;
     }
 
-    #answersList {
+    #cardsResult {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
       margin-top: 20px;
-      padding: 15px;
+    }
+
+    .card {
+      width: 120px;
+      height: 120px;
       border-radius: 10px;
-      background: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-      max-height: 300px;
-      overflow-y: auto;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 10px;
+    }
+
+    #message {
+      margin-top: 15px;
+      font-size: 1.2em;
+      color: #b71c1c;
     }
   </style>
 </head>
 <body>
   <h1>🎄 Ouverture Paquets 🎄</h1>
+  <div id="userStatus">Chargement...</div>
 
-  </body>
+  <div id="packArea">
+    <button id="openPackBtn">🎁 Ouvrir un paquet (5 jetons)</button>
+    <div id="message"></div>
+    <div id="cardsResult"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+      authDomain: "calendrier2025-3185f.firebaseapp.com",
+      projectId: "calendrier2025-3185f",
+      storageBucket: "calendrier2025-3185f.firebasestorage.app",
+      messagingSenderId: "846792576145",
+      appId: "1:846792576145:web:59028ccef4ffd5c8010330",
+      measurementId: "G-L62L4JSYMF"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // dictionnaire d'images (tu réutilises le même que dans collection)
+    const pictureLinks = {
+      1: "https://i.imgur.com/ewqwwd3.png",
+      2: "https://i.imgur.com/MiUjcra.png",
+      3: "https://i.imgur.com/apINuyT.png",
+      // ...
+      92: "https://i.imgur.com/8yvWgVw.png"
+    };
+
+    let currentUser = null;
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        currentUser = user;
+        document.getElementById("userStatus").innerText = "Connecté : " + user.email;
+      } else {
+        document.getElementById("userStatus").innerText = "Non connecté";
+        currentUser = null;
+      }
+    });
+
+    document.getElementById("openPackBtn").addEventListener("click", async () => {
+      if (!currentUser) {
+        document.getElementById("message").innerText = "Vous devez être connecté.";
+        return;
+      }
+
+      const userRef = doc(db, "users", currentUser.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        document.getElementById("message").innerText = "Profil introuvable.";
+        return;
+      }
+
+      const data = userSnap.data();
+      let tokens = data.jetons ?? 0;
+
+      if (tokens < 5) {
+        document.getElementById("message").innerText = "Pas assez de jetons (vous avez " + tokens + ").";
+        return;
+      }
+
+      // retirer 5 jetons
+      tokens -= 5;
+
+      // tirer 3 cartes au hasard
+      const obtainedCards = [];
+      for (let i = 0; i < 3; i++) {
+        const rand = Math.floor(Math.random() * 92) + 1;
+        obtainedCards.push(rand);
+        data[`Picture${rand}`] = true;
+      }
+
+      await updateDoc(userRef, {
+        jetons: tokens,
+        ...obtainedCards.reduce((acc, num) => ({ ...acc, [`Picture${num}`]: true }), {})
+      });
+
+      // afficher les cartes tirées
+      const resultDiv = document.getElementById("cardsResult");
+      resultDiv.innerHTML = "";
+      obtainedCards.forEach(num => {
+        const cardDiv = document.createElement("div");
+        cardDiv.classList.add("card");
+        const img = document.createElement("img");
+        img.src = pictureLinks[num];
+        img.alt = `Carte ${num}`;
+        cardDiv.appendChild(img);
+        resultDiv.appendChild(cardDiv);
+      });
+
+      document.getElementById("message").innerText = "Vous avez ouvert un paquet ! Il vous reste " + tokens + " jetons.";
+    });
+  </script>
+</body>
 </html>
