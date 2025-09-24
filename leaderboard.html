@@ -39,34 +39,87 @@
 
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 15px;
     }
 
     .card-slot {
-      width: 80px;
-      height: 80px;
+      width: 160px;
+      height: 160px;
       display: flex;
       justify-content: center;
       align-items: center;
       border: 2px dashed #ccc;
-      border-radius: 8px;
+      border-radius: 10px;
       background: #fafafa;
-      font-size: 0.9em;
+      font-size: 1.2em;
+      font-weight: bold;
       color: #777;
     }
 
     .card-slot img {
       max-width: 100%;
       max-height: 100%;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+    }
+
+    /* Classement */
+    #leaderboard {
+      margin-top: 40px;
+      padding: 20px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #leaderboard h2 {
+      text-align: center;
+      color: #b71c1c;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 12px;
+      font-size: 1.2em;
+    }
+
+    th {
+      background-color: #d32f2f;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
     }
   </style>
 </head>
 <body>
   <h1>🎄 Collections des joueurs 🎄</h1>
   <div id="collections"></div>
+
+  <div id="leaderboard">
+    <h2>🏆 Classement des joueurs 🏆</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Joueur</th>
+          <th>Nombre de cartes obtenues</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body"></tbody>
+    </table>
+  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
@@ -182,21 +235,23 @@
       92: "https://i.imgur.com/8yvWgVw.png"
     };
 
-    // charger toutes les collections
     async function loadCollections() {
       const usersRef = collection(db, "users");
       const snapshot = await getDocs(usersRef);
       const container = document.getElementById("collections");
+      const leaderboardBody = document.getElementById("leaderboard-body");
+      const leaderboard = [];
 
       snapshot.forEach(docSnap => {
         const data = docSnap.data();
         const div = document.createElement("div");
         div.classList.add("user-collection");
 
-        // en-tête avec email + jetons
+        let count = 0;
+
+        // en-tête
         div.innerHTML = `<div class="user-header">${data.email} — Jetons : ${data.jetons ?? 0}</div>`;
 
-        // grid des cartes
         const grid = document.createElement("div");
         grid.classList.add("cards-grid");
 
@@ -209,6 +264,7 @@
             img.src = pictureLinks[i];
             img.alt = `Picture ${i}`;
             slot.appendChild(img);
+            count++;
           } else {
             slot.textContent = i;
           }
@@ -218,6 +274,17 @@
 
         div.appendChild(grid);
         container.appendChild(div);
+
+        leaderboard.push({ email: data.email, count });
+      });
+
+      // trier par nombre de cartes décroissant
+      leaderboard.sort((a, b) => b.count - a.count);
+
+      leaderboard.forEach(player => {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${player.email}</td><td>${player.count}</td>`;
+        leaderboardBody.appendChild(row);
       });
     }
 
