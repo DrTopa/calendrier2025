@@ -1,122 +1,147 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Packs</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      background-color: #ffebcd;
-      background-image: url('https://www.transparenttextures.com/patterns/snow.png');
-      margin: 0;
-      padding: 20px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Packs</title>
+<style>
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: #ffebcd;
+  background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+  margin: 0;
+  padding: 20px;
+}
 
-    h1 {
-      font-size: 2.5em;
-      margin-bottom: 20px;
-      color: #d32f2f;
-      font-family: 'Comic Sans MS', cursive;
-      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-    }
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+  color: #d32f2f;
+  font-family: 'Comic Sans MS', cursive;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
 
-    #userStatus {
-      font-size: 1.2em;
-      margin-bottom: 15px;
-      color: #a23636;
-      font-weight: bold;
-    }
+#userStatus {
+  font-size: 1.2em;
+  margin-bottom: 15px;
+  color: #a23636;
+  font-weight: bold;
+}
 
-    #packArea {
-      background: rgba(255, 255, 255, 0.8);
-      border: 2px solid #b71c1c;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-      margin-top: 20px;
-      text-align: center;
-    }
+#packArea {
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px solid #b71c1c;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  text-align: center;
+}
 
-    #openPackBtn {
-      padding: 12px 25px;
-      font-size: 1.3em;
-      cursor: pointer;
-      background-color: #388e3c;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
+#buttonsArea {
+  margin-top: 15px;
+}
 
-    #openPackBtn:hover {
-      background-color: #2e7d32;
-    }
+button {
+  padding: 10px 20px;
+  font-size: 1.1em;
+  cursor: pointer;
+  margin: 5px;
+  border-radius: 8px;
+  border: none;
+  color: white;
+}
 
-    #cardsResult {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 20px;
-      flex-wrap: wrap;
-    }
+#openPackBtn { background-color: #388e3c; }
+#openPackBtn:hover { background-color: #2e7d32; }
 
-    .card {
-      width: 120px;
-      height: 120px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-      background: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+#revealAllBtn { background-color: #1976d2; }
+#revealAllBtn:hover { background-color: #115293; }
 
-    .card img {
-      max-width: 100%;
-      max-height: 100%;
-      border-radius: 10px;
-    }
+#nextBtn { background-color: #f57c00; }
+#nextBtn:hover { background-color: #e65100; }
 
-    #message {
-      margin-top: 15px;
-      font-size: 1.2em;
-      color: #b71c1c;
-    }
-  </style>
+#cardsResult {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  perspective: 1000px; /* perspective pour le flip */
+}
+
+.card {
+  width: 140px;
+  height: 200px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+  position: relative;
+}
+
+.card.flipped { transform: rotateY(180deg); }
+
+.card .front, .card .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 10px;
+}
+
+.card .front { transform: rotateY(180deg); }
+
+.card img { width: 100%; height: 100%; border-radius: 10px; }
+
+#message {
+  margin-top: 15px;
+  font-size: 1.2em;
+  color: #b71c1c;
+}
+</style>
 </head>
 <body>
-  <h1>🎄 Ouverture Paquets 🎄</h1>
-  <div id="userStatus">Chargement...</div>
+<h1>🎄 Ouverture Paquets 🎄</h1>
+<div id="userStatus">Chargement...</div>
 
-  <div id="packArea">
+<div id="packArea">
+  <div id="buttonsArea">
     <button id="openPackBtn">🎁 Ouvrir un paquet (5 jetons)</button>
-    <div id="message"></div>
-    <div id="cardsResult"></div>
+    <button id="revealAllBtn">Tout révéler</button>
+    <button id="nextBtn">Suivant</button>
   </div>
+  <div id="message"></div>
+  <div id="cardsResult"></div>
+</div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
-      authDomain: "calendrier2025-3185f.firebaseapp.com",
-      projectId: "calendrier2025-3185f",
-      storageBucket: "calendrier2025-3185f.firebasestorage.app",
-      messagingSenderId: "846792576145",
-      appId: "1:846792576145:web:59028ccef4ffd5c8010330",
-      measurementId: "G-L62L4JSYMF"
-    };
+const firebaseConfig = {
+  apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+  authDomain: "calendrier2025-3185f.firebaseapp.com",
+  projectId: "calendrier2025-3185f",
+  storageBucket: "calendrier2025-3185f.firebasestorage.app",
+  messagingSenderId: "846792576145",
+  appId: "1:846792576145:web:59028ccef4ffd5c8010330",
+  measurementId: "G-L62L4JSYMF"
+};
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
     // dictionnaire complet des 92 images
     const pictureLinks = {
@@ -213,82 +238,118 @@
       91: "https://i.imgur.com/bh3wUgz.png",
       92: "https://i.imgur.com/8yvWgVw.png"
     };
+// dos de carte
+const cardBack = "https://i.imgur.com/XVqpkKm.png"; // image de dos de carte
 
-    let currentUser = null;
+let currentUser = null;
+let obtainedCards = [];
 
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        currentUser = user;
-        const userRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userRef);
-
-        if (userSnap.exists()) {
-          const data = userSnap.data();
-          document.getElementById("userStatus").innerText =
-            `Connecté : ${data.email} — Jetons : ${data.jetons ?? 0}`;
-        }
-      } else {
-        document.getElementById("userStatus").innerText = "Non connecté";
-        currentUser = null;
-      }
-    });
-
-    document.getElementById("openPackBtn").addEventListener("click", async () => {
-      if (!currentUser) {
-        document.getElementById("message").innerText = "Vous devez être connecté.";
-        return;
-      }
-
-      const userRef = doc(db, "users", currentUser.uid);
-      const userSnap = await getDoc(userRef);
-
-      if (!userSnap.exists()) {
-        document.getElementById("message").innerText = "Profil introuvable.";
-        return;
-      }
-
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
       const data = userSnap.data();
-      let tokens = data.jetons ?? 0;
-
-      if (tokens < 5) {
-        document.getElementById("message").innerText = "Pas assez de jetons (vous avez " + tokens + ").";
-        return;
-      }
-
-      // retirer 5 jetons
-      tokens -= 5;
-
-      // tirer 5 cartes au hasard
-      const obtainedCards = [];
-      for (let i = 0; i < 5; i++) {
-        const rand = Math.floor(Math.random() * 92) + 1;
-        obtainedCards.push(rand);
-        data[`Picture${rand}`] = true;
-      }
-
-      await updateDoc(userRef, {
-        jetons: tokens,
-        ...obtainedCards.reduce((acc, num) => ({ ...acc, [`Picture${num}`]: true }), {})
-      });
-
-      // afficher les cartes tirées
-      const resultDiv = document.getElementById("cardsResult");
-      resultDiv.innerHTML = "";
-      obtainedCards.forEach(num => {
-        const cardDiv = document.createElement("div");
-        cardDiv.classList.add("card");
-        const img = document.createElement("img");
-        img.src = pictureLinks[num];
-        img.alt = `Carte ${num}`;
-        cardDiv.appendChild(img);
-        resultDiv.appendChild(cardDiv);
-      });
-
-      document.getElementById("message").innerText =
-        `Vous avez ouvert un paquet ! Il vous reste ${tokens} jetons.`;
       document.getElementById("userStatus").innerText =
-        `Connecté : ${data.email} — Jetons : ${tokens}`;
-    });
-  </script>
+        `Connecté : ${data.email} — Jetons : ${data.jetons ?? 0}`;
+    }
+  } else {
+    document.getElementById("userStatus").innerText = "Non connecté";
+    currentUser = null;
+  }
+});
+
+function createCard(num) {
+  const card = document.createElement("div");
+  card.classList.add("card");
+
+  const front = document.createElement("div");
+  front.classList.add("front");
+  const imgFront = document.createElement("img");
+  imgFront.src = pictureLinks[num];
+  imgFront.alt = `Carte ${num}`;
+  front.appendChild(imgFront);
+
+  const back = document.createElement("div");
+  back.classList.add("back");
+  const imgBack = document.createElement("img");
+  imgBack.src = cardBack;
+  imgBack.alt = "Dos carte";
+  back.appendChild(imgBack);
+
+  card.appendChild(front);
+  card.appendChild(back);
+
+  card.addEventListener("click", () => {
+    card.classList.toggle("flipped");
+  });
+
+  return card;
+}
+
+document.getElementById("openPackBtn").addEventListener("click", async () => {
+  if (!currentUser) {
+    document.getElementById("message").innerText = "Vous devez être connecté.";
+    return;
+  }
+
+  const userRef = doc(db, "users", currentUser.uid);
+  const userSnap = await getDoc(userRef);
+  if (!userSnap.exists()) {
+    document.getElementById("message").innerText = "Profil introuvable.";
+    return;
+  }
+
+  const data = userSnap.data();
+  let tokens = data.jetons ?? 0;
+  if (tokens < 5) {
+    document.getElementById("message").innerText = `Pas assez de jetons (${tokens})`;
+    return;
+  }
+
+  // retirer 5 jetons
+  tokens -= 5;
+
+  // tirer 5 cartes au hasard
+  obtainedCards = [];
+  for (let i = 0; i < 5; i++) {
+    const rand = Math.floor(Math.random() * 92) + 1;
+    obtainedCards.push(rand);
+    data[`Picture${rand}`] = true;
+  }
+
+  await updateDoc(userRef, {
+    jetons: tokens,
+    ...obtainedCards.reduce((acc, num) => ({ ...acc, [`Picture${num}`]: true }), {})
+  });
+
+  document.getElementById("userStatus").innerText =
+    `Connecté : ${data.email} — Jetons : ${tokens}`;
+
+  const resultDiv = document.getElementById("cardsResult");
+  resultDiv.innerHTML = "";
+  obtainedCards.forEach(num => {
+    const cardDiv = createCard(num);
+    resultDiv.appendChild(cardDiv);
+  });
+
+  document.getElementById("message").innerText =
+    "Cliquez sur chaque carte pour la révéler ou utilisez 'Tout révéler'";
+});
+
+document.getElementById("revealAllBtn").addEventListener("click", () => {
+  document.querySelectorAll(".card").forEach(c => c.classList.add("flipped"));
+});
+
+document.getElementById("nextBtn").addEventListener("click", () => {
+  const resultDiv = document.getElementById("cardsResult");
+  resultDiv.style.justifyContent = "flex-start"; // résumé sur ligne
+  resultDiv.style.flexWrap = "nowrap";
+  resultDiv.querySelectorAll(".card").forEach(c => c.classList.add("flipped"));
+  document.getElementById("message").innerText = "Résumé du tirage.";
+});
+</script>
 </body>
 </html>
+
