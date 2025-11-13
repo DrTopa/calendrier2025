@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎯 Pari 1 – France vs Suède 🎯</title>
+  <title>🎯 Prédictions – Jour 2 🎯</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       flex-direction: column;
       background-color: #ffebcd;
       background-image: url('https://www.transparenttextures.com/patterns/snow.png');
@@ -23,6 +23,8 @@
       color: #b71c1c;
       font-family: 'Comic Sans MS', cursive;
       text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+      text-align: center;
+      width: 100%;
     }
 
     #userStatus {
@@ -33,127 +35,115 @@
       color: #a23636;
     }
 
-    #instructions {
-      background: rgba(255, 255, 255, 0.9);
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-      margin-bottom: 20px;
-      text-align: center;
-      max-width: 900px;
-      font-size: 1.1em;
-      color: #333;
+    /* Onglets */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
     }
+    .tab-btn {
+      background: #b71c1c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 2px;
+      cursor: pointer;
+      border-radius: 5px 5px 0 0;
+      font-size: 1em;
+    }
+    .tab-btn.active { background: #d32f2f; }
 
-    #predictionArea {
-      background: rgba(255, 255, 255, 0.85);
+    .tab-content {
+      display: none;
+      background: rgba(255,255,255,0.9);
       border: 2px solid #b71c1c;
-      border-radius: 12px;
-      padding: 20px 30px;
-      box-shadow: 0 8px 12px rgba(0,0,0,0.2);
-      text-align: center;
+      border-radius: 0 12px 12px 12px;
+      padding: 15px;
       width: 100%;
       max-width: 500px;
+      margin: auto;
+      box-shadow: 0 8px 12px rgba(0,0,0,0.2);
     }
+    .tab-content.active { display: block; }
 
-    select, input {
-      padding: 10px;
+    label, input, select, button {
       font-size: 1.1em;
+    }
+    input, select {
+      width: 80%;
       margin: 8px 0;
+      padding: 8px;
       border-radius: 6px;
       border: 1px solid #ccc;
-      width: 80%;
     }
-
-    #submit-btn {
-      padding: 10px 20px;
-      font-size: 1.1em;
-      cursor: pointer;
+    button.submit-btn {
       background-color: #388e3c;
       color: white;
       border: none;
+      padding: 10px 20px;
       border-radius: 5px;
+      cursor: pointer;
       margin-top: 10px;
     }
+    button.submit-btn:hover { background-color: #2e7d32; }
 
-    #submit-btn:hover {
-      background-color: #2e7d32;
-    }
+    #answersList { display: none; margin-top: 15px; }
+    #answersList ul { list-style: none; padding-left:0; }
+    #answersList li { background: rgba(255,255,255,0.6); margin: 4px 0; padding: 6px 10px; border-radius:6px; border-left: 5px solid #b71c1c; }
 
-    #answersList {
-      display: none;
-      margin-top: 25px;
-      padding: 15px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-      max-width: 600px;
-      width: 90%;
-    }
-
-    #answersList ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    #answersList li {
-      background: rgba(255,255,255,0.6);
-      margin: 6px 0;
-      padding: 6px 10px;
-      border-radius: 6px;
-      border-left: 5px solid #b71c1c;
-    }
-
-    #your-answer {
-      margin-top: 15px;
-      font-weight: bold;
-      font-size: 1.1em;
-      color: #2e7d32;
-    }
+    #your-answer { margin-top: 10px; font-weight: bold; color: #2e7d32; }
   </style>
 </head>
-
 <body>
-  <h1>⚽ Pronostic – France 🇫🇷 vs 🇸🇪 Suède</h1>
-
-  <div id="instructions">
-    <p>Faites vos paris avant le coup d’envoi !</p>
-    <ul style="text-align:left; display:inline-block;">
-      <li>Résultat du match (France, Nul ou Suède)</li>
-      <li>Score final (ex: 2-1, 1-1...)</li>
-      <li>Nombre de cartons jaunes</li>
-      <li>Nombre de cartons rouges</li>
-    </ul>
-  </div>
-
+  <h1>⚽ Prédictions – Jour 2</h1>
   <div id="userStatus"></div>
 
-  <div id="predictionArea">
-    <label><b>Résultat du match :</b></label><br>
-    <select id="result-select">
+  <!-- Onglets Prédictions -->
+  <div class="tabs">
+    <button class="tab-btn active" data-target="prediction1">France 🇫🇷 vs Suède 🇸🇪</button>
+    <button class="tab-btn" data-target="prediction2">Autre Match</button>
+  </div>
+
+  <!-- Contenu des onglets -->
+  <div id="prediction1" class="tab-content active">
+    <!-- Formulaire de Prediction 1 -->
+    <label>Résultat du match :</label><br>
+    <select class="result-select">
       <option value="">-- Choisissez --</option>
       <option value="france">Victoire France</option>
       <option value="nul">Nul</option>
       <option value="suede">Victoire Suède</option>
     </select><br>
-
-    <label><b>Score final :</b></label><br>
-    <input id="score-input" type="text" placeholder="ex : 2-1"><br>
-
-    <label><b>Cartons jaunes :</b></label><br>
-    <input id="yellow-input" type="number" min="0" placeholder="ex : 3"><br>
-
-    <label><b>Cartons rouges :</b></label><br>
-    <input id="red-input" type="number" min="0" placeholder="ex : 1"><br>
-
-    <button id="submit-btn">Soumettre mes paris</button>
-
-    <div id="your-answer"></div>
+    <label>Score final :</label><br>
+    <input type="text" class="score-input" placeholder="ex : 2-1"><br>
+    <label>Cartons jaunes :</label><br>
+    <input type="number" class="yellow-input" min="0"><br>
+    <label>Cartons rouges :</label><br>
+    <input type="number" class="red-input" min="0"><br>
+    <button class="submit-btn">Soumettre mes paris</button>
+    <div class="your-answer"></div>
+    <div class="answersList"><h4>📊 Pronostics des autres :</h4><ul></ul></div>
   </div>
 
-  <div id="answersList">
-    <h3>📊 Pronostics des autres joueurs :</h3>
-    <ul id="answers"></ul>
+  <div id="prediction2" class="tab-content">
+    <!-- Formulaire de Prediction 2 -->
+    <label>Résultat :</label><br>
+    <select class="result-select">
+      <option value="">-- Choisissez --</option>
+      <option value="team1">Victoire Team 1</option>
+      <option value="nul">Nul</option>
+      <option value="team2">Victoire Team 2</option>
+    </select><br>
+    <label>Score final :</label><br>
+    <input type="text" class="score-input"><br>
+    <label>Cartons jaunes :</label><br>
+    <input type="number" class="yellow-input" min="0"><br>
+    <label>Cartons rouges :</label><br>
+    <input type="number" class="red-input" min="0"><br>
+    <button class="submit-btn">Soumettre mes paris</button>
+    <div class="your-answer"></div>
+    <div class="answersList"><h4>📊 Pronostics des autres :</h4><ul></ul></div>
   </div>
 
   <script type="module">
@@ -170,107 +160,84 @@
       appId: "1:846792576145:web:59028ccef4ffd5c8010330",
       measurementId: "G-L62L4JSYMF"
     };
-
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const resultSelect = document.getElementById("result-select");
-    const scoreInput = document.getElementById("score-input");
-    const yellowInput = document.getElementById("yellow-input");
-    const redInput = document.getElementById("red-input");
-    const submitBtn = document.getElementById("submit-btn");
-    const yourAnswerDiv = document.getElementById("your-answer");
-    const answersListDiv = document.getElementById("answersList");
-    const answersList = document.getElementById("answers");
-
     let userId = "";
 
     onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        userId = user.uid;
-        document.getElementById("userStatus").innerText = `Connecté : ${user.email}`;
-
-        const predRef = doc(db, "PredictionFranceSuede", userId);
-        const predSnap = await getDoc(predRef);
-
-        if (predSnap.exists()) {
-          showExistingPrediction(predSnap.data());
-        }
-      } else {
-        window.location.href = "login.html";
-      }
+      if (!user) return window.location.href="login.html";
+      userId = user.uid;
+      document.getElementById("userStatus").innerText = `Connecté : ${user.email}`;
+      document.querySelectorAll(".tab-content").forEach(loadExistingPrediction);
     });
 
-    function showExistingPrediction(data) {
-      resultSelect.style.display = "none";
-      scoreInput.style.display = "none";
-      yellowInput.style.display = "none";
-      redInput.style.display = "none";
-      submitBtn.style.display = "none";
+    // Onglets
+    document.querySelectorAll(".tab-btn").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+        document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.target).classList.add("active");
+      });
+    });
 
-      yourAnswerDiv.innerHTML = `
+    async function loadExistingPrediction(tabContent){
+      const predId = tabContent.id;
+      const predRef = doc(db, "Predictions", predId, userId);
+      const predSnap = await getDoc(predRef);
+      if(predSnap.exists()){
+        showPrediction(tabContent, predSnap.data());
+      }
+    }
+
+    function showPrediction(tabContent, data){
+      tabContent.querySelectorAll("select, input, .submit-btn").forEach(el=>el.style.display="none");
+      const yourDiv = tabContent.querySelector(".your-answer");
+      yourDiv.innerHTML = `
         ✅ Vos paris :
-        <ul style="list-style:none; padding-left:0;">
+        <ul style="list-style:none;padding-left:0">
           <li><b>Résultat :</b> ${data.result}</li>
           <li><b>Score :</b> ${data.score}</li>
           <li><b>Cartons jaunes :</b> ${data.yellow}</li>
           <li><b>Cartons rouges :</b> ${data.red}</li>
-        </ul>
-      `;
-
-      answersListDiv.style.display = "block";
-      loadOtherAnswers();
+        </ul>`;
+      tabContent.querySelector(".answersList").style.display="block";
+      loadOtherAnswers(tabContent);
     }
 
-    submitBtn.addEventListener("click", async () => {
-      const result = resultSelect.value;
-      const score = scoreInput.value.trim();
-      const yellow = yellowInput.value.trim();
-      const red = redInput.value.trim();
-
-      if (!result || !score || yellow === "" || red === "") {
-        alert("Merci de remplir tous les champs !");
-        return;
-      }
-
-      const predRef = doc(db, "PredictionFranceSuede", userId);
-      const predSnap = await getDoc(predRef);
-
-      if (predSnap.exists()) {
-        alert("Vous avez déjà soumis vos paris.");
-        return;
-      }
-
-      await setDoc(predRef, {
-        userId: userId,
-        UserEmail: auth.currentUser.email,
-        result: result,
-        score: score,
-        yellow: parseInt(yellow),
-        red: parseInt(red),
-        timestamp: new Date()
+    document.querySelectorAll(".submit-btn").forEach(btn=>{
+      btn.addEventListener("click", async ()=>{
+        const tab = btn.closest(".tab-content");
+        const predId = tab.id;
+        const result = tab.querySelector(".result-select").value;
+        const score = tab.querySelector(".score-input").value.trim();
+        const yellow = tab.querySelector(".yellow-input").value.trim();
+        const red = tab.querySelector(".red-input").value.trim();
+        if(!result || !score || yellow==="" || red===""){ alert("Remplissez tous les champs !"); return; }
+        const predRef = doc(db,"Predictions",predId,userId);
+        const predSnap = await getDoc(predRef);
+        if(predSnap.exists()){ alert("Vous avez déjà soumis vos paris."); return; }
+        await setDoc(predRef,{ userId, UserEmail: auth.currentUser.email, result, score, yellow: parseInt(yellow), red: parseInt(red), timestamp: new Date() });
+        showPrediction(tab,{result,score,yellow,red});
       });
-
-      showExistingPrediction({ result, score, yellow, red });
     });
 
-    async function loadOtherAnswers() {
-      answersList.innerHTML = "";
-      const predsSnap = await getDocs(collection(db, "PredictionFranceSuede"));
-      predsSnap.forEach((docSnap) => {
+    async function loadOtherAnswers(tab){
+      const predId = tab.id;
+      const answersUl = tab.querySelector(".answersList ul");
+      answersUl.innerHTML="";
+      const snap = await getDocs(collection(db,"Predictions",predId));
+      snap.forEach(docSnap=>{
+        if(docSnap.id===userId) return;
         const data = docSnap.data();
-        if (docSnap.id !== userId) {
-          const li = document.createElement("li");
-          li.innerHTML = `
-            <b>${data.UserEmail || "Anonyme"}</b> → 
-            ${data.result.toUpperCase()} | ${data.score} | 
-            🟨 ${data.yellow} | 🟥 ${data.red}
-          `;
-          answersList.appendChild(li);
-        }
+        const li = document.createElement("li");
+        li.innerHTML=`<b>${data.UserEmail||"Anonyme"}</b> → ${data.result.toUpperCase()} | ${data.score} | 🟨 ${data.yellow} | 🟥 ${data.red}`;
+        answersUl.appendChild(li);
       });
     }
+
   </script>
 </body>
 </html>
