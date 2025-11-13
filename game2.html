@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎯 Pari 1 – France vs Suède 🎯</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background-color: #ffebcd;
+      background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.3em;
+      margin-bottom: 10px;
+      color: #b71c1c;
+      font-family: 'Comic Sans MS', cursive;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    }
+
+    #userStatus {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.1em;
+      color: #a23636;
+    }
+
+    #instructions {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+      text-align: center;
+      max-width: 900px;
+      font-size: 1.1em;
+      color: #333;
+    }
+
+    #predictionArea {
+      background: rgba(255, 255, 255, 0.85);
+      border: 2px solid #b71c1c;
+      border-radius: 12px;
+      padding: 20px 30px;
+      box-shadow: 0 8px 12px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    select, input {
+      padding: 10px;
+      font-size: 1.1em;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 80%;
+    }
+
+    #submit-btn {
+      padding: 10px 20px;
+      font-size: 1.1em;
+      cursor: pointer;
+      background-color: #388e3c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+
+    #submit-btn:hover {
+      background-color: #2e7d32;
+    }
+
+    #answersList {
+      display: none;
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      max-width: 600px;
+      width: 90%;
+    }
+
+    #answersList ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    #answersList li {
+      background: rgba(255,255,255,0.6);
+      margin: 6px 0;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border-left: 5px solid #b71c1c;
+    }
+
+    #your-answer {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 1.1em;
+      color: #2e7d32;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>⚽ Pronostic – France 🇫🇷 vs 🇸🇪 Suède</h1>
+
+  <div id="instructions">
+    <p>Faites vos paris avant le coup d’envoi !</p>
+    <ul style="text-align:left; display:inline-block;">
+      <li>Résultat du match (France, Nul ou Suède)</li>
+      <li>Score final (ex: 2-1, 1-1...)</li>
+      <li>Nombre de cartons jaunes</li>
+      <li>Nombre de cartons rouges</li>
+    </ul>
+  </div>
+
+  <div id="userStatus"></div>
+
+  <div id="predictionArea">
+    <label><b>Résultat du match :</b></label><br>
+    <select id="result-select">
+      <option value="">-- Choisissez --</option>
+      <option value="france">Victoire France</option>
+      <option value="nul">Nul</option>
+      <option value="suede">Victoire Suède</option>
+    </select><br>
+
+    <label><b>Score final :</b></label><br>
+    <input id="score-input" type="text" placeholder="ex : 2-1"><br>
+
+    <label><b>Cartons jaunes :</b></label><br>
+    <input id="yellow-input" type="number" min="0" placeholder="ex : 3"><br>
+
+    <label><b>Cartons rouges :</b></label><br>
+    <input id="red-input" type="number" min="0" placeholder="ex : 1"><br>
+
+    <button id="submit-btn">Soumettre mes paris</button>
+
+    <div id="your-answer"></div>
+  </div>
+
+  <div id="answersList">
+    <h3>📊 Pronostics des autres joueurs :</h3>
+    <ul id="answers"></ul>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+      authDomain: "calendrier2025-3185f.firebaseapp.com",
+      projectId: "calendrier2025-3185f",
+      storageBucket: "calendrier2025-3185f.firebasestorage.app",
+      messagingSenderId: "846792576145",
+      appId: "1:846792576145:web:59028ccef4ffd5c8010330",
+      measurementId: "G-L62L4JSYMF"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const resultSelect = document.getElementById("result-select");
+    const scoreInput = document.getElementById("score-input");
+    const yellowInput = document.getElementById("yellow-input");
+    const redInput = document.getElementById("red-input");
+    const submitBtn = document.getElementById("submit-btn");
+    const yourAnswerDiv = document.getElementById("your-answer");
+    const answersListDiv = document.getElementById("answersList");
+    const answersList = document.getElementById("answers");
+
+    let userId = "";
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        userId = user.uid;
+        document.getElementById("userStatus").innerText = `Connecté : ${user.email}`;
+
+        const predRef = doc(db, "PredictionFranceSuede", userId);
+        const predSnap = await getDoc(predRef);
+
+        if (predSnap.exists()) {
+          showExistingPrediction(predSnap.data());
+        }
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+
+    function showExistingPrediction(data) {
+      resultSelect.style.display = "none";
+      scoreInput.style.display = "none";
+      yellowInput.style.display = "none";
+      redInput.style.display = "none";
+      submitBtn.style.display = "none";
+
+      yourAnswerDiv.innerHTML = `
+        ✅ Vos paris :
+        <ul style="list-style:none; padding-left:0;">
+          <li><b>Résultat :</b> ${data.result}</li>
+          <li><b>Score :</b> ${data.score}</li>
+          <li><b>Cartons jaunes :</b> ${data.yellow}</li>
+          <li><b>Cartons rouges :</b> ${data.red}</li>
+        </ul>
+      `;
+
+      answersListDiv.style.display = "block";
+      loadOtherAnswers();
+    }
+
+    submitBtn.addEventListener("click", async () => {
+      const result = resultSelect.value;
+      const score = scoreInput.value.trim();
+      const yellow = yellowInput.value.trim();
+      const red = redInput.value.trim();
+
+      if (!result || !score || yellow === "" || red === "") {
+        alert("Merci de remplir tous les champs !");
+        return;
+      }
+
+      const predRef = doc(db, "PredictionFranceSuede", userId);
+      const predSnap = await getDoc(predRef);
+
+      if (predSnap.exists()) {
+        alert("Vous avez déjà soumis vos paris.");
+        return;
+      }
+
+      await setDoc(predRef, {
+        userId: userId,
+        UserEmail: auth.currentUser.email,
+        result: result,
+        score: score,
+        yellow: parseInt(yellow),
+        red: parseInt(red),
+        timestamp: new Date()
+      });
+
+      showExistingPrediction({ result, score, yellow, red });
+    });
+
+    async function loadOtherAnswers() {
+      answersList.innerHTML = "";
+      const predsSnap = await getDocs(collection(db, "PredictionFranceSuede"));
+      predsSnap.forEach((docSnap) => {
+        const data = docSnap.data();
+        if (docSnap.id !== userId) {
+          const li = document.createElement("li");
+          li.innerHTML = `
+            <b>${data.UserEmail || "Anonyme"}</b> → 
+            ${data.result.toUpperCase()} | ${data.score} | 
+            🟨 ${data.yellow} | 🟥 ${data.red}
+          `;
+          answersList.appendChild(li);
+        }
+      });
+    }
+  </script>
+</body>
+</html>
