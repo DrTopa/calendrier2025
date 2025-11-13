@@ -156,121 +156,135 @@
     <ul id="answers"></ul>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
-      authDomain: "calendrier2025-3185f.firebaseapp.com",
-      projectId: "calendrier2025-3185f",
-      storageBucket: "calendrier2025-3185f.firebasestorage.app",
-      messagingSenderId: "846792576145",
-      appId: "1:846792576145:web:59028ccef4ffd5c8010330",
-      measurementId: "G-L62L4JSYMF"
-    };
+const firebaseConfig = {
+  apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+  authDomain: "calendrier2025-3185f.firebaseapp.com",
+  projectId: "calendrier2025-3185f",
+  storageBucket: "calendrier2025-3185f.firebasestorage.app",
+  messagingSenderId: "846792576145",
+  appId: "1:846792576145:web:59028ccef4ffd5c8010330",
+  measurementId: "G-L62L4JSYMF"
+};
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-    const resultSelect = document.getElementById("result-select");
-    const scoreInput = document.getElementById("score-input");
-    const yellowInput = document.getElementById("yellow-input");
-    const redInput = document.getElementById("red-input");
-    const submitBtn = document.getElementById("submit-btn");
-    const yourAnswerDiv = document.getElementById("your-answer");
-    const answersListDiv = document.getElementById("answersList");
-    const answersList = document.getElementById("answers");
+const resultSelect = document.getElementById("result-select");
+const scoreInput = document.getElementById("score-input");
+const yellowInput = document.getElementById("yellow-input");
+const redInput = document.getElementById("red-input");
+const submitBtn = document.getElementById("submit-btn");
+const yourAnswerDiv = document.getElementById("your-answer");
+const answersListDiv = document.getElementById("answersList");
+const answersList = document.getElementById("answers");
 
-    let userId = "";
+let currentUser = null;
 
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        userId = user.uid;
-        document.getElementById("userStatus").innerText = `Connecté : ${user.email}`;
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    document.getElementById("userStatus").innerText = `Connecté : ${user.email}`;
 
-        const predRef = doc(db, "PredictionFranceSuede", userId);
-        const predSnap = await getDoc(predRef);
+    // Vérifier si l'utilisateur a déjà des paris dans Jour 2
+    const jour2Ref = doc(db, "Predictions", "Jour 2");
+    const jour2Snap = await getDoc(jour2Ref);
 
-        if (predSnap.exists()) {
-          showExistingPrediction(predSnap.data());
-        }
-      } else {
-        window.location.href = "login.html";
-      }
-    });
-
-    function showExistingPrediction(data) {
-      resultSelect.style.display = "none";
-      scoreInput.style.display = "none";
-      yellowInput.style.display = "none";
-      redInput.style.display = "none";
-      submitBtn.style.display = "none";
-
-      yourAnswerDiv.innerHTML = `
-        ✅ Vos paris :
-        <ul style="list-style:none; padding-left:0;">
-          <li><b>Résultat :</b> ${data.result}</li>
-          <li><b>Score :</b> ${data.score}</li>
-          <li><b>Cartons jaunes :</b> ${data.yellow}</li>
-          <li><b>Cartons rouges :</b> ${data.red}</li>
-        </ul>
-      `;
-
-      answersListDiv.style.display = "block";
-      loadOtherAnswers();
+    if (jour2Snap.exists() && jour2Snap.data()[user.uid]) {
+      showExistingPrediction(jour2Snap.data()[user.uid]);
     }
+  } else {
+    window.location.href = "login.html";
+  }
+});
 
-    submitBtn.addEventListener("click", async () => {
-      const result = resultSelect.value;
-      const score = scoreInput.value.trim();
-      const yellow = yellowInput.value.trim();
-      const red = redInput.value.trim();
+function showExistingPrediction(data) {
+  resultSelect.style.display = "none";
+  scoreInput.style.display = "none";
+  yellowInput.style.display = "none";
+  redInput.style.display = "none";
+  submitBtn.style.display = "none";
 
-      if (!result || !score || yellow === "" || red === "") {
-        alert("Merci de remplir tous les champs !");
-        return;
-      }
+  yourAnswerDiv.innerHTML = `
+    ✅ Vos paris :
+    <ul style="list-style:none; padding-left:0;">
+      <li><b>Résultat :</b> ${data.result}</li>
+      <li><b>Score :</b> ${data.score}</li>
+      <li><b>Cartons jaunes :</b> ${data.yellow}</li>
+      <li><b>Cartons rouges :</b> ${data.red}</li>
+    </ul>
+  `;
 
-      const predRef = doc(db, "PredictionFranceSuede", userId);
-      const predSnap = await getDoc(predRef);
+  answersListDiv.style.display = "block";
+  loadOtherAnswers();
+}
 
-      if (predSnap.exists()) {
-        alert("Vous avez déjà soumis vos paris.");
-        return;
-      }
+submitBtn.addEventListener("click", async () => {
+  const result = resultSelect.value;
+  const score = scoreInput.value.trim();
+  const yellow = yellowInput.value.trim();
+  const red = redInput.value.trim();
 
-      await setDoc(predRef, {
-        userId: userId,
-        UserEmail: auth.currentUser.email,
-        result: result,
-        score: score,
-        yellow: parseInt(yellow),
-        red: parseInt(red),
-        timestamp: new Date()
-      });
+  if (!result || !score || yellow === "" || red === "") {
+    alert("Merci de remplir tous les champs !");
+    return;
+  }
 
-      showExistingPrediction({ result, score, yellow, red });
-    });
+  const jour2Ref = doc(db, "Predictions", "Jour 2");
+  const jour2Snap = await getDoc(jour2Ref);
+  const newPrediction = {
+    userId: currentUser.uid,
+    UserEmail: currentUser.email,
+    result: result,
+    score: score,
+    yellow: parseInt(yellow),
+    red: parseInt(red),
+    timestamp: new Date()
+  };
 
-    async function loadOtherAnswers() {
-      answersList.innerHTML = "";
-      const predsSnap = await getDocs(collection(db, "Predictions"));
-      predsSnap.forEach((docSnap) => {
-        const data = docSnap.data();
-        if (docSnap.id !== userId) {
-          const li = document.createElement("li");
-          li.innerHTML = `
-            <b>${data.UserEmail || "Anonyme"}</b> → 
-            ${data.result.toUpperCase()} | ${data.score} | 
-            🟨 ${data.yellow} | 🟥 ${data.red}
-          `;
-          answersList.appendChild(li);
-        }
-      });
+  if (jour2Snap.exists()) {
+    const data = jour2Snap.data();
+    if (data[currentUser.uid]) {
+      alert("Vous avez déjà soumis vos paris pour Jour 2.");
+      return;
     }
-  </script>
+    // Ajouter la prédiction sous l'UID
+    await updateDoc(jour2Ref, { [currentUser.uid]: newPrediction });
+  } else {
+    // Créer le document Jour 2 et ajouter la prédiction
+    await setDoc(jour2Ref, { [currentUser.uid]: newPrediction });
+  }
+
+  showExistingPrediction(newPrediction);
+});
+
+// Charger les paris des autres
+async function loadOtherAnswers() {
+  answersList.innerHTML = "";
+  const jour2Ref = doc(db, "Predictions", "Jour 2");
+  const jour2Snap = await getDoc(jour2Ref);
+
+  if (!jour2Snap.exists()) return;
+
+  const allData = jour2Snap.data();
+  for (const uid in allData) {
+    if (uid === currentUser.uid) continue;
+    const data = allData[uid];
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <b>${data.UserEmail || "Anonyme"}</b> → 
+      ${data.result.toUpperCase()} | ${data.score} | 
+      🟨 ${data.yellow} | 🟥 ${data.red}
+    `;
+    answersList.appendChild(li);
+  }
+}
+</script>
+
 </body>
 </html>
