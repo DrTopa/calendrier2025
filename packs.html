@@ -139,7 +139,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// dictionnaire complet des 92 images
+// dictionnaire complet des 92 images (inchangé)
 const pictureLinks = {
   1: "https://i.imgur.com/ewqwwd3.png",
   2: "https://i.imgur.com/MiUjcra.png",
@@ -237,6 +237,53 @@ const pictureLinks = {
 
 const cardBack = "https://i.imgur.com/kgI2UCT.png";
 
+// --- NOUVELLE LOGIQUE DE RARETÉ ---
+
+const classes = {
+  common: {
+    cartes: [10,13,14,16,17,19,2,20,23,25,26,3,30,32,40,41,42,44,45,47,5,50,51,53,55,56,57,58,59,6,60,61,62,65,66,67,68,7,70,71,73,74,75,76,77,79,8,80,81,82,84,86,88,9,90,91,92],
+    p_class: 0.73
+  },
+  uncommon: {
+    cartes: [1,11,12,15,18,21,22,24,28,29,33,34,4,43,46,48,49,52,54,63,64,69,72,78,83,85,87,89],
+    p_class: 0.207
+  },
+  rare: {
+    cartes: [27,31,35,36,37,38,39],
+    p_class: 0.063
+  }
+};
+
+for (const c in classes) {
+  const n = classes[c].cartes.length;
+  classes[c].p_card = classes[c].p_class / n;
+}
+
+function tirerCarte() {
+  const r = Math.random();
+  let cumulative = 0;
+  for (const c in classes) {
+    cumulative += classes[c].p_class;
+    if (r < cumulative) {
+      return randomChoice(classes[c].cartes);
+    }
+  }
+  return randomChoice(classes.common.cartes);
+}
+
+function tirer7emeCarte() {
+  const r = Math.random();
+  if (r < 0.95) {
+    return randomChoice(classes.uncommon.cartes);
+  } else {
+    return randomChoice(classes.rare.cartes);
+  }
+}
+
+function randomChoice(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
 let currentUser = null;
 let obtainedCards = [];
 
@@ -305,13 +352,13 @@ document.getElementById("openPackBtn").addEventListener("click", async () => {
   }
 
   tokens -= 5;
-
   obtainedCards = [];
-  for (let i = 0; i < 5; i++) {
-    const rand = Math.floor(Math.random() * 92) + 1;
-    obtainedCards.push(rand);
-    data[`Picture${rand}`] = true;
+
+  // 6 cartes normales + 1 carte spéciale
+  for (let i = 0; i < 6; i++) {
+    obtainedCards.push(tirerCarte());
   }
+  obtainedCards.push(tirer7emeCarte());
 
   await updateDoc(userRef, {
     jetons: tokens,
