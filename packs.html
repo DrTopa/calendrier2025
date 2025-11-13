@@ -70,12 +70,12 @@ button {
   flex-wrap: wrap;
   perspective: 1000px;
 }
-/* Halos selon la rareté */
-.card.uncommon {
+/* Halo visible uniquement après révélation */
+.card[data-rarity="uncommon"].flipped {
   box-shadow: 0 0 20px 4px rgba(0, 150, 255, 0.7);
 }
 
-.card.rare {
+.card[data-rarity="rare"].flipped {
   animation: goldenGlow 2s infinite alternate;
   box-shadow: 0 0 25px 6px rgba(255, 215, 0, 0.8);
 }
@@ -83,6 +83,27 @@ button {
 @keyframes goldenGlow {
   0% { box-shadow: 0 0 15px 4px rgba(255, 215, 0, 0.6); }
   100% { box-shadow: 0 0 35px 10px rgba(255, 215, 0, 1); }
+}
+
+/* Badge “Nouvelle !” */
+.new-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: linear-gradient(45deg, #ff6b6b, #ffb84d);
+  color: white;
+  font-weight: bold;
+  font-size: 0.9em;
+  padding: 5px 8px;
+  border-radius: 6px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  transform: rotate(-5deg);
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.card.flipped .new-badge {
+  opacity: 1;
 }
 
 .card {
@@ -254,45 +275,14 @@ const cardBack = "https://i.imgur.com/kgI2UCT.png";
 const commons = [10,13,14,16,17,19,2,20,23,25,26,3,30,32,40,41,42,44,45,47,5,50,51,53,55,56,57,58,59,6,60,61,62,65,66,67,68,7,70,71,73,74,75,76,77,79,8,80,81,82,84,86,88,9,90,91,92];
 const uncommons = [1,11,12,15,18,21,22,24,28,29,33,34,4,43,46,48,49,52,54,63,64,69,72,78,83,85,87,89];
 const rares = [27,31,35,36,37,38,39];
-let currentUser = null;
 
+// === Utilitaires ===
 function getRarity(num) {
   if (rares.includes(num)) return "rare";
   if (uncommons.includes(num)) return "uncommon";
   return "common";
 }
 
-// === Création de la carte avec halo ===
-function createCard(num) {
-  const rarity = getRarity(num);
-  const card = document.createElement("div");
-  card.classList.add("card", rarity);
-
-  const front = document.createElement("div");
-  front.classList.add("front");
-  const imgFront = document.createElement("img");
-  imgFront.src = pictureLinks[num];
-  imgFront.alt = `Carte ${num}`;
-  front.appendChild(imgFront);
-
-  const back = document.createElement("div");
-  back.classList.add("back");
-  const imgBack = document.createElement("img");
-  imgBack.src = cardBack;
-  imgBack.alt = "Dos carte";
-  back.appendChild(imgBack);
-
-  card.appendChild(front);
-  card.appendChild(back);
-
-  card.addEventListener("click", () => {
-    card.classList.toggle("flipped");
-  });
-
-  return card;
-}
-
-// === Sélection d'une carte selon les probabilités ===
 function drawCard(isSeventh = false) {
   if (isSeventh) {
     const r = Math.random();
@@ -305,6 +295,8 @@ function drawCard(isSeventh = false) {
   else if (r < 0.73 + 0.207) return uncommons[Math.floor(Math.random() * uncommons.length)];
   else return rares[Math.floor(Math.random() * rares.length)];
 }
+
+let currentUser = null;
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -322,6 +314,42 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
+// === Création d'une carte ===
+function createCard(num, rarity, isNew) {
+  const card = document.createElement("div");
+  card.classList.add("card");
+  card.dataset.rarity = rarity;
+
+  const front = document.createElement("div");
+  front.classList.add("front");
+  const imgFront = document.createElement("img");
+  imgFront.src = pictureLinks[num];
+  front.appendChild(imgFront);
+
+  if (isNew) {
+    const badge = document.createElement("div");
+    badge.classList.add("new-badge");
+    badge.innerText = "🆕 Nouvelle !";
+    front.appendChild(badge);
+  }
+
+  const back = document.createElement("div");
+  back.classList.add("back");
+  const imgBack = document.createElement("img");
+  imgBack.src = cardBack;
+  back.appendChild(imgBack);
+
+  card.appendChild(front);
+  card.appendChild(back);
+
+  card.addEventListener("click", () => {
+    card.classList.toggle("flipped");
+  });
+
+  return card;
+}
+
+// === Ouverture d’un pack ===
 document.getElementById("openPackBtn").addEventListener("click", async () => {
   if (!currentUser) {
     document.getElementById("message").innerText = "Vous devez être connecté.";
@@ -345,8 +373,15 @@ document.getElementById("openPackBtn").addEventListener("click", async () => {
   tokens -= 5;
 
   const obtainedCards = [];
+  const newFlags = {}; // pour savoir quelles cartes sont nouvelles
   for (let i = 0; i < 6; i++) obtainedCards.push(drawCard(false));
   obtainedCards.push(drawCard(true));
+
+  for (const num of obtainedCards) {
+    const key = `Picture${num}`;
+    newFlags[num] = !data[key]; // vrai si carte nouvelle
+    data[key] = true; // on la marque comme obtenue
+  }
 
   await updateDoc(userRef, {
     jetons: tokens,
@@ -358,12 +393,17 @@ document.getElementById("openPackBtn").addEventListener("click", async () => {
 
   const resultDiv = document.getElementById("cardsResult");
   resultDiv.innerHTML = "";
-  obtainedCards.forEach(num => resultDiv.appendChild(createCard(num)));
+  obtainedCards.forEach(num => {
+    const rarity = getRarity(num);
+    const cardDiv = createCard(num, rarity, newFlags[num]);
+    resultDiv.appendChild(cardDiv);
+  });
 
   document.getElementById("message").innerText =
     "Cliquez sur chaque carte pour la révéler.";
 });
 
+// === Bouton suivant ===
 document.getElementById("nextBtn").addEventListener("click", () => {
   const resultDiv = document.getElementById("cardsResult");
   resultDiv.style.justifyContent = "flex-start";
