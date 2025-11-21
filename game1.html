@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pari 1 - Pronostic</title>
+  <title>📊 Jour 1 – Élections Sainte-Lucie 2025</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -18,190 +18,277 @@
     }
 
     h1 {
-      font-size: 2.5em;
-      margin-bottom: 20px;
-      color: #d32f2f;
+      font-size: 2.3em;
+      margin-bottom: 10px;
+      color: #b71c1c;
       font-family: 'Comic Sans MS', cursive;
-      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+      text-align: center;
     }
 
     #userStatus {
       position: absolute;
       top: 10px;
       right: 10px;
-      font-size: 1.2em;
+      font-size: 1.1em;
       color: #a23636;
     }
 
     #instructions {
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.9);
       padding: 15px;
       border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
       margin-bottom: 20px;
       text-align: center;
-      max-width: 1000px;
-      font-size: 1.2em;
+      max-width: 900px;
+      font-size: 1.1em;
       color: #333;
     }
 
     #predictionArea {
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.95);
       border: 2px solid #b71c1c;
       border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-      margin-top: 20px;
+      padding: 20px 30px;
+      box-shadow: 0 8px 12px rgba(0,0,0,0.12);
       text-align: center;
+      width: 100%;
+      max-width: 720px;
     }
 
-    #prediction-input {
+    select, input {
       padding: 10px;
-      font-size: 1.2em;
-      margin-right: 10px;
+      font-size: 1.05em;
+      margin: 10px 0;
       border-radius: 6px;
       border: 1px solid #ccc;
+      width: 80%;
     }
 
     #submit-btn {
       padding: 10px 20px;
-      font-size: 1.2em;
+      font-size: 1.05em;
       cursor: pointer;
       background-color: #388e3c;
       color: white;
       border: none;
       border-radius: 5px;
+      margin-top: 12px;
     }
 
-    #submit-btn:hover {
-      background-color: #2e7d32;
-    }
+    #submit-btn:hover { background-color: #2e7d32; }
+
+    #your-answer { margin-top: 15px; font-weight: bold; font-size: 1.05em; color: #2e7d32; }
 
     #answersList {
-      display: none; /* Hidden until user submits */
-      margin-top: 20px;
+      display: none;
+      margin-top: 25px;
       padding: 15px;
       border-radius: 10px;
-      background: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-      max-height: 300px;
-      overflow-y: auto;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.12);
+      max-width: 720px;
+      width: 90%;
     }
+
+    #answersList ul { padding-left: 0; margin: 0; }
+    #answersList li {
+      background: rgba(250,250,250,0.9);
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 6px;
+      border-left: 5px solid #b71c1c;
+      list-style: none;
+      font-size: 0.98em;
+    }
+
+    .small { font-size:0.9em; color:#666 }
+    .center { text-align:center }
   </style>
 </head>
 <body>
-  <h1>🎄 Pari 1 🎄</h1>
-
+  <h1>📊 Jour 1 – Élections Sainte-Lucie 2025</h1>
   <div id="instructions">
-    <p>Entrez votre pronostic : <b>Paris</b>, <b>Marseille</b> ou <b>Nul</b>.</p>
+    <p>Faites vos prédictions pour les élections législatives !</p>
+    <ul style="text-align:left; display:inline-block;">
+      <li>Quelle partie aura la majorité ?</li>
+      <li>Combien de sièges pour la majorité ?</li>
+      <li>Participation (%)</li>
+      <li>Stephenson King réélu ?</li>
+      <li>Philip Pierre réélu ?</li>
+    </ul>
   </div>
 
   <div id="userStatus"></div>
 
   <div id="predictionArea">
-    <input id="prediction-input" type="text" placeholder="Votre choix...">
-    <button id="submit-btn">Soumettre</button>
-    <div id="your-answer"></div>
+    <label><b>Quelle partie aura la majorité ?</b></label><br>
+    <select id="majorityParty">
+      <option value="">-- Choisissez --</option>
+      <option value="parti_travailliste">Parti Travailliste</option>
+      <option value="parti_uni">Parti Uni des Travailleurs</option>
+    </select><br>
+
+    <label><b>Combien de sièges pour la majorité ?</b></label><br>
+    <input id="majoritySeats" type="number" min="0" max="15" placeholder="0-15"><br>
+
+    <label><b>Participation (%) :</b></label><br>
+    <input id="participation" type="number" min="0" max="100" placeholder="ex : 75"><br>
+
+    <label><b>Stephenson King réélu ?</b></label><br>
+    <select id="stephenson">
+      <option value="">-- Choisissez --</option>
+      <option value="oui">Oui</option>
+      <option value="non">Non</option>
+    </select><br>
+
+    <label><b>Philip Pierre réélu ?</b></label><br>
+    <select id="philip">
+      <option value="">-- Choisissez --</option>
+      <option value="oui">Oui</option>
+      <option value="non">Non</option>
+    </select><br>
+
+    <button id="submit-btn">Soumettre mes prédictions</button>
+    <div id="your-answer" class="center"></div>
   </div>
 
   <div id="answersList">
-    <h3>Réponses des autres :</h3>
+    <h3>📊 Prédictions des autres joueurs :</h3>
     <ul id="answers"></ul>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
-      authDomain: "calendrier2025-3185f.firebaseapp.com",
-      projectId: "calendrier2025-3185f",
-      storageBucket: "calendrier2025-3185f.firebasestorage.app",
-      messagingSenderId: "846792576145",
-      appId: "1:846792576145:web:59028ccef4ffd5c8010330",
-      measurementId: "G-L62L4JSYMF"
-    };
+const firebaseConfig = {
+  apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+  authDomain: "calendrier2025-3185f.firebaseapp.com",
+  projectId: "calendrier2025-3185f",
+  storageBucket: "calendrier2025-3185f.firebasestorage.app",
+  messagingSenderId: "846792576145",
+  appId: "1:846792576145:web:59028ccef4ffd5c8010330",
+  measurementId: "G-L62L4JSYMF"
+};
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-    const predictionInput = document.getElementById("prediction-input");
-    const submitBtn = document.getElementById("submit-btn");
-    const answersListDiv = document.getElementById("answersList");
-    const answersList = document.getElementById("answers");
-    const yourAnswerDiv = document.getElementById("your-answer");
+const fields = {
+  majorityParty: document.getElementById('majorityParty'),
+  majoritySeats: document.getElementById('majoritySeats'),
+  participation: document.getElementById('participation'),
+  stephenson: document.getElementById('stephenson'),
+  philip: document.getElementById('philip')
+};
 
-    let userId = "";
+const submitBtn = document.getElementById('submit-btn');
+const yourAnswerDiv = document.getElementById('your-answer');
+const answersListDiv = document.getElementById('answersList');
+const answersUl = document.getElementById('answers');
+let currentUser = null;
 
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        userId = user.uid;
-        document.getElementById("userStatus").innerText = `Bienvenue : ${user.email}`;
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = 'login.html';
+    return;
+  }
+  currentUser = user;
+  document.getElementById('userStatus').innerText = `Connecté : ${user.email}`;
 
-        // Check if already answered
-        const predRef = doc(db, "Prediction1", userId);
-        const predSnap = await getDoc(predRef);
+  const jour1Ref = doc(db, 'Predictions', 'Jour 1');
+  const jour1Snap = await getDoc(jour1Ref);
+  if (jour1Snap.exists() && jour1Snap.data()[user.uid]) {
+    showExistingPrediction(jour1Snap.data()[user.uid]);
+  } else {
+    loadOtherAnswers();
+  }
+});
 
-        if (predSnap.exists()) {
-          const data = predSnap.data();
-          predictionInput.style.display = "none";
-          submitBtn.style.display = "none";
-          yourAnswerDiv.innerText = `Votre pronostic : ${data.prediction}`;
+function showExistingPrediction(data) {
+  for (const k in fields) fields[k].style.display = 'none';
+  submitBtn.style.display = 'none';
 
-          // Show others only after answered
-          answersListDiv.style.display = "block";
-          loadOtherAnswers();
-        }
-      } else {
-        window.location.href = "login.html";
-      }
-    });
+  yourAnswerDiv.innerHTML = `\n    ✅ Vos prédictions :\n    <ul style="list-style:none; padding-left:0; margin:0">\n      <li><b>Majorité :</b> ${escapeHtml(data.majorityParty)}</li>\n      <li><b>Sièges :</b> ${escapeHtml(data.majoritySeats)}</li>\n      <li><b>Participation :</b> ${escapeHtml(data.participation)}%</li>\n      <li><b>Stephenson King :</b> ${escapeHtml(data.stephenson)}</li>\n      <li><b>Philip Pierre :</b> ${escapeHtml(data.philip)}</li>\n    </ul>\n  `;
 
-    submitBtn.addEventListener("click", async () => {
-      const prediction = predictionInput.value.trim().toLowerCase();
-      if (!["paris", "marseille", "nul"].includes(prediction)) {
-        alert("Veuillez entrer Paris, Marseille ou Nul");
-        return;
-      }
+  answersListDiv.style.display = 'block';
+  loadOtherAnswers();
+}
 
-      const predRef = doc(db, "Prediction1", userId);
-      const predSnap = await getDoc(predRef);
+submitBtn.addEventListener('click', async () => {
+  if (!currentUser) { alert('Utilisateur non identifié.'); return; }
 
-      if (!predSnap.exists()) {
-        await setDoc(predRef, {
-          userId: userId,
-          UserEmail: auth.currentUser.email,
-          prediction: prediction,
-          timestamp: new Date()
-        });
+  const payload = {
+    userId: currentUser.uid,
+    userEmail: currentUser.email,
+    majorityParty: fields.majorityParty.value,
+    majoritySeats: parseInt(fields.majoritySeats.value),
+    participation: parseInt(fields.participation.value),
+    stephenson: fields.stephenson.value,
+    philip: fields.philip.value,
+    timestamp: new Date().toISOString()
+  };
 
-        predictionInput.style.display = "none";
-        submitBtn.style.display = "none";
-        yourAnswerDiv.innerText = `Votre pronostic : ${prediction}`;
+  if (!payload.majorityParty || isNaN(payload.majoritySeats) || isNaN(payload.participation) || !payload.stephenson || !payload.philip) {
+    alert('Merci de remplir tous les champs correctement.');
+    return;
+  }
 
-        // Now show other answers
-        answersListDiv.style.display = "block";
-        loadOtherAnswers();
-      } else {
-        alert("Vous avez déjà soumis un pronostic.");
-      }
-    });
+  const jour1Ref = doc(db, 'Predictions', 'Jour 1');
+  const jour1Snap = await getDoc(jour1Ref);
 
-    async function loadOtherAnswers() {
-      answersList.innerHTML = "";
-      const predsSnap = await getDocs(collection(db, "Prediction1"));
-      predsSnap.forEach((docSnap) => {
-        const data = docSnap.data();
-        if (docSnap.id !== userId) {
-          const li = document.createElement("li");
-          li.innerText = `${data.UserEmail || "Anonyme"} : ${data.prediction}`;
-          answersList.appendChild(li);
-        }
-      });
+  if (jour1Snap.exists()) {
+    if (jour1Snap.data()[currentUser.uid]) {
+      alert('Vous avez déjà soumis vos prédictions pour Jour 1.');
+      showExistingPrediction(jour1Snap.data()[currentUser.uid]);
+      return;
     }
-  </script>
+    await updateDoc(jour1Ref, { [currentUser.uid]: payload });
+  } else {
+    await setDoc(jour1Ref, { [currentUser.uid]: payload });
+  }
+
+  showExistingPrediction(payload);
+  yourAnswerDiv.insertAdjacentHTML('beforeend', '<div class="small">Vos réponses ont été enregistrées.</div>');
+});
+
+async function loadOtherAnswers() {
+  answersUl.innerHTML = '';
+  try {
+    const jour1Ref = doc(db, 'Predictions', 'Jour 1');
+    const jour1Snap = await getDoc(jour1Ref);
+    if (!jour1Snap.exists()) return;
+    const all = jour1Snap.data();
+    const entries = Object.entries(all).filter(([uid]) => uid !== (currentUser && currentUser.uid));
+
+    if (entries.length === 0) {
+      answersUl.innerHTML = '<li class="small">Aucune autre réponse pour l’instant.</li>';
+      answersListDiv.style.display = 'block';
+      return;
+    }
+
+    entries.sort((a,b) => Date.parse(b[1].timestamp || 0) - Date.parse(a[1].timestamp || 0));
+    for (const [uid, data] of entries) {
+      const li = document.createElement('li');
+      li.innerHTML = `<b>${escapeHtml(data.userEmail || 'Anonyme')}</b> — ${escapeHtml(data.majorityParty)} | Sièges:${escapeHtml(data.majoritySeats)} | Participation:${escapeHtml(data.participation)}% | Stephenson:${escapeHtml(data.stephenson)} | Philip:${escapeHtml(data.philip)} <div class="small">${escapeHtml(new Date(data.timestamp || '').toLocaleString() || '')}</div>`;
+      answersUl.appendChild(li);
+    }
+    answersListDiv.style.display = 'block';
+  } catch (err) {
+    console.error('Erreur lecture autres réponses :', err);
+    answersUl.innerHTML = '<li class="small">Impossible de charger les autres réponses.</li>';
+    answersListDiv.style.display = 'block';
+  }
+}
+
+function escapeHtml(str) {
+  if (str === undefined || str === null) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+</script>
 </body>
 </html>
