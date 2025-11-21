@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎯 Pari 1 – France vs Suède 🎯</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎄 Jour 0 – Prédictions spéciales 🎄</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -23,6 +23,7 @@
       color: #b71c1c;
       font-family: 'Comic Sans MS', cursive;
       text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+      text-align: center;
     }
 
     #userStatus {
@@ -46,20 +47,20 @@
     }
 
     #predictionArea {
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.95);
       border: 2px solid #b71c1c;
       border-radius: 12px;
       padding: 20px 30px;
-      box-shadow: 0 8px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 8px 12px rgba(0,0,0,0.12);
       text-align: center;
       width: 100%;
-      max-width: 500px;
+      max-width: 720px;
     }
 
-    select, input {
+    select {
       padding: 10px;
-      font-size: 1.1em;
-      margin: 8px 0;
+      font-size: 1.05em;
+      margin: 10px 0;
       border-radius: 6px;
       border: 1px solid #ccc;
       width: 80%;
@@ -67,92 +68,124 @@
 
     #submit-btn {
       padding: 10px 20px;
-      font-size: 1.1em;
+      font-size: 1.05em;
       cursor: pointer;
       background-color: #388e3c;
       color: white;
       border: none;
       border-radius: 5px;
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
-    #submit-btn:hover {
-      background-color: #2e7d32;
-    }
+    #submit-btn:hover { background-color: #2e7d32; }
+
+    #your-answer { margin-top: 15px; font-weight: bold; font-size: 1.05em; color: #2e7d32; }
 
     #answersList {
       display: none;
       margin-top: 25px;
       padding: 15px;
       border-radius: 10px;
-      background: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-      max-width: 600px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.12);
+      max-width: 720px;
       width: 90%;
     }
 
-    #answersList ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
+    #answersList ul { padding-left: 0; margin: 0; }
     #answersList li {
-      background: rgba(255,255,255,0.6);
-      margin: 6px 0;
-      padding: 6px 10px;
+      background: rgba(250,250,250,0.9);
+      margin: 8px 0;
+      padding: 10px;
       border-radius: 6px;
       border-left: 5px solid #b71c1c;
+      list-style: none;
+      font-size: 0.98em;
     }
 
-    #your-answer {
-      margin-top: 15px;
-      font-weight: bold;
-      font-size: 1.1em;
-      color: #2e7d32;
-    }
+    .small { font-size:0.9em; color:#666 }
+    .center { text-align:center }
   </style>
 </head>
-
 <body>
-  <h1>⚽ Pronostic – France 🇫🇷 vs 🇸🇪 Suède</h1>
+  <h1>🎁 Jour 0 – Prédictions Spéciales 🎁</h1>
 
   <div id="instructions">
-    <p>Faites vos paris avant le coup d’envoi !</p>
+    <p>Répondez aux quelques questions ci-dessous — vous ne pouvez soumettre qu'une seule fois pour le Jour 0.</p>
     <ul style="text-align:left; display:inline-block;">
-      <li>Résultat du match (France, Nul ou Suède)</li>
-      <li>Score final (ex: 2-1, 1-1...)</li>
-      <li>Nombre de cartons jaunes</li>
-      <li>Nombre de cartons rouges</li>
+      <li>Neige à Paris ?</li>
+      <li>Neige au Luxembourg ?</li>
+      <li>Squeezie sortira-t-il un nouveau concept de jeu ?</li>
+      <li>Nouvelle vidéo de Choss sur Noël ?</li>
+      <li>Choisis ton entreprise poulain (10 entreprises du CAC40 proposées)</li>
+      <li>Qui sera le premier à atteindre le niveau 6 ?</li>
     </ul>
   </div>
 
   <div id="userStatus"></div>
 
   <div id="predictionArea">
-    <label><b>Résultat du match :</b></label><br>
-    <select id="result-select">
+
+    <label><b>Neigera-t-il à Paris ?</b></label><br>
+    <select id="neige-paris">
       <option value="">-- Choisissez --</option>
-      <option value="france">Victoire France</option>
-      <option value="nul">Nul</option>
-      <option value="suede">Victoire Suède</option>
+      <option value="oui">Oui</option>
+      <option value="non">Non</option>
     </select><br>
 
-    <label><b>Score final :</b></label><br>
-    <input id="score-input" type="text" placeholder="ex : 2-1"><br>
+    <label><b>Neigera-t-il au Luxembourg ?</b></label><br>
+    <select id="neige-lux">
+      <option value="">-- Choisissez --</option>
+      <option value="oui">Oui</option>
+      <option value="non">Non</option>
+    </select><br>
 
-    <label><b>Cartons jaunes :</b></label><br>
-    <input id="yellow-input" type="number" min="0" placeholder="ex : 3"><br>
+    <label><b>Squeezie sortira-t-il un nouveau concept de jeu ?</b></label><br>
+    <select id="squeezie">
+      <option value="">-- Choisissez --</option>
+      <option value="oui">Oui</option>
+      <option value="non">Non</option>
+    </select><br>
 
-    <label><b>Cartons rouges :</b></label><br>
-    <input id="red-input" type="number" min="0" placeholder="ex : 1"><br>
+    <label><b>Nouvelle vidéo de Choss sur Noël ?</b></label><br>
+    <select id="choss">
+      <option value="">-- Choisissez --</option>
+      <option value="oui">Oui</option>
+      <option value="non">Non</option>
+    </select><br>
 
-    <button id="submit-btn">Soumettre mes paris</button>
+    <label><b>Choisis ton entreprise poulain :</b></label><br>
+    <select id="entreprise">
+      <option value="">-- Choisissez --</option>
+      <option value="LVMH">LVMH</option>
+      <option value="TotalEnergies">TotalEnergies</option>
+      <option value="L'Oréal">L'Oréal</option>
+      <option value="Air Liquide">Air Liquide</option>
+      <option value="Sanofi">Sanofi</option>
+      <option value="Dassault Systèmes">Dassault Systèmes</option>
+      <option value="BNP Paribas">BNP Paribas</option>
+      <option value="AXA">AXA</option>
+      <option value="Kering">Kering</option>
+      <option value="Schneider Electric">Schneider Electric</option>
+    </select><br>
 
-    <div id="your-answer"></div>
+    <label><b>Qui sera le premier à avoir le niveau 6 ?</b></label><br>
+    <select id="niveau6">
+      <option value="">-- Choisissez --</option>
+      <option value="Adrien">Adrien</option>
+      <option value="Nono">Nono</option>
+      <option value="Thaddee">Thaddée</option>
+      <option value="Loris">Loris</option>
+      <option value="Romain">Romain</option>
+    </select><br>
+
+    <button id="submit-btn">Soumettre mes prédictions</button>
+
+    <div id="your-answer" class="center"></div>
   </div>
 
   <div id="answersList">
-    <h3>📊 Pronostics des autres joueurs :</h3>
+    <h3>📊 Prédictions des autres joueurs :</h3>
     <ul id="answers"></ul>
   </div>
 
@@ -161,6 +194,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebas
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
+// ---- CONFIG FIREBASE (identique à l'app principale) ----
 const firebaseConfig = {
   apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
   authDomain: "calendrier2025-3185f.firebaseapp.com",
@@ -175,116 +209,154 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const resultSelect = document.getElementById("result-select");
-const scoreInput = document.getElementById("score-input");
-const yellowInput = document.getElementById("yellow-input");
-const redInput = document.getElementById("red-input");
-const submitBtn = document.getElementById("submit-btn");
-const yourAnswerDiv = document.getElementById("your-answer");
-const answersListDiv = document.getElementById("answersList");
-const answersList = document.getElementById("answers");
-
+// ---- ELEMENTS ----
+const fields = {
+  paris: document.getElementById('neige-paris'),
+  lux: document.getElementById('neige-lux'),
+  squeezie: document.getElementById('squeezie'),
+  choss: document.getElementById('choss'),
+  entreprise: document.getElementById('entreprise'),
+  niveau6: document.getElementById('niveau6')
+};
+const submitBtn = document.getElementById('submit-btn');
+const yourAnswerDiv = document.getElementById('your-answer');
+const answersListDiv = document.getElementById('answersList');
+const answersUl = document.getElementById('answers');
 let currentUser = null;
 
+// ---- AUTH ----
 onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    currentUser = user;
-    document.getElementById("userStatus").innerText = `Connecté : ${user.email}`;
+  if (!user) {
+    window.location.href = 'login.html';
+    return;
+  }
+  currentUser = user;
+  document.getElementById('userStatus').innerText = `Connecté : ${user.email}`;
 
-    // Vérifier si l'utilisateur a déjà des paris dans Jour 2
-    const jour2Ref = doc(db, "Predictions", "Jour 2");
-    const jour2Snap = await getDoc(jour2Ref);
-
-    if (jour2Snap.exists() && jour2Snap.data()[user.uid]) {
-      showExistingPrediction(jour2Snap.data()[user.uid]);
+  // vérifier si l'utilisateur a déjà soumis pour Jour 0
+  try {
+    const jour0Ref = doc(db, 'Predictions', 'Jour 0');
+    const jour0Snap = await getDoc(jour0Ref);
+    if (jour0Snap.exists() && jour0Snap.data()[user.uid]) {
+      showExistingPrediction(jour0Snap.data()[user.uid]);
+    } else {
+      // charger les réponses des autres même si l'utilisateur n'a pas encore répondu
+      loadOtherAnswers();
     }
-  } else {
-    window.location.href = "login.html";
+  } catch (err) {
+    console.error('Erreur lecture Firestore:', err);
   }
 });
 
+// ---- AFFICHER PRÉDICTIONS EXISTANTES ----
 function showExistingPrediction(data) {
-  resultSelect.style.display = "none";
-  scoreInput.style.display = "none";
-  yellowInput.style.display = "none";
-  redInput.style.display = "none";
-  submitBtn.style.display = "none";
+  // masquer les champs
+  for (const k in fields) fields[k].style.display = 'none';
+  submitBtn.style.display = 'none';
 
-  yourAnswerDiv.innerHTML = `
-    ✅ Vos paris :
-    <ul style="list-style:none; padding-left:0;">
-      <li><b>Résultat :</b> ${data.result}</li>
-      <li><b>Score :</b> ${data.score}</li>
-      <li><b>Cartons jaunes :</b> ${data.yellow}</li>
-      <li><b>Cartons rouges :</b> ${data.red}</li>
-    </ul>
-  `;
+  yourAnswerDiv.innerHTML = `\n    ✅ Vos prédictions :\n    <ul style="list-style:none; padding-left:0; margin:0">\n      <li><b>Neige Paris :</b> ${escapeHtml(data.paris)}</li>\n      <li><b>Neige Luxembourg :</b> ${escapeHtml(data.lux)}</li>\n      <li><b>Squeezie :</b> ${escapeHtml(data.squeezie)}</li>\n      <li><b>Choss Noël :</b> ${escapeHtml(data.choss)}</li>\n      <li><b>Entreprise :</b> ${escapeHtml(data.entreprise)}</li>\n      <li><b>Niveau 6 :</b> ${escapeHtml(data.niveau6)}</li>\n    </ul>\n  `;
 
-  answersListDiv.style.display = "block";
+  answersListDiv.style.display = 'block';
   loadOtherAnswers();
 }
 
-submitBtn.addEventListener("click", async () => {
-  const result = resultSelect.value;
-  const score = scoreInput.value.trim();
-  const yellow = yellowInput.value.trim();
-  const red = redInput.value.trim();
+// ---- SOUMISSION ----
+submitBtn.addEventListener('click', async () => {
+  if (!currentUser) { alert('Utilisateur non identifié.'); return; }
 
-  if (!result || !score || yellow === "" || red === "") {
-    alert("Merci de remplir tous les champs !");
+  const payload = {
+    userId: currentUser.uid,
+    userEmail: currentUser.email,
+    paris: fields.paris.value,
+    lux: fields.lux.value,
+    squeezie: fields.squeezie.value,
+    choss: fields.choss.value,
+    entreprise: fields.entreprise.value,
+    niveau6: fields.niveau6.value,
+    timestamp: new Date().toISOString()
+  };
+
+  // validation simple
+  if (!payload.paris || !payload.lux || !payload.squeezie || !payload.choss || !payload.entreprise || !payload.niveau6) {
+    alert('Merci de répondre à toutes les questions avant de soumettre.');
     return;
   }
 
-  const jour2Ref = doc(db, "Predictions", "Jour 2");
-  const jour2Snap = await getDoc(jour2Ref);
-  const newPrediction = {
-    userId: currentUser.uid,
-    UserEmail: currentUser.email,
-    result: result,
-    score: score,
-    yellow: parseInt(yellow),
-    red: parseInt(red),
-    timestamp: new Date()
-  };
+  try {
+    const jour0Ref = doc(db, 'Predictions', 'Jour 0');
+    const jour0Snap = await getDoc(jour0Ref);
 
-  if (jour2Snap.exists()) {
-    const data = jour2Snap.data();
-    if (data[currentUser.uid]) {
-      alert("Vous avez déjà soumis vos paris pour Jour 2.");
-      return;
+    if (jour0Snap.exists()) {
+      const data = jour0Snap.data();
+      if (data[currentUser.uid]) {
+        alert('Vous avez déjà soumis vos prédictions pour Jour 0.');
+        showExistingPrediction(data[currentUser.uid]);
+        return;
+      }
+      // ajouter sous l'UID
+      await updateDoc(jour0Ref, { [currentUser.uid]: payload });
+    } else {
+      // créer le document
+      await setDoc(jour0Ref, { [currentUser.uid]: payload });
     }
-    // Ajouter la prédiction sous l'UID
-    await updateDoc(jour2Ref, { [currentUser.uid]: newPrediction });
-  } else {
-    // Créer le document Jour 2 et ajouter la prédiction
-    await setDoc(jour2Ref, { [currentUser.uid]: newPrediction });
-  }
 
-  showExistingPrediction(newPrediction);
+    // afficher
+    showExistingPrediction(payload);
+    // succès
+    yourAnswerDiv.insertAdjacentHTML('beforeend', '<div class="small">Vos réponses ont été enregistrées.</div>');
+  } catch (err) {
+    console.error('Erreur lors de la soumission :', err);
+    alert('Erreur lors de la soumission, réessayez plus tard.');
+  }
 });
 
-// Charger les paris des autres
+// ---- CHARGER LES AUTRES RÉPONSES ----
 async function loadOtherAnswers() {
-  answersList.innerHTML = "";
-  const jour2Ref = doc(db, "Predictions", "Jour 2");
-  const jour2Snap = await getDoc(jour2Ref);
+  answersUl.innerHTML = '';
+  try {
+    const jour0Ref = doc(db, 'Predictions', 'Jour 0');
+    const jour0Snap = await getDoc(jour0Ref);
+    if (!jour0Snap.exists()) return;
+    const all = jour0Snap.data();
+    const entries = Object.entries(all).filter(([uid]) => uid !== (currentUser && currentUser.uid));
 
-  if (!jour2Snap.exists()) return;
+    if (entries.length === 0) {
+      answersUl.innerHTML = '<li class="small">Aucune autre réponse pour l’instant.</li>';
+      answersListDiv.style.display = 'block';
+      return;
+    }
 
-  const allData = jour2Snap.data();
-  for (const uid in allData) {
-    if (uid === currentUser.uid) continue;
-    const data = allData[uid];
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <b>${data.UserEmail || "Anonyme"}</b> → 
-      ${data.result.toUpperCase()} | ${data.score} | 
-      🟨 ${data.yellow} | 🟥 ${data.red}
-    `;
-    answersList.appendChild(li);
+    // afficher les autres (triés par timestamp décroissant si possible)
+    entries.sort((a,b) => {
+      const ta = a[1].timestamp ? Date.parse(a[1].timestamp) : 0;
+      const tb = b[1].timestamp ? Date.parse(b[1].timestamp) : 0;
+      return tb - ta;
+    });
+
+    for (const [uid, data] of entries) {
+      const li = document.createElement('li');
+      li.innerHTML = `<b>${escapeHtml(data.userEmail || 'Anonyme')}</b> — ${escapeHtml(data.paris)} | ${escapeHtml(data.lux)} | Squeezie:${escapeHtml(data.squeezie)} | Choss:${escapeHtml(data.choss)} | ${escapeHtml(data.entreprise)} | Niveau6:${escapeHtml(data.niveau6)} <div class="small">${escapeHtml(new Date(data.timestamp || '').toLocaleString() || '')}</div>`;
+      answersUl.appendChild(li);
+    }
+    answersListDiv.style.display = 'block';
+  } catch (err) {
+    console.error('Erreur lecture autres réponses :', err);
+    answersUl.innerHTML = '<li class="small">Impossible de charger les autres réponses.</li>';
+    answersListDiv.style.display = 'block';
   }
 }
-</script>
 
+// ---- PETITE FONCTION D'ÉCHAPPEMENT POUR SÉCURITÉ D'AFFICHAGE ----
+function escapeHtml(str) {
+  if (str === undefined || str === null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+</script>
 </body>
 </html>
