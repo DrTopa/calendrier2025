@@ -128,28 +128,28 @@
 
   <div id="userStatus"></div>
 
-  <div id="predictionArea">
-    <label><b>Résultat du match :</b></label><br>
-    <select id="result-select">
-      <option value="">-- Choisissez --</option>
-      <option value="france">Victoire France</option>
-      <option value="nul">Nul</option>
-      <option value="suede">Victoire Suède</option>
-    </select><br>
+ <div id="predictionArea">
+  <label><b>Résultat du match :</b></label> <span class="small">(5 pts)</span><br>
+  <select id="result-select">
+    <option value="">-- Choisissez --</option>
+    <option value="france">Victoire France</option>
+    <option value="nul">Nul</option>
+    <option value="suede">Victoire Suède</option>
+  </select><br>
 
-    <label><b>Score final :</b></label><br>
-    <input id="score-input" type="text" placeholder="ex : 2-1"><br>
+  <label><b>Score final :</b></label> <span class="small">(20 pts)</span><br>
+  <input id="score-input" type="text" placeholder="ex : 2-1"><br>
 
-    <label><b>Cartons jaunes :</b></label><br>
-    <input id="yellow-input" type="number" min="0" placeholder="ex : 3"><br>
+  <label><b>Cartons jaunes :</b></label> <span class="small">(20 pts, -5 pts par erreur)</span><br>
+  <input id="yellow-input" type="number" min="0" placeholder="ex : 3"><br>
 
-    <label><b>Cartons rouges :</b></label><br>
-    <input id="red-input" type="number" min="0" placeholder="ex : 1"><br>
+  <label><b>Cartons rouges :</b></label> <span class="small">(10 pts)</span><br>
+  <input id="red-input" type="number" min="0" placeholder="ex : 1"><br>
 
-    <button id="submit-btn">Soumettre mes paris</button>
+  <button id="submit-btn">Soumettre mes paris</button>
 
-    <div id="your-answer"></div>
-  </div>
+  <div id="your-answer"></div>
+</div>
 
   <div id="answersList">
     <h3>📊 Pronostics des autres joueurs :</h3>
