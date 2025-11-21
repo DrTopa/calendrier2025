@@ -6,111 +6,147 @@
 <title>Collection</title>
 <style>
 body {
-font-family: 'Segoe UI', Tahoma, sans-serif;
-background-color: #ffebcd;
-background-image: url('https://www.transparenttextures.com/patterns/snow.png');
-margin: 0;
-padding: 20px;
-color: #333;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background-color: #ffebcd;
+  background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+  margin: 0;
+  padding: 20px;
+  color: #333;
 }
-
 
 h1, h2 {
-text-align: center;
-color: #d32f2f;
-font-family: 'Comic Sans MS', cursive;
-text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  color: #d32f2f;
+  font-family: 'Comic Sans MS', cursive;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
-
-
 h1 { font-size: 2.5em; margin-bottom: 30px; }
 h2 { font-size: 2em; margin-top: 50px; margin-bottom: 20px; }
 
-
 .user-collection, .complete-collection {
-margin-bottom: 50px;
-padding: 20px;
-background: rgba(255,255,255,0.9);
-border-radius: 15px;
-box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  margin-bottom: 50px;
+  padding: 20px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
-
 
 .user-header { font-size: 1.5em; margin-bottom: 15px; color: #2e7d32; }
 
-
 .cards-grid {
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-gap: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 15px;
 }
-
 
 .card-slot {
-width: 160px;
-height: 160px;
-display: flex;
-justify-content: center;
-align-items: center;
-border: 2px dashed #ccc;
-border-radius: 10px;
-background: #fafafa;
-font-size: 1.2em;
-font-weight: bold;
-color: #777;
-cursor: pointer;
-transition: transform 0.3s;
+  width: 160px;
+  height: 160px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  background: #fafafa;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #777;
+  cursor: pointer;
+  transition: transform 0.3s;
 }
-
-
 .card-slot:hover { transform: scale(1.05); }
 
-
 .card-slot img {
-max-width: 100%;
-max-height: 100%;
-border-radius: 10px;
-box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
 }
-
 
 #leaderboard {
-margin-top: 40px;
-padding: 20px;
-background: rgba(255,255,255,0.95);
-border-radius: 15px;
-box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-max-width: 800px;
-margin-left: auto;
-margin-right: auto;
+  margin-top: 40px;
+  padding: 20px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-
 #leaderboard h2 { color: #b71c1c; margin-bottom: 20px; }
-
 
 table { width: 100%; border-collapse: collapse; text-align: center; }
 th, td { border: 1px solid #ccc; padding: 12px; font-size: 1.2em; }
 th { background-color: #d32f2f; color: white; }
 tr:nth-child(even) { background-color: #f9f9f9; }
 
-
 /* Zoom modal */
 #zoomModal {
-display: none;
-position: fixed;
-z-index: 1000;
-left: 0;
-top: 0;
-width: 100%;
-height: 100%;
-background: rgba(0,0,0,0.8);
-justify-content: center;
-align-items: center;
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
 }
+#zoomModal img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+</style>
+</head>
+<body>
+<h1>🎄 Collections des joueurs 🎄</h1>
+<div id="collections"></div>
 
-    // dictionnaire Picture -> URL
-    const pictureLinks = {
+<div id="leaderboard">
+  <h2>🏆 Classement des joueurs 🏆</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Joueur</th>
+        <th>Nombre de cartes obtenues</th>
+      </tr>
+    </thead>
+    <tbody id="leaderboard-body"></tbody>
+  </table>
+</div>
+
+<h2>📦 Collection complète</h2>
+<div id="complete-collection" class="complete-collection"></div>
+
+<!-- Zoom modal -->
+<div id="zoomModal" onclick="this.style.display='none'">
+  <img id="zoomImg" src="" alt="Zoom Carte">
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+  authDomain: "calendrier2025-3185f.firebaseapp.com",
+  projectId: "calendrier2025-3185f",
+  storageBucket: "calendrier2025-3185f.firebasestorage.app",
+  messagingSenderId: "846792576145",
+  appId: "1:846792576145:web:59028ccef4ffd5c8010330",
+  measurementId: "G-L62L4JSYMF"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// dictionnaire Picture -> URL
+const pictureLinks = {
   1: "https://i.imgur.com/ewqwwd3.png",
   2: "https://i.imgur.com/MiUjcra.png",
   3: "https://i.imgur.com/gtAzNLQ.png",
@@ -202,87 +238,77 @@ align-items: center;
   89: "https://i.imgur.com/HcQgtUu.png",
   90: "https://i.imgur.com/Yz1yYqt.png",
   91: "https://i.imgur.com/bh3wUgz.png",
-  92: "https://i.imgur.com/EMo7O1h.png",
+  92: "https://i.imgur.com/EMo7O1h.png"
 };
 
 async function loadCollections() {
-const usersRef = collection(db, "users");
-const snapshot = await getDocs(usersRef);
-const container = document.getElementById("collections");
-const leaderboardBody = document.getElementById("leaderboard-body");
-const leaderboard = [];
+  const usersRef = collection(db, "users");
+  const snapshot = await getDocs(usersRef);
+  const container = document.getElementById("collections");
+  const leaderboardBody = document.getElementById("leaderboard-body");
+  const leaderboard = [];
 
+  snapshot.forEach(docSnap => {
+    const data = docSnap.data();
+    const div = document.createElement("div");
+    div.classList.add("user-collection");
 
-snapshot.forEach(docSnap => {
-const data = docSnap.data();
-const div = document.createElement("div");
-div.classList.add("user-collection");
+    let count = 0;
+    div.innerHTML = `<div class="user-header">${data.email} — Jetons : ${data.jetons ?? 0}</div>`;
 
+    const grid = document.createElement("div");
+    grid.classList.add("cards-grid");
 
-let count = 0;
-div.innerHTML = `<div class="user-header">${data.email} — Jetons : ${data.jetons ?? 0}</div>`;
+    for (let i = 1; i <= 92; i++) {
+      const slot = document.createElement("div");
+      slot.classList.add("card-slot");
+      if (data[`Picture${i}`]) {
+        const img = document.createElement("img");
+        img.src = pictureLinks[i];
+        img.alt = `Picture ${i}`;
+        slot.appendChild(img);
+        count++;
+      } else { slot.textContent = i; }
+      slot.addEventListener('click', () => zoomCard(i));
+      grid.appendChild(slot);
+    }
 
+    div.appendChild(grid);
+    container.appendChild(div);
 
-const grid = document.createElement("div");
-grid.classList.add("cards-grid");
+    leaderboard.push({ email: data.email, count });
+  });
 
+  leaderboard.sort((a,b)=>b.count-a.count);
+  leaderboard.forEach(player => {
+    const row = document.createElement("tr");
+    row.innerHTML = `<td>${player.email}</td><td>${player.count}</td>`;
+    leaderboardBody.appendChild(row);
+  });
 
-for (let i = 1; i <= 92; i++) {
-const slot = document.createElement("div");
-slot.classList.add("card-slot");
-if (data[`Picture${i}`]) {
-const img = document.createElement("img");
-img.src = pictureLinks[i];
-img.alt = `Picture ${i}`;
-slot.appendChild(img);
-count++;
-} else { slot.textContent = i; }
-slot.addEventListener('click', () => zoomCard(i));
-grid.appendChild(slot);
+  // Affichage collection complète
+  const completeContainer = document.getElementById("complete-collection");
+  const gridComplete = document.createElement("div");
+  gridComplete.classList.add("cards-grid");
+  for (let i = 1; i <= 92; i++) {
+    const slot = document.createElement("div");
+    slot.classList.add("card-slot");
+    const img = document.createElement("img");
+    img.src = pictureLinks[i];
+    img.alt = `Picture ${i}`;
+    slot.appendChild(img);
+    slot.addEventListener('click', () => zoomCard(i));
+    gridComplete.appendChild(slot);
+  }
+  completeContainer.appendChild(gridComplete);
 }
-
-
-div.appendChild(grid);
-container.appendChild(div);
-
-
-leaderboard.push({ email: data.email, count });
-});
-
-
-leaderboard.sort((a, b) => b.count - a.count);
-leaderboard.forEach(player => {
-const row = document.createElement("tr");
-row.innerHTML = `<td>${player.email}</td><td>${player.count}</td>`;
-leaderboardBody.appendChild(row);
-});
-
-
-// Affichage collection complète
-const completeContainer = document.getElementById("complete-collection");
-const gridComplete = document.createElement("div");
-gridComplete.classList.add("cards-grid");
-for (let i = 1; i <= 92; i++) {
-const slot = document.createElement("div");
-slot.classList.add("card-slot");
-const img = document.createElement("img");
-img.src = pictureLinks[i];
-img.alt = `Picture ${i}`;
-slot.appendChild(img);
-slot.addEventListener('click', () => zoomCard(i));
-gridComplete.appendChild(slot);
-}
-completeContainer.appendChild(gridComplete);
-}
-
 
 function zoomCard(i) {
-const modal = document.getElementById('zoomModal');
-const zoomImg = document.getElementById('zoomImg');
-zoomImg.src = pictureLinks[i];
-modal.style.display = 'flex';
+  const modal = document.getElementById('zoomModal');
+  const zoomImg = document.getElementById('zoomImg');
+  zoomImg.src = pictureLinks[i];
+  modal.style.display = 'flex';
 }
-
 
 loadCollections();
 </script>
