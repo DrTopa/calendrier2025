@@ -122,37 +122,37 @@
 
   <div id="userStatus"></div>
 
-  <div id="predictionArea">
-    <label><b>Quelle partie aura la majorité ?</b></label><br>
-    <select id="majorityParty">
-      <option value="">-- Choisissez --</option>
-      <option value="parti_travailliste">Parti Travailliste</option>
-      <option value="parti_uni">Parti Uni des Travailleurs</option>
-    </select><br>
+<div id="predictionArea">
+  <label><b>Quelle partie aura la majorité ?</b> <span class="small">(Bonne réponse = 3 pts)</span></label><br>
+  <select id="majorityParty">
+    <option value="">-- Choisissez --</option>
+    <option value="parti_travailliste">Parti Travailliste</option>
+    <option value="parti_uni">Parti Uni des Travailleurs</option>
+  </select><br>
 
-    <label><b>Combien de sièges pour la majorité ?</b></label><br>
-    <input id="majoritySeats" type="number" min="0" max="15" placeholder="0-15"><br>
+  <label><b>Combien de sièges pour la majorité ?</b> <span class="small">(10 pts si exact, -1 par écart)</span></label><br>
+  <input id="majoritySeats" type="number" min="0" max="15" placeholder="0-15"><br>
 
-    <label><b>Participation (%) :</b></label><br>
-    <input id="participation" type="number" min="0" max="100" placeholder="ex : 75"><br>
+  <label><b>Participation (%) :</b> <span class="small">(20 pts si exact, -1 par écart)</span></label><br>
+  <input id="participation" type="number" min="0" max="100" placeholder="ex : 75"><br>
 
-    <label><b>Stephenson King réélu ?</b></label><br>
-    <select id="stephenson">
-      <option value="">-- Choisissez --</option>
-      <option value="oui">Oui</option>
-      <option value="non">Non</option>
-    </select><br>
+  <label><b>Stephenson King réélu ?</b> <span class="small">(3 pts)</span></label><br>
+  <select id="stephenson">
+    <option value="">-- Choisissez --</option>
+    <option value="oui">Oui</option>
+    <option value="non">Non</option>
+  </select><br>
 
-    <label><b>Philip Pierre réélu ?</b></label><br>
-    <select id="philip">
-      <option value="">-- Choisissez --</option>
-      <option value="oui">Oui</option>
-      <option value="non">Non</option>
-    </select><br>
+  <label><b>Philip Pierre réélu ?</b> <span class="small">(3 pts)</span></label><br>
+  <select id="philip">
+    <option value="">-- Choisissez --</option>
+    <option value="oui">Oui</option>
+    <option value="non">Non</option>
+  </select><br>
 
-    <button id="submit-btn">Soumettre mes prédictions</button>
-    <div id="your-answer" class="center"></div>
-  </div>
+  <button id="submit-btn">Soumettre mes prédictions</button>
+  <div id="your-answer" class="center"></div>
+</div>
 
   <div id="answersList">
     <h3>📊 Prédictions des autres joueurs :</h3>
