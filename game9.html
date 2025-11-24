@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚽ Champions League – Jour 9</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-direction: column;
+      background-color: #ffebcd;
+      background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+      color: #b71c1c;
+      font-family: 'Comic Sans MS', cursive;
+      text-align: center;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    }
+
+    #userStatus {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.1em;
+      color: #a23636;
+    }
+
+    #instructions {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+      text-align: center;
+      max-width: 900px;
+      font-size: 1em;
+      color: #333;
+    }
+
+    #predictionArea {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .match-block {
+      background: rgba(255,255,255,0.95);
+      border: 2px solid #b71c1c;
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    select, input {
+      padding: 8px;
+      font-size: 1em;
+      width: 90%;
+      margin-top: 5px;
+      margin-bottom: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    #submit-btn {
+      grid-column: 1 / -1;
+      padding: 10px 20px;
+      font-size: 1.05em;
+      cursor: pointer;
+      background-color: #388e3c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 12px;
+      justify-self: center;
+    }
+
+    #submit-btn:hover { background-color: #2e7d32; }
+
+    #your-answer {
+      grid-column: 1 / -1;
+      text-align: center;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #2e7d32;
+    }
+
+    #answersList {
+      display: none;
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.95);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.12);
+      max-width: 900px;
+      width: 100%;
+    }
+
+    #answersList ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    #answersList li {
+      background: rgba(250,250,250,0.9);
+      margin: 6px 0;
+      padding: 8px 10px;
+      border-left: 5px solid #b71c1c;
+      border-radius: 5px;
+    }
+
+    .small { font-size:0.9em; color:#666; display:block; margin-top:5px; }
+  </style>
+</head>
+
+<body>
+  <h1>⚽ Champions League – Jour 9</h1>
+  <div id="instructions">
+    <p>Vous pouvez choisir de parier sur autant de matchs que vous voulez. Si vous répondez correctement :</p>
+    <span class="small">1 bonne réponse = 3 pts, 2 = 7 pts, 3 = 12 pts, 4 = 18 pts, 5 = 25 pts, 6 = 33 pts, 7 = 42 pts, 8 = 52 pts, 9 = 63 pts. <br>Attention : 1 mauvaise réponse et c'est 0 pt.</span>
+  </div>
+
+  <div id="userStatus"></div>
+
+  <div id="predictionArea">
+    <div class="match-block">
+      <label><b>Villarreal vs Copenhague</b></label><br>
+      <select class="vote">
+        <option value="">Voulez-vous parier ?</option>
+        <option value="oui">Oui</option>
+        <option value="non">Non</option>
+      </select><br>
+      <input type="text" class="result" placeholder="Victoire Villarreal / Copenhague / Nul" disabled>
+    </div>
+
+    <div class="match-block">
+      <label><b>FK Qarabag vs Ajax</b></label><br>
+      <select class="vote">
+        <option value="">Voulez-vous parier ?</option>
+        <option value="oui">Oui</option>
+        <option value="non">Non</option>
+      </select><br>
+      <input type="text" class="result" placeholder="Victoire FK Qarabag / Ajax / Nul" disabled>
+    </div>
+
+    <div class="match-block">
+      <label><b>Leverkusen vs Newcastle</b></label><br>
+      <select class="vote">
+        <option value="">Voulez-vous parier ?</option>
+        <option value="oui">Oui</option>
+        <option value="non">Non</option>
+      </select><br>
+      <input type="text" class="result" placeholder="Victoire Leverkusen / Newcastle / Nul" disabled>
+    </div>
+
+    <div class="match-block">
+      <label><b>Real Madrid vs Manchester City</b></label><br>
+      <select class="vote">
+        <option value="">Voulez-vous parier ?</option>
+        <option value="oui">Oui</option>
+        <option value="non">Non</option>
+      </select><br>
+      <input type="text" class="result" placeholder="Victoire Real Madrid / Manchester City / Nul" disabled>
+    </div>
+
+    <div class="match-block">
+      <label><b>Benfica vs Naples</b></label><br>
+      <select class="vote">
+        <option value="">Voulez-vous parier ?</option>
+        <option value="oui">Oui</option>
+        <option value="non">Non</option>
+      </select><br>
+      <input type="text" class="result" placeholder="Victoire Benfica / Naples / Nul" disabled>
+    </div>
+
+    <div class="match-block">
+      <label><b>Club Brugge vs Arsenal</b></label><br>
+      <select class="vote">
+        <option value="">Voulez-vous parier ?</option>
+        <option value="oui">Oui</option>
+        <option value="non">Non</option>
+      </select><br>
+      <input type="text" class="result" placeholder="Victoire Club Brugge / Arsenal / Nul" disabled>
+    </div>
+
+    <div class="match-block">
+      <label><b>Athletic Bilbao vs Paris-SG</b></label><br>
+      <select class="vote">
+        <option value="">Voulez-vous parier ?</option>
+        <option value="oui">Oui</option>
+        <option value="non">Non</option>
+      </select><br>
+      <input type="text" class="result" placeholder="Victoire Athletic Bilbao / Paris-SG / Nul" disabled>
+    </div>
+
+    <div class="match-block">
+      <label><b>Juventus vs Paphos</b></label><br>
+      <select class="vote">
+        <option value="">Voulez-vous parier ?</option>
+        <option value="oui">Oui</option>
+        <option value="non">Non</option>
+      </select><br>
+      <input type="text" class="result" placeholder="Victoire Juventus / Paphos / Nul" disabled>
+    </div>
+
+    <div class="match-block">
+      <label><b>Dortmund vs Bodø/Glimt</b></label><br>
+      <select class="vote">
+        <option value="">Voulez-vous parier ?</option>
+        <option value="oui">Oui</option>
+        <option value="non">Non</option>
+      </select><br>
+      <input type="text" class="result" placeholder="Victoire Dortmund / Bodø/Glimt / Nul" disabled>
+    </div>
+
+    <button id="submit-btn">Soumettre mes paris</button>
+    <div id="your-answer"></div>
+  </div>
+
+  <div id="answersList">
+    <h3>📊 Pronostics des autres joueurs :</h3>
+    <ul id="answers"></ul>
+  </div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+  authDomain: "calendrier2025-3185f.firebaseapp.com",
+  projectId: "calendrier2025-3185f",
+  storageBucket: "calendrier2025-3185f.firebasestorage.app",
+  messagingSenderId: "846792576145",
+  appId: "1:846792576145:web:59028ccef4ffd5c8010330",
+  measurementId: "G-L62L4JSYMF"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const votes = document.querySelectorAll(".vote");
+const results = document.querySelectorAll(".result");
+const submitBtn = document.getElementById("submit-btn");
+const yourAnswerDiv = document.getElementById("your-answer");
+const answersList = document.getElementById("answers");
+const answersListDiv = document.getElementById("answersList");
+
+let currentUser = null;
+
+votes.forEach((vote, i) => {
+  vote.addEventListener("change", () => {
+    results[i].disabled = vote.value !== "oui";
+    if (vote.value !== "oui") results[i].value = "";
+  });
+});
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) { window.location.href = 'login.html'; return; }
+  currentUser = user;
+  document.getElementById("userStatus").innerText = `Connecté : ${user.email}`;
+
+  const jour9Ref = doc(db, "Predictions", "Jour 9");
+  const jour9Snap = await getDoc(jour9Ref);
+  if (jour9Snap.exists() && jour9Snap.data()[user.uid]) {
+    showExistingPrediction(jour9Snap.data()[user.uid]);
+  }
+});
+
+submitBtn.addEventListener("click", async () => {
+  if (!currentUser) return alert("Utilisateur non identifié.");
+
+  const payload = {};
+  votes.forEach((vote, i) => {
+    payload[`match${i+1}`] = {
+      vote: vote.value,
+      result: results[i].value.trim()
+    };
+  });
+
+  const jour9Ref = doc(db, "Predictions", "Jour 9");
+  const jour9Snap = await getDoc(jour9Ref);
+
+  if (jour9Snap.exists() && jour9Snap.data()[currentUser.uid]) {
+    alert("Vous avez déjà soumis vos paris pour Jour 9.");
+    return;
+  }
+
+  if (jour9Snap.exists()) {
+    await updateDoc(jour9Ref, { [currentUser.uid]: { userId: currentUser.uid, userEmail: currentUser.email, predictions: payload, timestamp: new Date().toISOString() } });
+  } else {
+    await setDoc(jour9Ref, { [currentUser.uid]: { userId: currentUser.uid, userEmail: currentUser.email, predictions: payload, timestamp: new Date().toISOString() } });
+  }
+
+  showExistingPrediction({ predictions: payload });
+});
+
+function showExistingPrediction(data) {
+  votes.forEach(v => v.disabled = true);
+  results.forEach(r => r.disabled = true);
+  submitBtn.style.display = "none";
+
+  yourAnswerDiv.innerHTML = "✅ Vos paris :<ul style='list-style:none; padding-left:0;'>";
+  results.forEach((r, i) => {
+    const pred = data.predictions ? data.predictions[`match${i+1}`] : null;
+    if (pred && pred.vote === "oui") {
+      yourAnswerDiv.innerHTML += `<li><b>Match ${i+1} :</b> ${pred.result}</li>`;
+    } else {
+      yourAnswerDiv.innerHTML += `<li><b>Match ${i+1} :</b> Pas parié</li>`;
+    }
+  });
+  yourAnswerDiv.innerHTML += "</ul>";
+
+  loadOtherAnswers();
+}
+
+async function loadOtherAnswers() {
+  answersList.innerHTML = "";
+  const jour9Ref = doc(db, "Predictions", "Jour 9");
+  const jour9Snap = await getDoc(jour9Ref);
+  if (!jour9Snap.exists()) return;
+  const all = jour9Snap.data();
+
+  Object.entries(all).forEach(([uid, data]) => {
+    if (currentUser && uid === currentUser.uid) return;
+    const li = document.createElement("li");
+    li.innerHTML = `<b>${data.userEmail || 'Anonyme'}</b><br>`;
+    for (let i = 1; i <= 9; i++) {
+      const pred = data.predictions[`match${i}`];
+      li.innerHTML += `Match ${i}: ${pred && pred.vote === "oui" ? pred.result : "Pas parié"}<br>`;
+    }
+    answersList.appendChild(li);
+  });
+  answersListDiv.style.display = "block";
+}
+</script>
+</body>
+</html>
