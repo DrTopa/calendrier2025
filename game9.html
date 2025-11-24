@@ -3,97 +3,111 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⚽ Champions League – Jour 9</title>
+  <title>🏆 Champions League – Jour 9</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      flex-direction: column;
-      background-color: #ffebcd;
-      background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+      background-color: #fdf6e3;
       margin: 0;
       padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     h1 {
       font-size: 2em;
-      margin-bottom: 10px;
-      color: #b71c1c;
-      font-family: 'Comic Sans MS', cursive;
       text-align: center;
-      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-    }
-
-    #userStatus {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 1.1em;
-      color: #a23636;
+      color: #b71c1c;
+      margin-bottom: 10px;
+      font-family: 'Comic Sans MS', cursive;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
     }
 
     #instructions {
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255,255,255,0.9);
       padding: 15px;
       border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-      margin-bottom: 20px;
-      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       max-width: 900px;
-      font-size: 1em;
-      color: #333;
+      margin-bottom: 20px;
+      font-size: 1.05em;
+      text-align: center;
+    }
+
+    #pointsInfo {
+      font-size: 0.9em;
+      color: #555;
+      margin-top: 5px;
     }
 
     #predictionArea {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      width: 100%;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
       max-width: 900px;
-      margin: 0 auto;
+      width: 100%;
     }
 
-    .match-block {
+    .match-card {
       background: rgba(255,255,255,0.95);
-      border: 2px solid #b71c1c;
-      border-radius: 10px;
-      padding: 10px;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 6px 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.2s;
+    }
+
+    .match-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .match-title {
+      font-weight: bold;
+      margin-bottom: 10px;
       text-align: center;
     }
 
-    select, input {
+    select, input[type="text"] {
       padding: 8px;
       font-size: 1em;
-      width: 90%;
-      margin-top: 5px;
-      margin-bottom: 5px;
-      border-radius: 5px;
+      border-radius: 6px;
       border: 1px solid #ccc;
+      width: 90%;
+      margin-bottom: 8px;
+    }
+
+    .vote-section {
+      width: 100%;
+      text-align: center;
+    }
+
+    .vote-section label {
+      margin-right: 8px;
     }
 
     #submit-btn {
-      grid-column: 1 / -1;
       padding: 10px 20px;
-      font-size: 1.05em;
+      font-size: 1.1em;
       cursor: pointer;
       background-color: #388e3c;
       color: white;
       border: none;
-      border-radius: 5px;
-      margin-top: 12px;
-      justify-self: center;
+      border-radius: 6px;
+      margin-top: 20px;
+      grid-column: span 2;
     }
 
     #submit-btn:hover { background-color: #2e7d32; }
 
     #your-answer {
-      grid-column: 1 / -1;
-      text-align: center;
       margin-top: 15px;
       font-weight: bold;
+      font-size: 1.05em;
       color: #2e7d32;
+      grid-column: span 2;
     }
 
     #answersList {
@@ -105,133 +119,212 @@
       box-shadow: 0 4px 6px rgba(0,0,0,0.12);
       max-width: 900px;
       width: 100%;
+      grid-column: span 2;
     }
 
-    #answersList ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
+    #answersList ul { padding-left: 0; margin: 0; }
     #answersList li {
       background: rgba(250,250,250,0.9);
-      margin: 6px 0;
-      padding: 8px 10px;
+      margin: 8px 0;
+      padding: 8px;
+      border-radius: 6px;
       border-left: 5px solid #b71c1c;
-      border-radius: 5px;
+      list-style: none;
+      font-size: 0.95em;
     }
 
-    .small { font-size:0.9em; color:#666; display:block; margin-top:5px; }
   </style>
 </head>
-
 <body>
-  <h1>⚽ Champions League – Jour 9</h1>
-  <div id="instructions">
-    <p>Vous pouvez choisir de parier sur autant de matchs que vous voulez. Si vous répondez correctement :</p>
-    <span class="small">1 bonne réponse = 3 pts, 2 = 7 pts, 3 = 12 pts, 4 = 18 pts, 5 = 25 pts, 6 = 33 pts, 7 = 42 pts, 8 = 52 pts, 9 = 63 pts. <br>Attention : 1 mauvaise réponse et c'est 0 pt.</span>
+
+<h1>🏆 Champions League – Jour 9</h1>
+
+<div id="instructions">
+  <p>Choisissez les matchs pour lesquels vous souhaitez parier. Pour chaque match :</p>
+  <ul style="text-align:left; display:inline-block;">
+    <li>Voulez-vous voter ? (Oui/Non)</li>
+    <li>Si Oui : victoire équipe 1 / victoire équipe 2 / Nul</li>
+  </ul>
+  <div id="pointsInfo">
+    Points : 1 bonne réponse = 3 pts, 2 = 7 pts, 3 = 12, 4 = 18, 5 = 25, 6 = 33, 7 = 42, 8 = 52, 9 = 63 <br>
+    1 réponse fausse = 0 point
+  </div>
+</div>
+
+<div id="predictionArea">
+
+  <div class="match-card">
+    <div class="match-title">Villarreal - Copenhague</div>
+    <div class="vote-section">
+      <label>Voter ?</label>
+      <select class="vote-select">
+        <option value="">--Choisissez--</option>
+        <option value="oui">Oui</option>
+        <option value="non">Non</option>
+      </select><br>
+      <select class="match-result" style="display:none;">
+        <option value="">--Résultat--</option>
+        <option value="equipe1">Victoire Villarreal</option>
+        <option value="nul">Nul</option>
+        <option value="equipe2">Victoire Copenhague</option>
+      </select>
+    </div>
   </div>
 
-  <div id="userStatus"></div>
-
-  <div id="predictionArea">
-    <div class="match-block">
-      <label><b>Villarreal vs Copenhague</b></label><br>
-      <select class="vote">
-        <option value="">Voulez-vous parier ?</option>
+  <div class="match-card">
+    <div class="match-title">FK Qarabag - Ajax</div>
+    <div class="vote-section">
+      <label>Voter ?</label>
+      <select class="vote-select">
+        <option value="">--Choisissez--</option>
         <option value="oui">Oui</option>
         <option value="non">Non</option>
       </select><br>
-      <input type="text" class="result" placeholder="Victoire Villarreal / Copenhague / Nul" disabled>
+      <select class="match-result" style="display:none;">
+        <option value="">--Résultat--</option>
+        <option value="equipe1">Victoire FK Qarabag</option>
+        <option value="nul">Nul</option>
+        <option value="equipe2">Victoire Ajax</option>
+      </select>
     </div>
-
-    <div class="match-block">
-      <label><b>FK Qarabag vs Ajax</b></label><br>
-      <select class="vote">
-        <option value="">Voulez-vous parier ?</option>
-        <option value="oui">Oui</option>
-        <option value="non">Non</option>
-      </select><br>
-      <input type="text" class="result" placeholder="Victoire FK Qarabag / Ajax / Nul" disabled>
-    </div>
-
-    <div class="match-block">
-      <label><b>Leverkusen vs Newcastle</b></label><br>
-      <select class="vote">
-        <option value="">Voulez-vous parier ?</option>
-        <option value="oui">Oui</option>
-        <option value="non">Non</option>
-      </select><br>
-      <input type="text" class="result" placeholder="Victoire Leverkusen / Newcastle / Nul" disabled>
-    </div>
-
-    <div class="match-block">
-      <label><b>Real Madrid vs Manchester City</b></label><br>
-      <select class="vote">
-        <option value="">Voulez-vous parier ?</option>
-        <option value="oui">Oui</option>
-        <option value="non">Non</option>
-      </select><br>
-      <input type="text" class="result" placeholder="Victoire Real Madrid / Manchester City / Nul" disabled>
-    </div>
-
-    <div class="match-block">
-      <label><b>Benfica vs Naples</b></label><br>
-      <select class="vote">
-        <option value="">Voulez-vous parier ?</option>
-        <option value="oui">Oui</option>
-        <option value="non">Non</option>
-      </select><br>
-      <input type="text" class="result" placeholder="Victoire Benfica / Naples / Nul" disabled>
-    </div>
-
-    <div class="match-block">
-      <label><b>Club Brugge vs Arsenal</b></label><br>
-      <select class="vote">
-        <option value="">Voulez-vous parier ?</option>
-        <option value="oui">Oui</option>
-        <option value="non">Non</option>
-      </select><br>
-      <input type="text" class="result" placeholder="Victoire Club Brugge / Arsenal / Nul" disabled>
-    </div>
-
-    <div class="match-block">
-      <label><b>Athletic Bilbao vs Paris-SG</b></label><br>
-      <select class="vote">
-        <option value="">Voulez-vous parier ?</option>
-        <option value="oui">Oui</option>
-        <option value="non">Non</option>
-      </select><br>
-      <input type="text" class="result" placeholder="Victoire Athletic Bilbao / Paris-SG / Nul" disabled>
-    </div>
-
-    <div class="match-block">
-      <label><b>Juventus vs Paphos</b></label><br>
-      <select class="vote">
-        <option value="">Voulez-vous parier ?</option>
-        <option value="oui">Oui</option>
-        <option value="non">Non</option>
-      </select><br>
-      <input type="text" class="result" placeholder="Victoire Juventus / Paphos / Nul" disabled>
-    </div>
-
-    <div class="match-block">
-      <label><b>Dortmund vs Bodø/Glimt</b></label><br>
-      <select class="vote">
-        <option value="">Voulez-vous parier ?</option>
-        <option value="oui">Oui</option>
-        <option value="non">Non</option>
-      </select><br>
-      <input type="text" class="result" placeholder="Victoire Dortmund / Bodø/Glimt / Nul" disabled>
-    </div>
-
-    <button id="submit-btn">Soumettre mes paris</button>
-    <div id="your-answer"></div>
   </div>
+
+  <div class="match-card">
+    <div class="match-title">Leverkusen - Newcastle</div>
+    <div class="vote-section">
+      <label>Voter ?</label>
+      <select class="vote-select">
+        <option value="">--Choisissez--</option>
+        <option value="oui">Oui</option>
+        <option value="non">Non</option>
+      </select><br>
+      <select class="match-result" style="display:none;">
+        <option value="">--Résultat--</option>
+        <option value="equipe1">Victoire Leverkusen</option>
+        <option value="nul">Nul</option>
+        <option value="equipe2">Victoire Newcastle</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="match-card">
+    <div class="match-title">Real Madrid - Manchester City</div>
+    <div class="vote-section">
+      <label>Voter ?</label>
+      <select class="vote-select">
+        <option value="">--Choisissez--</option>
+        <option value="oui">Oui</option>
+        <option value="non">Non</option>
+      </select><br>
+      <select class="match-result" style="display:none;">
+        <option value="">--Résultat--</option>
+        <option value="equipe1">Victoire Real Madrid</option>
+        <option value="nul">Nul</option>
+        <option value="equipe2">Victoire Manchester City</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="match-card">
+    <div class="match-title">Benfica - Naples</div>
+    <div class="vote-section">
+      <label>Voter ?</label>
+      <select class="vote-select">
+        <option value="">--Choisissez--</option>
+        <option value="oui">Oui</option>
+        <option value="non">Non</option>
+      </select><br>
+      <select class="match-result" style="display:none;">
+        <option value="">--Résultat--</option>
+        <option value="equipe1">Victoire Benfica</option>
+        <option value="nul">Nul</option>
+        <option value="equipe2">Victoire Naples</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="match-card">
+    <div class="match-title">Club Brugge - Arsenal</div>
+    <div class="vote-section">
+      <label>Voter ?</label>
+      <select class="vote-select">
+        <option value="">--Choisissez--</option>
+        <option value="oui">Oui</option>
+        <option value="non">Non</option>
+      </select><br>
+      <select class="match-result" style="display:none;">
+        <option value="">--Résultat--</option>
+        <option value="equipe1">Victoire Club Brugge</option>
+        <option value="nul">Nul</option>
+        <option value="equipe2">Victoire Arsenal</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="match-card">
+    <div class="match-title">Athletic Bilbao - Paris-SG</div>
+    <div class="vote-section">
+      <label>Voter ?</label>
+      <select class="vote-select">
+        <option value="">--Choisissez--</option>
+        <option value="oui">Oui</option>
+        <option value="non">Non</option>
+      </select><br>
+      <select class="match-result" style="display:none;">
+        <option value="">--Résultat--</option>
+        <option value="equipe1">Victoire Athletic Bilbao</option>
+        <option value="nul">Nul</option>
+        <option value="equipe2">Victoire Paris-SG</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="match-card">
+    <div class="match-title">Juventus - Paphos</div>
+    <div class="vote-section">
+      <label>Voter ?</label>
+      <select class="vote-select">
+        <option value="">--Choisissez--</option>
+        <option value="oui">Oui</option>
+        <option value="non">Non</option>
+      </select><br>
+      <select class="match-result" style="display:none;">
+        <option value="">--Résultat--</option>
+        <option value="equipe1">Victoire Juventus</option>
+        <option value="nul">Nul</option>
+        <option value="equipe2">Victoire Paphos</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="match-card">
+    <div class="match-title">Dortmund - Bodø/Glimt</div>
+    <div class="vote-section">
+      <label>Voter ?</label>
+      <select class="vote-select">
+        <option value="">--Choisissez--</option>
+        <option value="oui">Oui</option>
+        <option value="non">Non</option>
+      </select><br>
+      <select class="match-result" style="display:none;">
+        <option value="">--Résultat--</option>
+        <option value="equipe1">Victoire Dortmund</option>
+        <option value="nul">Nul</option>
+        <option value="equipe2">Victoire Bodø/Glimt</option>
+      </select>
+    </div>
+  </div>
+
+  <button id="submit-btn">Soumettre mes paris</button>
+  <div id="your-answer"></div>
 
   <div id="answersList">
     <h3>📊 Pronostics des autres joueurs :</h3>
     <ul id="answers"></ul>
   </div>
+
+</div>
+
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
@@ -252,100 +345,106 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const votes = document.querySelectorAll(".vote");
-const results = document.querySelectorAll(".result");
+const voteSelects = document.querySelectorAll(".vote-select");
+const resultSelects = document.querySelectorAll(".match-result");
 const submitBtn = document.getElementById("submit-btn");
 const yourAnswerDiv = document.getElementById("your-answer");
-const answersList = document.getElementById("answers");
 const answersListDiv = document.getElementById("answersList");
-
+const answersUl = document.getElementById("answers");
 let currentUser = null;
 
-votes.forEach((vote, i) => {
-  vote.addEventListener("change", () => {
-    results[i].disabled = vote.value !== "oui";
-    if (vote.value !== "oui") results[i].value = "";
+// Affichage conditionnel des résultats
+voteSelects.forEach((vs, idx) => {
+  vs.addEventListener("change", () => {
+    if(vs.value === "oui") resultSelects[idx].style.display = "block";
+    else resultSelects[idx].style.display = "none";
   });
 });
 
 onAuthStateChanged(auth, async (user) => {
-  if (!user) { window.location.href = 'login.html'; return; }
+  if(!user) { window.location.href = "login.html"; return; }
   currentUser = user;
-  document.getElementById("userStatus").innerText = `Connecté : ${user.email}`;
 
   const jour9Ref = doc(db, "Predictions", "Jour 9");
   const jour9Snap = await getDoc(jour9Ref);
-  if (jour9Snap.exists() && jour9Snap.data()[user.uid]) {
+  if(jour9Snap.exists() && jour9Snap.data()[user.uid]) {
     showExistingPrediction(jour9Snap.data()[user.uid]);
-  }
-});
-
-submitBtn.addEventListener("click", async () => {
-  if (!currentUser) return alert("Utilisateur non identifié.");
-
-  const payload = {};
-  votes.forEach((vote, i) => {
-    payload[`match${i+1}`] = {
-      vote: vote.value,
-      result: results[i].value.trim()
-    };
-  });
-
-  const jour9Ref = doc(db, "Predictions", "Jour 9");
-  const jour9Snap = await getDoc(jour9Ref);
-
-  if (jour9Snap.exists() && jour9Snap.data()[currentUser.uid]) {
-    alert("Vous avez déjà soumis vos paris pour Jour 9.");
-    return;
-  }
-
-  if (jour9Snap.exists()) {
-    await updateDoc(jour9Ref, { [currentUser.uid]: { userId: currentUser.uid, userEmail: currentUser.email, predictions: payload, timestamp: new Date().toISOString() } });
   } else {
-    await setDoc(jour9Ref, { [currentUser.uid]: { userId: currentUser.uid, userEmail: currentUser.email, predictions: payload, timestamp: new Date().toISOString() } });
+    loadOtherAnswers();
   }
-
-  showExistingPrediction({ predictions: payload });
 });
 
 function showExistingPrediction(data) {
-  votes.forEach(v => v.disabled = true);
-  results.forEach(r => r.disabled = true);
+  voteSelects.forEach(vs => vs.style.display = "none");
+  resultSelects.forEach(rs => rs.style.display = "none");
   submitBtn.style.display = "none";
 
-  yourAnswerDiv.innerHTML = "✅ Vos paris :<ul style='list-style:none; padding-left:0;'>";
-  results.forEach((r, i) => {
-    const pred = data.predictions ? data.predictions[`match${i+1}`] : null;
-    if (pred && pred.vote === "oui") {
-      yourAnswerDiv.innerHTML += `<li><b>Match ${i+1} :</b> ${pred.result}</li>`;
-    } else {
-      yourAnswerDiv.innerHTML += `<li><b>Match ${i+1} :</b> Pas parié</li>`;
-    }
+  yourAnswerDiv.innerHTML = "✅ Vos pronostics :<ul style='padding-left:0'>";
+  data.predictions.forEach((p,i)=>{
+    yourAnswerDiv.innerHTML += `<li>${escapeHtml(p.match)} : ${escapeHtml(p.vote === "oui" ? p.result : "Non voté")}</li>`;
   });
   yourAnswerDiv.innerHTML += "</ul>";
 
+  answersListDiv.style.display = "block";
   loadOtherAnswers();
 }
 
-async function loadOtherAnswers() {
-  answersList.innerHTML = "";
+submitBtn.addEventListener("click", async ()=>{
+  if(!currentUser) { alert("Utilisateur non identifié"); return; }
+
+  const predictions = [];
+  for(let i=0;i<voteSelects.length;i++){
+    predictions.push({
+      match: document.querySelectorAll(".match-title")[i].innerText,
+      vote: voteSelects[i].value,
+      result: resultSelects[i].value
+    });
+  }
+
+  const payload = {
+    userId: currentUser.uid,
+    userEmail: currentUser.email,
+    predictions,
+    timestamp: new Date().toISOString()
+  };
+
   const jour9Ref = doc(db, "Predictions", "Jour 9");
   const jour9Snap = await getDoc(jour9Ref);
-  if (!jour9Snap.exists()) return;
-  const all = jour9Snap.data();
 
-  Object.entries(all).forEach(([uid, data]) => {
-    if (currentUser && uid === currentUser.uid) return;
-    const li = document.createElement("li");
-    li.innerHTML = `<b>${data.userEmail || 'Anonyme'}</b><br>`;
-    for (let i = 1; i <= 9; i++) {
-      const pred = data.predictions[`match${i}`];
-      li.innerHTML += `Match ${i}: ${pred && pred.vote === "oui" ? pred.result : "Pas parié"}<br>`;
+  if(jour9Snap.exists()){
+    if(jour9Snap.data()[currentUser.uid]){
+      alert("Vous avez déjà soumis vos pronostics pour Jour 9.");
+      showExistingPrediction(jour9Snap.data()[currentUser.uid]);
+      return;
     }
-    answersList.appendChild(li);
+    await updateDoc(jour9Ref, { [currentUser.uid]: payload });
+  } else {
+    await setDoc(jour9Ref, { [currentUser.uid]: payload });
+  }
+
+  showExistingPrediction(payload);
+});
+
+async function loadOtherAnswers(){
+  answersUl.innerHTML = "";
+  const jour9Ref = doc(db, "Predictions", "Jour 9");
+  const jour9Snap = await getDoc(jour9Ref);
+  if(!jour9Snap.exists()) return;
+  const all = jour9Snap.data();
+  Object.entries(all).forEach(([uid,data])=>{
+    if(uid === currentUser.uid) return;
+    const li = document.createElement("li");
+    li.innerHTML = `<b>${data.userEmail||'Anonyme'}</b> : ${data.predictions.map(p=>p.vote==='oui'?`${p.match}:${p.result}`:'').filter(Boolean).join(' | ')}`;
+    answersUl.appendChild(li);
   });
   answersListDiv.style.display = "block";
 }
+
+function escapeHtml(str){
+  if(!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
 </script>
+
 </body>
 </html>
