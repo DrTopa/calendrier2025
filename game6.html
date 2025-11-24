@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏎️ Jour 6 – Grand Prix F1 Abou Dhabi</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background-color: #e3f2fd;
+      background-image: url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.3em;
+      margin-bottom: 10px;
+      color: #0d47a1;
+      font-family: 'Comic Sans MS', cursive;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    #userStatus {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.1em;
+      color: #0d47a1;
+    }
+
+    #instructions {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+      text-align: center;
+      max-width: 900px;
+      font-size: 1.1em;
+      color: #333;
+    }
+
+    #predictionArea {
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid #0d47a1;
+      border-radius: 12px;
+      padding: 20px 30px;
+      box-shadow: 0 8px 12px rgba(0,0,0,0.12);
+      text-align: center;
+      width: 100%;
+      max-width: 720px;
+    }
+
+    select, input {
+      padding: 10px;
+      font-size: 1.05em;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 80%;
+    }
+
+    #submit-btn {
+      padding: 10px 20px;
+      font-size: 1.05em;
+      cursor: pointer;
+      background-color: #0d47a1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 12px;
+    }
+
+    #submit-btn:hover { background-color: #08306b; }
+
+    #your-answer { margin-top: 15px; font-weight: bold; font-size: 1.05em; color: #0d47a1; }
+
+    #answersList {
+      display: none;
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.12);
+      max-width: 720px;
+      width: 90%;
+    }
+
+    #answersList ul { padding-left: 0; margin: 0; }
+    #answersList li {
+      background: rgba(250,250,250,0.9);
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 6px;
+      border-left: 5px solid #0d47a1;
+      list-style: none;
+      font-size: 0.98em;
+    }
+
+    .small { font-size:0.9em; color:#666 }
+    .center { text-align:center }
+  </style>
+</head>
+<body>
+<h1>🏎️ Jour 6 – Grand Prix F1 Abou Dhabi</h1>
+
+<div id="instructions">
+  <p>Faites vos prédictions pour le Grand Prix de F1 à Abou Dhabi !</p>
+  <ul style="text-align:left; display:inline-block;">
+    <li>Nom du gagnant</li>
+    <li>Norris champion ?</li>
+    <li>Nom d’un pilote sur le podium</li>
+    <li>Y aura-t-il un abandon ?</li>
+    <li>Un Français dans le top 5 ?</li>
+    <li>Un Français dans le top 10 ?</li>
+  </ul>
+</div>
+
+<div id="userStatus"></div>
+
+<div id="predictionArea">
+
+  <!-- Indications de points -->
+  <div class="small" style="margin-bottom:15px;">
+    Indications de points :
+    <span class="small">
+      Gagnant = 10 pts |
+      Norris champion = 3 pts |
+      Podium = 5 pts |
+      Abandon = 3 pts |
+      Français Top 5 = 5 pts |
+      Français Top 10 = 5 pts
+    </span>
+  </div>
+
+  <label><b>Nom du gagnant :</b> <span class="small">(10 pts)</span></label><br>
+  <input id="winner" type="text" placeholder="ex : Verstappen"><br>
+
+  <label><b>Norris sera-t-il champion ?</b> <span class="small">(3 pts)</span></label><br>
+  <select id="norris">
+    <option value="">-- Choisissez --</option>
+    <option value="oui">Oui</option>
+    <option value="non">Non</option>
+  </select><br>
+
+  <label><b>Qui sera sur le podium ?</b> <span class="small">(5 pts)</span></label><br>
+  <input id="podium" type="text" placeholder="ex : Leclerc"><br>
+
+  <label><b>Y aura-t-il un pilote qui abandonne ?</b> <span class="small">(3 pts)</span></label><br>
+  <select id="abandon">
+    <option value="">-- Choisissez --</option>
+    <option value="oui">Oui</option>
+    <option value="non">Non</option>
+  </select><br>
+
+  <label><b>Un Français dans le top 5 ?</b> <span class="small">(5 pts)</span></label><br>
+  <select id="frTop5">
+    <option value="">-- Choisissez --</option>
+    <option value="oui">Oui</option>
+    <option value="non">Non</option>
+  </select><br>
+
+  <label><b>Un Français dans le top 10 ?</b> <span class="small">(5 pts)</span></label><br>
+  <select id="frTop10">
+    <option value="">-- Choisissez --</option>
+    <option value="oui">Oui</option>
+    <option value="non">Non</option>
+  </select><br>
+
+  <button id="submit-btn">Soumettre mes prédictions</button>
+  <div id="your-answer" class="center"></div>
+
+</div>
+
+<div id="answersList">
+  <h3>📊 Prédictions des autres joueurs :</h3>
+  <ul id="answers"></ul>
+</div>
+
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+  authDomain: "calendrier2025-3185f.firebaseapp.com",
+  projectId: "calendrier2025-3185f",
+  storageBucket: "calendrier2025-3185f.firebasestorage.app",
+  messagingSenderId: "846792576145",
+  appId: "1:846792576145:web:59028ccef4ffd5c8010330",
+  measurementId: "G-L62L4JSYMF"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const fields = {
+  winner: document.getElementById('winner'),
+  norris: document.getElementById('norris'),
+  podium: document.getElementById('podium'),
+  abandon: document.getElementById('abandon'),
+  frTop5: document.getElementById('frTop5'),
+  frTop10: document.getElementById('frTop10')
+};
+
+const submitBtn = document.getElementById('submit-btn');
+const yourAnswerDiv = document.getElementById('your-answer');
+const answersListDiv = document.getElementById('answersList');
+const answersUl = document.getElementById('answers');
+
+let currentUser = null;
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = 'login.html';
+    return;
+  }
+  currentUser = user;
+  document.getElementById('userStatus').innerText = `Connecté : ${user.email}`;
+
+  const ref6 = doc(db, 'Predictions', 'Jour6');
+  const snap6 = await getDoc(ref6);
+
+  if (snap6.exists() && snap6.data()[user.uid]) {
+    showExistingPrediction(snap6.data()[user.uid]);
+  } else {
+    loadOtherAnswers();
+  }
+});
+
+function showExistingPrediction(data) {
+  for (const k in fields) fields[k].style.display = 'none';
+  submitBtn.style.display = 'none';
+
+  yourAnswerDiv.innerHTML = `
+    ✅ Vos prédictions :
+    <ul style="list-style:none; padding-left:0; margin:0">
+      <li><b>Gagnant :</b> ${escapeHtml(data.winner)}</li>
+      <li><b>Norris champion :</b> ${escapeHtml(data.norris)}</li>
+      <li><b>Podium :</b> ${escapeHtml(data.podium)}</li>
+      <li><b>Abandon :</b> ${escapeHtml(data.abandon)}</li>
+      <li><b>Français top 5 :</b> ${escapeHtml(data.frTop5)}</li>
+      <li><b>Français top 10 :</b> ${escapeHtml(data.frTop10)}</li>
+    </ul>
+  `;
+
+  answersListDiv.style.display = 'block';
+  loadOtherAnswers();
+}
+
+submitBtn.addEventListener('click', async () => {
+  if (!currentUser) return;
+
+  const payload = {
+    userId: currentUser.uid,
+    userEmail: currentUser.email,
+    winner: fields.winner.value,
+    norris: fields.norris.value,
+    podium: fields.podium.value,
+    abandon: fields.abandon.value,
+    frTop5: fields.frTop5.value,
+    frTop10: fields.frTop10.value,
+    timestamp: new Date().toISOString()
+  };
+
+  if (!payload.winner || !payload.norris || !payload.podium || !payload.abandon || !payload.frTop5 || !payload.frTop10) {
+    alert('Merci de remplir tous les champs correctement.');
+    return;
+  }
+
+  const ref6 = doc(db, 'Predictions', 'Jour6');
+  const snap6 = await getDoc(ref6);
+
+  if (snap6.exists()) {
+    if (snap6.data()[currentUser.uid]) {
+      alert('Vous avez déjà soumis vos prédictions pour Jour 6.');
+      showExistingPrediction(snap6.data()[currentUser.uid]);
+      return;
+    }
+    await updateDoc(ref6, { [currentUser.uid]: payload });
+  } else {
+    await setDoc(ref6, { [currentUser.uid]: payload });
+  }
+
+  showExistingPrediction(payload);
+  yourAnswerDiv.insertAdjacentHTML('beforeend', '<div class="small">Vos réponses ont été enregistrées.</div>');
+});
+
+async function loadOtherAnswers() {
+  answersUl.innerHTML = '';
+
+  try {
+    const ref6 = doc(db, 'Predictions', 'Jour6');
+    const snap6 = await getDoc(ref6);
+    if (!snap6.exists()) return;
+
+    const all = snap6.data();
+    const entries = Object.entries(all).filter(([uid]) => uid !== (currentUser && currentUser.uid));
+
+    if (entries.length === 0) {
+      answersUl.innerHTML = '<li class="small">Aucune autre réponse pour l’instant.</li>';
+      answersListDiv.style.display = 'block';
+      return;
+    }
+
+    entries.sort((a,b) => Date.parse(b[1].timestamp) - Date.parse(a[1].timestamp));
+
+    for (const [uid, data] of entries) {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <b>${escapeHtml(data.userEmail)}</b> —
+        Gagnant : ${escapeHtml(data.winner)} |
+        Norris : ${escapeHtml(data.norris)} |
+        Podium : ${escapeHtml(data.podium)} |
+        Abandon : ${escapeHtml(data.abandon)} |
+        FR Top5 : ${escapeHtml(data.frTop5)} |
+        FR Top10 : ${escapeHtml(data.frTop10)}
+        <div class="small">${escapeHtml(new Date(data.timestamp).toLocaleString())}</div>
+      `;
+      answersUl.appendChild(li);
+    }
+
+    answersListDiv.style.display = 'block';
+
+  } catch (err) {
+    answersUl.innerHTML = '<li class="small">Impossible de charger les autres réponses.</li>';
+  }
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
+}
+</script>
+
+</body>
+</html>
