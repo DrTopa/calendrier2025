@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎮 Game 10 – GOTY 2025 🎮</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background-color: #ffebcd;
+      background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.3em;
+      margin-bottom: 10px;
+      color: #b71c1c;
+      font-family: 'Comic Sans MS', cursive;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    #userStatus {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.1em;
+      color: #a23636;
+    }
+
+    #instructions {
+      background: rgba(255,255,255,0.9);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+      text-align: center;
+      max-width: 900px;
+      font-size: 1.1em;
+      color: #333;
+    }
+
+    #predictionArea {
+      background: rgba(255,255,255,0.95);
+      border: 2px solid #b71c1c;
+      border-radius: 12px;
+      padding: 20px 30px;
+      box-shadow: 0 8px 12px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 100%;
+      max-width: 700px;
+    }
+
+    select {
+      padding: 10px;
+      font-size: 1.05em;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 90%;
+    }
+
+    #submit-btn {
+      padding: 10px 20px;
+      font-size: 1.1em;
+      cursor: pointer;
+      background-color: #388e3c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 15px;
+    }
+
+    #submit-btn:hover { background-color: #2e7d32; }
+
+    #your-answer {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 1.05em;
+      color: #2e7d32;
+      text-align: center;
+    }
+
+    #answersList {
+      display: none;
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.95);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      max-width: 700px;
+      width: 90%;
+    }
+
+    #answersList ul {
+      padding-left: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    #answersList li {
+      background: rgba(250,250,250,0.9);
+      margin: 6px 0;
+      padding: 10px;
+      border-left: 5px solid #b71c1c;
+      border-radius: 6px;
+    }
+
+    .small { font-size:0.9em; color:#666; }
+  </style>
+</head>
+
+<body>
+  <h1>🎮 Pronostics – GOTY 2025 🎮</h1>
+
+  <div id="instructions">
+    <p>Faites vos pronostics pour les catégories GOTY 2025 !</p>
+    <div>Indications de points : <span class="small">Chaque bonne réponse = 5 pts</span></div>
+  </div>
+
+  <div id="userStatus"></div>
+
+  <div id="predictionArea">
+    <label><b>GOTY 2025 :</b></label><br>
+    <select id="goty">
+      <option value="">-- Choisissez --</option>
+      <option value="Clair Obscur: Expedition 33">Clair Obscur: Expedition 33</option>
+      <option value="Death Stranding 2: On the Beach">Death Stranding 2: On the Beach</option>
+      <option value="Ghost of Yōtei">Ghost of Yōtei</option>
+      <option value="Kingdom Come: Deliverance II">Kingdom Come: Deliverance II</option>
+      <option value="Silent Hill f">Silent Hill f</option>
+    </select><br>
+
+    <label><b>Best Narrative :</b></label><br>
+    <select id="narrative">
+      <option value="">-- Choisissez --</option>
+      <option value="Clair Obscur: Expedition 33">Clair Obscur: Expedition 33</option>
+      <option value="Death Stranding 2: On the Beach">Death Stranding 2: On the Beach</option>
+      <option value="Ghost of Yōtei">Ghost of Yōtei</option>
+      <option value="Kingdom Come: Deliverance II">Kingdom Come: Deliverance II</option>
+      <option value="Silent Hill f">Silent Hill f</option>
+    </select><br>
+
+    <label><b>Best Audio Design :</b></label><br>
+    <select id="audio">
+      <option value="">-- Choisissez --</option>
+      <option value="Battlefield 6">Battlefield 6</option>
+      <option value="Clair Obscur: Expedition 33">Clair Obscur: Expedition 33</option>
+      <option value="Death Stranding 2: On the Beach">Death Stranding 2: On the Beach</option>
+      <option value="Ghost of Yōtei">Ghost of Yōtei</option>
+      <option value="Silent Hill f">Silent Hill f</option>
+    </select><br>
+
+    <label><b>Best Independent Game :</b></label><br>
+    <select id="indie">
+      <option value="">-- Choisissez --</option>
+      <option value="Absolum">Absolum</option>
+      <option value="Ball x Pit">Ball x Pit</option>
+      <option value="Blue Prince">Blue Prince</option>
+      <option value="Clair Obscur: Expedition 33">Clair Obscur: Expedition 33</option>
+      <option value="Hades II">Hades II</option>
+      <option value="Hollow Knight: Silksong">Hollow Knight: Silksong</option>
+    </select><br>
+
+    <label><b>Best Mobile Game :</b></label><br>
+    <select id="mobile">
+      <option value="">-- Choisissez --</option>
+      <option value="Destiny: Rising">Destiny: Rising</option>
+      <option value="Persona 5: The Phantom X">Persona 5: The Phantom X</option>
+      <option value="Sonic Rumble">Sonic Rumble</option>
+      <option value="Umamusume: Pretty Derby">Umamusume: Pretty Derby</option>
+      <option value="Wuthering Waves">Wuthering Waves</option>
+    </select><br>
+
+    <label><b>Best Action/Adventure Game :</b></label><br>
+    <select id="action">
+      <option value="">-- Choisissez --</option>
+      <option value="Death Stranding 2: On the Beach">Death Stranding 2: On the Beach</option>
+      <option value="Ghost of Yōtei">Ghost of Yōtei</option>
+      <option value="Indiana Jones & The Great Circle">Indiana Jones & The Great Circle</option>
+      <option value="Hollow Knight: Silksong">Hollow Knight: Silksong</option>
+      <option value="Split Fiction">Split Fiction</option>
+    </select><br>
+
+    <label><b>Best Family Game :</b></label><br>
+    <select id="family">
+      <option value="">-- Choisissez --</option>
+      <option value="Donkey Kong Bananza">Donkey Kong Bananza</option>
+      <option value="LEGO Party!">LEGO Party!</option>
+      <option value="LEGO Voyagers">LEGO Voyagers</option>
+      <option value="Mario Kart World">Mario Kart World</option>
+      <option value="Sonic Racing: CrossWorlds">Sonic Racing: CrossWorlds</option>
+      <option value="Split Fiction">Split Fiction</option>
+    </select><br>
+
+    <label><b>Best Sports Game :</b></label><br>
+    <select id="sports">
+      <option value="">-- Choisissez --</option>
+      <option value="EA Sports 26">EA Sports 26</option>
+      <option value="F1 25">F1 25</option>
+      <option value="Mario Kart World">Mario Kart World</option>
+      <option value="Remarch">Remarch</option>
+      <option value="Sonic Racing CrossWorlds">Sonic Racing CrossWorlds</option>
+    </select><br>
+
+    <label><b>Best Multiplayer :</b></label><br>
+    <select id="multiplayer">
+      <option value="">-- Choisissez --</option>
+      <option value="ARC Raiders">ARC Raiders</option>
+      <option value="Battlefield 6">Battlefield 6</option>
+      <option value="Elden Ring Nightreign">Elden Ring Nightreign</option>
+      <option value="Peak">Peak</option>
+      <option value="Split Fiction">Split Fiction</option>
+    </select><br>
+
+    <button id="submit-btn">Soumettre mes pronostics</button>
+
+    <div id="your-answer"></div>
+  </div>
+
+  <div id="answersList">
+    <h3>📊 Pronostics des autres joueurs :</h3>
+    <ul id="answers"></ul>
+  </div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+  authDomain: "calendrier2025-3185f.firebaseapp.com",
+  projectId: "calendrier2025-3185f",
+  storageBucket: "calendrier2025-3185f.firebasestorage.app",
+  messagingSenderId: "846792576145",
+  appId: "1:846792576145:web:59028ccef4ffd5c8010330",
+  measurementId: "G-L62L4JSYMF"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const fields = {
+  goty: document.getElementById('goty'),
+  narrative: document.getElementById('narrative'),
+  audio: document.getElementById('audio'),
+  indie: document.getElementById('indie'),
+  mobile: document.getElementById('mobile'),
+  action: document.getElementById('action'),
+  family: document.getElementById('family'),
+  sports: document.getElementById('sports'),
+  multiplayer: document.getElementById('multiplayer')
+};
+
+const submitBtn = document.getElementById('submit-btn');
+const yourAnswerDiv = document.getElementById('your-answer');
+const answersListDiv = document.getElementById('answersList');
+const answersUl = document.getElementById('answers');
+let currentUser = null;
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) { window.location.href = 'login.html'; return; }
+  currentUser = user;
+  document.getElementById('userStatus').innerText = `Connecté : ${user.email}`;
+
+  const jourRef = doc(db, 'Predictions', 'Jour 10');
+  const jourSnap = await getDoc(jourRef);
+  if (jourSnap.exists() && jourSnap.data()[user.uid]) {
+    showExistingPrediction(jourSnap.data()[user.uid]);
+  } else {
+    loadOtherAnswers();
+  }
+});
+
+function showExistingPrediction(data) {
+  for (const k in fields) fields[k].style.display = 'none';
+  submitBtn.style.display = 'none';
+
+  yourAnswerDiv.innerHTML = `
+    ✅ Vos pronostics :
+    <ul style="list-style:none; padding-left:0; margin:0">
+      <li><b>GOTY :</b> ${escapeHtml(data.goty)}</li>
+      <li><b>Narrative :</b> ${escapeHtml(data.narrative)}</li>
+      <li><b>Audio :</b> ${escapeHtml(data.audio)}</li>
+      <li><b>Indie :</b> ${escapeHtml(data.indie)}</li>
+      <li><b>Mobile :</b> ${escapeHtml(data.mobile)}</li>
+      <li><b>Action/Adventure :</b> ${escapeHtml(data.action)}</li>
+      <li><b>Family :</b> ${escapeHtml(data.family)}</li>
+      <li><b>Sports :</b> ${escapeHtml(data.sports)}</li>
+      <li><b>Multiplayer :</b> ${escapeHtml(data.multiplayer)}</li>
+    </ul>
+  `;
+  answersListDiv.style.display = 'block';
+  loadOtherAnswers();
+}
+
+submitBtn.addEventListener('click', async () => {
+  if (!currentUser) { alert('Utilisateur non identifié.'); return; }
+
+  const payload = {};
+  for (const key in fields) {
+    if (!fields[key].value) { alert('Merci de remplir toutes les catégories.'); return; }
+    payload[key] = fields[key].value;
+  }
+  payload.userId = currentUser.uid;
+  payload.userEmail = currentUser.email;
+  payload.timestamp = new Date().toISOString();
+
+  const jourRef = doc(db, 'Predictions', 'Jour 10');
+  const jourSnap = await getDoc(jourRef);
+
+  if (jourSnap.exists() && jourSnap.data()[currentUser.uid]) {
+    alert('Vous avez déjà soumis vos pronostics pour Jour 10.');
+    showExistingPrediction(jourSnap.data()[currentUser.uid]);
+    return;
+  }
+
+  if (jourSnap.exists()) {
+    await updateDoc(jourRef, { [currentUser.uid]: payload });
+  } else {
+    await setDoc(jourRef, { [currentUser.uid]: payload });
+  }
+
+  showExistingPrediction(payload);
+  yourAnswerDiv.insertAdjacentHTML('beforeend', '<div class="small">Vos réponses ont été enregistrées.</div>');
+});
+
+async function loadOtherAnswers() {
+  answersUl.innerHTML = '';
+  try {
+    const jourRef = doc(db, 'Predictions', 'Jour 10');
+    const jourSnap = await getDoc(jourRef);
+    if (!jourSnap.exists()) return;
+
+    const all = jourSnap.data();
+    const entries = Object.entries(all).filter(([uid]) => uid !== (currentUser && currentUser.uid));
+    if (entries.length === 0) {
+      answersUl.innerHTML = '<li class="small">Aucune autre réponse pour l’instant.</li>';
+      answersListDiv.style.display = 'block';
+      return;
+    }
+
+    entries.sort((a,b) => Date.parse(b[1].timestamp || 0) - Date.parse(a[1].timestamp || 0));
+    for (const [uid, data] of entries) {
+      const li = document.createElement('li');
+      li.innerHTML = `<b>${escapeHtml(data.userEmail || 'Anonyme')}</b> — GOTY: ${escapeHtml(data.goty)}, Narrative: ${escapeHtml(data.narrative)}, Audio: ${escapeHtml(data.audio)}, Indie: ${escapeHtml(data.indie)}, Mobile: ${escapeHtml(data.mobile)}, Action: ${escapeHtml(data.action)}, Family: ${escapeHtml(data.family)}, Sports: ${escapeHtml(data.sports)}, Multiplayer: ${escapeHtml(data.multiplayer)} <div class="small">${escapeHtml(new Date(data.timestamp || '').toLocaleString() || '')}</div>`;
+      answersUl.appendChild(li);
+    }
+    answersListDiv.style.display = 'block';
+  } catch (err) {
+    console.error('Erreur lecture autres réponses :', err);
+    answersUl.innerHTML = '<li class="small">Impossible de charger les autres réponses.</li>';
+    answersListDiv.style.display = 'block';
+  }
+}
+
+function escapeHtml(str) {
+  if (str === undefined || str === null) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+</script>
+</body>
+</html>
