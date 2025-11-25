@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎯 Pronos – Loris</title>
+  <title>🎯 Pronos – Parents</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -42,7 +42,13 @@
       width: 100%;
       box-shadow: 0px 6px 10px rgba(0,0,0,0.1);
     }
-    select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #bbb; font-size: 1em; }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #bbb;
+      font-size: 1em;
+    }
     #submit-btn {
       padding: 12px 25px;
       font-size: 1.2em;
@@ -78,29 +84,24 @@
 </head>
 <body>
 
-<h1>🎯 Pronos – Loris</h1>
+<h1>🎯 Pronos – Parents</h1>
 
 <div id="instructions">
-  <p>Pariez sur les deux événements suivants concernant Loris :</p>
+  <p>Pariez sur les événements suivants concernant les parents :</p>
   <ul style="text-align:left; display:inline-block;">
-    <li>Combien de vues au 15 décembre aura le projet d'allemand de Loris ? (-1 point tous les 10 vues)</li>
-    <li>Loris va-t-il réussir à convaincre les parents pour l'Australie ?</li>
+    <li>Combien de vues au 15 décembre aura le projet des parents ? (-1 point tous les 10 vues)</li>
+    <li>Les parents vont-ils nous envoyer une photo de colis reçu par Whatsapp ?</li>
   </ul>
   <div id="pointsInfo">💰 <b>10 points</b> par bonne réponse</div>
 </div>
 
 <div class="question-card">
-  <strong>📌 Combien de vues au 15 décembre aura le projet d'allemand de Loris ? (-1 point tous les 10 vues)</strong><br><br>
-  <select id="q1">
-    <option value="">-- Choisir --</option>
-    <option value="moins">Moins de 100</option>
-    <option value="100-200">100 à 200</option>
-    <option value="200+">Plus de 200</option>
-  </select>
+  <strong>📌 Combien de vues au 15 décembre aura le projet des parents ?</strong><br><br>
+  <input type="number" id="q1" placeholder="Entrez un nombre">
 </div>
 
 <div class="question-card">
-  <strong>📌 Loris va-t-il réussir à convaincre les parents pour l'Australie ?</strong><br><br>
+  <strong>📌 Les parents vont-ils nous envoyer une photo de colis reçu par Whatsapp ?</strong><br><br>
   <select id="q2">
     <option value="">-- Choisir --</option>
     <option value="oui">Oui</option>
@@ -108,7 +109,6 @@
   </select>
 </div>
 
-  
 <button id="submit-btn">Soumettre mes réponses</button>
 
 <div id="your-answer"></div>
@@ -147,11 +147,11 @@ onAuthStateChanged(auth, async (user) => {
   if (!user) { window.location.href = "login.html"; return; }
   currentUser = user;
 
-  docRef = doc(db, "Predictions", "Loris");
+  docRef = doc(db, "Predictions", "Parents");
   const snap = await getDoc(docRef);
 
   if (!snap.exists()) {
-    await setDoc(docRef, {}); // Créer le document "Loris" si inexistant
+    await setDoc(docRef, {}); // Créer le document "Parents" si inexistant
   }
 
   // Création du champ utilisateur avec email dès l'arrivée
@@ -181,13 +181,16 @@ document.getElementById("submit-btn").addEventListener("click", async () => {
   const q1 = document.getElementById("q1").value;
   const q2 = document.getElementById("q2").value;
 
-  if (!q1 || !q2) { alert("Veuillez répondre aux deux questions !"); return; }
+  if (q1 === "" || q2 === "") { 
+    alert("Veuillez répondre aux deux questions !"); 
+    return; 
+  }
 
   await updateDoc(docRef, {
     [currentUser.uid]: {
       email: currentUser.email,
       createdAt: new Date().toISOString(),
-      q1,
+      q1: Number(q1),
       q2,
       submittedAt: new Date().toISOString()
     }
@@ -206,8 +209,8 @@ function showUserAnswers(data) {
 
   document.getElementById("your-answer").innerHTML =
     "✅ <b>Vos réponses :</b><br>" +
-    `Vues projet allemand : <b>${data.q1}</b><br>` +
-    `Convaincre parents Australie : <b>${data.q2}</b>`;
+    `Vues prévues : <b>${data.q1}</b><br>` +
+    `Photo envoyée par Whatsapp : <b>${data.q2}</b>`;
 
   loadOtherAnswers();
 }
@@ -221,14 +224,14 @@ async function loadOtherAnswers(existingData = null) {
 
   answersUl.innerHTML = "";
 
-  const snap = await getDoc(doc(db, "Predictions", "Loris"));
+  const snap = await getDoc(doc(db, "Predictions", "Parents"));
   if (!snap.exists()) return;
   const allData = snap.data();
 
   Object.entries(allData).forEach(([uid, data]) => {
     if (uid === currentUser.uid) return;
     answersUl.innerHTML += `<li><b>${data.email || 'Anonyme'}</b>` +
-      (data.q1 && data.q2 ? ` : Vues: ${data.q1}, Australie: ${data.q2}` : " (pas encore répondu)") +
+      ((data.q1 || data.q2) ? ` : Vues=${data.q1 || 'N/A'}, Photo=${data.q2 || 'N/A'}` : " (pas encore répondu)") +
       `</li>`;
   });
 
