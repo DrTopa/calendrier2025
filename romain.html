@@ -162,42 +162,35 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 let currentUser = null;
-let initialDocRef = null;
+let docRef = null;
 
 // -------------------------------------------------------------
-// 1️⃣ Dès l'ouverture → créer un document avec timestamp
+// Auth et récupération document Firestore
 // -------------------------------------------------------------
 onAuthStateChanged(auth, async (user) => {
   if (!user) { window.location.href = "login.html"; return; }
-
   currentUser = user;
 
-  const userRef = doc(db, "Romain", user.uid);
-  const snap = await getDoc(userRef);
+  docRef = doc(db, "Predictions", "Romain");
+  const snap = await getDoc(docRef);
 
   if (!snap.exists()) {
-    await setDoc(userRef, {
-      userId: user.uid,
-      userEmail: user.email,
-      createdAt: new Date().toISOString()
-    });
+    await setDoc(docRef, {}); // créer document vide si nécessaire
   }
 
-  initialDocRef = userRef;
+  const data = (await getDoc(docRef)).data();
 
-  // Si déjà répondu → afficher ses réponses
-  if (snap.exists() && snap.data().answers) {
-    showUserAnswers(snap.data());
+  if (data && data[currentUser.uid]) {
+    showUserAnswers(data[currentUser.uid]);
   } else {
-    loadOtherAnswers();
+    loadOtherAnswers(data);
   }
 });
 
 // -------------------------------------------------------------
-// 2️⃣ Soumission des réponses
+// Soumission des réponses
 // -------------------------------------------------------------
 document.getElementById("submit-btn").addEventListener("click", async () => {
-  if (!currentUser) return;
 
   const q1 = document.getElementById("q1").value;
   const q2 = document.getElementById("q2").value;
@@ -207,51 +200,56 @@ document.getElementById("submit-btn").addEventListener("click", async () => {
     return;
   }
 
-  const payload = {
-    answers: {
+  await updateDoc(docRef, {
+    [currentUser.uid]: {
       q1,
-      q2
-    },
-    submittedAt: new Date().toISOString()
-  };
+      q2,
+      submittedAt: new Date().toISOString(),
+      email: currentUser.email
+    }
+  });
 
-  await updateDoc(initialDocRef, payload);
-
-  showUserAnswers({ answers: payload.answers });
+  showUserAnswers({ q1, q2 });
 });
 
 // -------------------------------------------------------------
-// 3️⃣ Afficher les réponses du joueur
+// Affichage des réponses du joueur
 // -------------------------------------------------------------
 function showUserAnswers(data) {
   document.getElementById("submit-btn").style.display = "none";
+  document.getElementById("q1").disabled = true;
+  document.getElementById("q2").disabled = true;
 
   document.getElementById("your-answer").innerHTML =
     "✅ <b>Vos réponses :</b><br>" +
-    `4 décembre : <b>${data.answers.q1}</b><br>` +
-    `11 décembre : <b>${data.answers.q2}</b>`;
+    `4 décembre : <b>${data.q1}</b><br>` +
+    `11 décembre : <b>${data.q2}</b>`;
 
   loadOtherAnswers();
 }
 
 // -------------------------------------------------------------
-// 4️⃣ Charger les autres joueurs
+// Charger les réponses des autres joueurs
 // -------------------------------------------------------------
-async function loadOtherAnswers() {
-  const container = document.getElementById("answers");
+async function loadOtherAnswers(existingData = null) {
+  const answersUl = document.getElementById("answers");
   const wrapper = document.getElementById("answersList");
 
-  container.innerHTML = "";
+  answersUl.innerHTML = "";
 
-  const ref = doc(db, "Romain", currentUser.uid);
-  const allSnap = await getDoc(doc(db, "Romain", currentUser.uid));
+  const snap = await getDoc(doc(db, "Predictions", "Romain"));
+  if (!snap.exists()) return;
 
-  const colRef = doc(db, "Romain");
+  const allData = snap.data();
+
+  Object.entries(allData).forEach(([uid, data]) => {
+    if (uid === currentUser.uid) return;
+    answersUl.innerHTML += `<li><b>${data.email || 'Anonyme'}</b> : 4 décembre: ${data.q1}, 11 décembre: ${data.q2}</li>`;
+  });
 
   wrapper.style.display = "block";
 }
 
 </script>
-
 </body>
 </html>
