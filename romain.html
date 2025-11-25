@@ -14,7 +14,6 @@
       flex-direction: column;
       align-items: center;
     }
-
     h1 {
       font-size: 2em;
       text-align: center;
@@ -23,7 +22,6 @@
       font-family: 'Comic Sans MS', cursive;
       text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
     }
-
     #instructions {
       background: rgba(255,255,255,0.9);
       padding: 15px;
@@ -34,13 +32,7 @@
       font-size: 1.1em;
       text-align: center;
     }
-
-    #pointsInfo {
-      margin-top: 5px;
-      font-size: 0.9em;
-      color: #444;
-    }
-
+    #pointsInfo { margin-top: 5px; font-size: 0.9em; color: #444; }
     .question-card {
       background: rgba(255,255,255,0.95);
       border-radius: 12px;
@@ -50,15 +42,7 @@
       width: 100%;
       box-shadow: 0px 6px 10px rgba(0,0,0,0.1);
     }
-
-    select {
-      width: 100%;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #bbb;
-      font-size: 1em;
-    }
-
+    select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #bbb; font-size: 1em; }
     #submit-btn {
       padding: 12px 25px;
       font-size: 1.2em;
@@ -69,16 +53,8 @@
       cursor: pointer;
       margin-top: 15px;
     }
-
     #submit-btn:hover { background-color: #2e7d32; }
-
-    #your-answer {
-      margin-top: 20px;
-      font-size: 1.1em;
-      font-weight: bold;
-      color: #2e7d32;
-    }
-
+    #your-answer { margin-top: 20px; font-size: 1.1em; font-weight: bold; color: #2e7d32; }
     #answersList {
       display: none;
       margin-top: 20px;
@@ -89,7 +65,6 @@
       width: 100%;
       box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
     }
-
     #answersList ul { padding-left: 0; }
     #answersList li {
       list-style: none;
@@ -142,7 +117,6 @@
 </div>
 
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
@@ -165,7 +139,7 @@ let currentUser = null;
 let docRef = null;
 
 // -------------------------------------------------------------
-// Auth et récupération document Firestore
+// Auth et création immédiate de l'entrée utilisateur
 // -------------------------------------------------------------
 onAuthStateChanged(auth, async (user) => {
   if (!user) { window.location.href = "login.html"; return; }
@@ -175,15 +149,26 @@ onAuthStateChanged(auth, async (user) => {
   const snap = await getDoc(docRef);
 
   if (!snap.exists()) {
-    await setDoc(docRef, {}); // créer document vide si nécessaire
+    await setDoc(docRef, {}); // Créer le document "Romain" si inexistant
   }
 
+  // Création du champ utilisateur avec email dès l'arrivée
   const data = (await getDoc(docRef)).data();
+  if (!data[currentUser.uid]) {
+    await updateDoc(docRef, {
+      [currentUser.uid]: {
+        email: currentUser.email,
+        createdAt: new Date().toISOString()
+      }
+    });
+  }
 
-  if (data && data[currentUser.uid]) {
-    showUserAnswers(data[currentUser.uid]);
+  // Si l'utilisateur a déjà répondu → afficher
+  const updatedData = (await getDoc(docRef)).data();
+  if (updatedData[currentUser.uid].q1 && updatedData[currentUser.uid].q2) {
+    showUserAnswers(updatedData[currentUser.uid]);
   } else {
-    loadOtherAnswers(data);
+    loadOtherAnswers(updatedData);
   }
 });
 
@@ -191,21 +176,18 @@ onAuthStateChanged(auth, async (user) => {
 // Soumission des réponses
 // -------------------------------------------------------------
 document.getElementById("submit-btn").addEventListener("click", async () => {
-
   const q1 = document.getElementById("q1").value;
   const q2 = document.getElementById("q2").value;
 
-  if (!q1 || !q2) {
-    alert("Veuillez répondre aux deux questions !");
-    return;
-  }
+  if (!q1 || !q2) { alert("Veuillez répondre aux deux questions !"); return; }
 
   await updateDoc(docRef, {
     [currentUser.uid]: {
+      email: currentUser.email,
+      createdAt: new Date().toISOString(), // Peut rester la date initiale ou ajouter une autre clé
       q1,
       q2,
-      submittedAt: new Date().toISOString(),
-      email: currentUser.email
+      submittedAt: new Date().toISOString()
     }
   });
 
@@ -229,7 +211,7 @@ function showUserAnswers(data) {
 }
 
 // -------------------------------------------------------------
-// Charger les réponses des autres joueurs
+// Affichage des réponses des autres joueurs
 // -------------------------------------------------------------
 async function loadOtherAnswers(existingData = null) {
   const answersUl = document.getElementById("answers");
@@ -239,17 +221,17 @@ async function loadOtherAnswers(existingData = null) {
 
   const snap = await getDoc(doc(db, "Predictions", "Romain"));
   if (!snap.exists()) return;
-
   const allData = snap.data();
 
   Object.entries(allData).forEach(([uid, data]) => {
     if (uid === currentUser.uid) return;
-    answersUl.innerHTML += `<li><b>${data.email || 'Anonyme'}</b> : 4 décembre: ${data.q1}, 11 décembre: ${data.q2}</li>`;
+    answersUl.innerHTML += `<li><b>${data.email || 'Anonyme'}</b>` +
+      (data.q1 && data.q2 ? ` : 4 décembre: ${data.q1}, 11 décembre: ${data.q2}` : " (pas encore répondu)") +
+      `</li>`;
   });
 
   wrapper.style.display = "block";
 }
-
 </script>
 </body>
 </html>
