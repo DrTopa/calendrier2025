@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎯 Pronos – Parents</title>
+  <title>🎯 Pronos – Loris</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -84,24 +84,24 @@
 </head>
 <body>
 
-<h1>🎯 Pronos – Parents</h1>
+<h1>🎯 Pronos – Loris</h1>
 
 <div id="instructions">
-  <p>Pariez sur les événements suivants concernant les parents :</p>
+  <p>Pariez sur les événements suivants concernant Loris :</p>
   <ul style="text-align:left; display:inline-block;">
-    <li>Combien de vues au 15 décembre aura le projet des parents ? (-1 point tous les 10 vues)</li>
-    <li>Les parents vont-ils nous envoyer une photo de colis reçu par Whatsapp ?</li>
+    <li>Combien de vues au 15 décembre aura le projet de Loris ? (-1 point tous les 10 vues)</li>
+    <li>Loris arrivera t-il à partir en Australie en échange ?</li>
   </ul>
   <div id="pointsInfo">💰 <b>10 points</b> par bonne réponse</div>
 </div>
 
 <div class="question-card">
-  <strong>📌 Combien de vues au 15 décembre aura le projet des parents ?</strong><br><br>
+  <strong>📌 Combien de vues au 15 décembre aura le projet d'allemand de Loris ?</strong><br><br>
   <input type="number" id="q1" placeholder="Entrez un nombre">
 </div>
 
 <div class="question-card">
-  <strong>📌 Les parents vont-ils nous envoyer une photo de colis reçu par Whatsapp ?</strong><br><br>
+  <strong>📌 Loris arrivera t-il à partir en Australie en échange ?</strong><br><br>
   <select id="q2">
     <option value="">-- Choisir --</option>
     <option value="oui">Oui</option>
@@ -147,11 +147,11 @@ onAuthStateChanged(auth, async (user) => {
   if (!user) { window.location.href = "login.html"; return; }
   currentUser = user;
 
-  docRef = doc(db, "Predictions", "Parents");
+  docRef = doc(db, "Predictions", "Loris");
   const snap = await getDoc(docRef);
 
   if (!snap.exists()) {
-    await setDoc(docRef, {}); // Créer le document "Parents" si inexistant
+    await setDoc(docRef, {}); // Créer le document "Loris" si inexistant
   }
 
   // Création du champ utilisateur avec email dès l'arrivée
@@ -224,7 +224,7 @@ async function loadOtherAnswers(existingData = null) {
 
   answersUl.innerHTML = "";
 
-  const snap = await getDoc(doc(db, "Predictions", "Parents"));
+  const snap = await getDoc(doc(db, "Predictions", "Loris"));
   if (!snap.exists()) return;
   const allData = snap.data();
 
