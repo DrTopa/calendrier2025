@@ -117,16 +117,16 @@ input[type="text"], input[type="number"] {
         <li>Top 3 (3 régions à écrire)</li>
         <li>Classement Île-de-France (1 à 30)</li>
         <li>Classement Normandie (1 à 30)</li>
-        <li>Dernière région</li>
+        <li>Pied du podium</li>
     </ul>
 
     <p><b>Système de points :</b></p>
     <div>
-        • 30 pts si la région gagnante est correcte<br>
+        • 40 pts si la région gagnante est correcte<br>
         • 15 pts par région correcte dans le Top 3<br>
         • 50 pts pour le classement exact Île-de-France (−5 pts par rang d’écart)<br>
         • 50 pts pour le classement exact Normandie (−5 pts par rang d’écart)<br>
-        • 30 pts si la dernière région est correcte
+        • 40 pts si la région au pied du podium est correcte
     </div>
 </div>
 
@@ -163,7 +163,7 @@ input[type="text"], input[type="number"] {
     </div>
 
     <div class="card">
-        <div class="card-title">Dernière région</div>
+        <div class="card-title">¨Pied du Podium</div>
         <input type="text" id="last">
     </div>
 
@@ -226,7 +226,7 @@ function showExisting(data){
     html += `<li>Top 3 : ${data.top1}, ${data.top2}, ${data.top3}</li>`;
     html += `<li>Île-de-France : ${data.idf}</li>`;
     html += `<li>Normandie : ${data.normandie}</li>`;
-    html += `<li>Dernière : ${data.last}</li>`;
+    html += `<li>Pied du podium : ${data.last}</li>`;
 
     html += "</ul>";
 
@@ -286,7 +286,7 @@ async function loadOthers(){
             `Gagnante: ${data.winner} | ` +
             `Top3: ${data.top1}, ${data.top2}, ${data.top3} | ` +
             `IDF: ${data.idf} | Normandie: ${data.normandie} | ` +
-            `Dernière: ${data.last}`;
+            `Pied du podium: ${data.last}`;
         ul.appendChild(li);
     });
 
