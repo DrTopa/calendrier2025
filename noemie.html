@@ -153,4 +153,85 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   // Création du champ utilisateur avec email dès l'arrivée
-  const data = (await getDoc(docRef)).data()
+  const data = (await getDoc(docRef)).data();
+  if (!data[currentUser.uid]) {
+    await updateDoc(docRef, {
+      [currentUser.uid]: {
+        email: currentUser.email,
+        createdAt: new Date().toISOString()
+      }
+    });
+  }
+
+  // Si l'utilisateur a déjà répondu → afficher
+  const updatedData = (await getDoc(docRef)).data();
+  if (updatedData[currentUser.uid].q1 && updatedData[currentUser.uid].q2) {
+    showUserAnswers(updatedData[currentUser.uid]);
+  } else {
+    loadOtherAnswers(updatedData);
+  }
+});
+
+// -------------------------------------------------------------
+// Soumission des réponses
+// -------------------------------------------------------------
+document.getElementById("submit-btn").addEventListener("click", async () => {
+  const q1 = document.getElementById("q1").value;
+  const q2 = document.getElementById("q2").value;
+
+  if (!q1 || !q2) { alert("Veuillez répondre aux deux questions !"); return; }
+
+  await updateDoc(docRef, {
+    [currentUser.uid]: {
+      email: currentUser.email,
+      createdAt: new Date().toISOString(),
+      q1,
+      q2,
+      submittedAt: new Date().toISOString()
+    }
+  });
+
+  showUserAnswers({ q1, q2 });
+});
+
+// -------------------------------------------------------------
+// Affichage des réponses du joueur
+// -------------------------------------------------------------
+function showUserAnswers(data) {
+  document.getElementById("submit-btn").style.display = "none";
+  document.getElementById("q1").disabled = true;
+  document.getElementById("q2").disabled = true;
+
+  document.getElementById("your-answer").innerHTML =
+    "✅ <b>Vos réponses :</b><br>" +
+    `Rager sur le site : <b>${data.q1}</b><br>` +
+    `Indications avant Noël pour Carlos : <b>${data.q2}</b>`;
+
+  loadOtherAnswers();
+}
+
+// -------------------------------------------------------------
+// Affichage des réponses des autres joueurs
+// -------------------------------------------------------------
+async function loadOtherAnswers(existingData = null) {
+  const answersUl = document.getElementById("answers");
+  const wrapper = document.getElementById("answersList");
+
+  answersUl.innerHTML = "";
+
+  const snap = await getDoc(doc(db, "Predictions", "Noemie"));
+  if (!snap.exists()) return;
+  const allData = snap.data();
+
+  Object.entries(allData).forEach(([uid, data]) => {
+    if (uid === currentUser.uid) return;
+    answersUl.innerHTML += `<li><b>${data.email || 'Anonyme'}</b>` +
+      (data.q1 && data.q2 ? ` : Rager: ${data.q1}, Indications: ${data.q2}` : " (pas encore répondu)") +
+      `</li>`;
+  });
+
+  wrapper.style.display = "block";
+}
+</script>
+</body>
+</html>
