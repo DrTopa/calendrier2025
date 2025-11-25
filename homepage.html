@@ -8,19 +8,19 @@
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
       display: flex;
-      justify-content: flex-start;
-      align-items: center;
       flex-direction: column;
-      height: 100vh;
+      align-items: center;
       margin: 0;
       color: #2e7d32;
       text-align: center;
       background-color: #ffebcd;
       background-image: url('https://www.transparenttextures.com/patterns/giftly.png');
+      padding-bottom: 40px;
     }
 
     h1 {
       font-size: 2.5em;
+      margin-top: 20px;
       margin-bottom: 20px;
       color: #d32f2f;
       text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
@@ -42,75 +42,20 @@
       font-weight: bold;
     }
 
-    /* FULL LEFT ALIGNMENT FOR BUTTONS + GRID */
-    .main-content {
-      display: flex;
-      justify-content: flex-start;
-      align-items: flex-start;
-      width: 100%;
-      margin-top: 20px;
-      padding-left: 40px; /* Align with grid */
-    }
-
-    /* Left column with buttons */
-    .left-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-right: 40px; /* Space between buttons and grid */
-    }
-
-    .menu-btn {
-      width: 220px;
-      height: 45px;
-      background-color: #2e7d32;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      font-size: 1.2em;
-      border-radius: 8px;
-      transition: background-color 0.3s;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-    }
-
-    .menu-btn:hover { background-color: #1b5e20; }
-
-    /* Special buttons */
-    #pack-btn { background-color: #ff9800; }
-    #pack-btn:hover { background-color: darkorange; }
-
-    #logout-btn {
-      width: 220px;
-      height: 45px;
-      background-color: red;
-      color: white;
-      font-size: 1.2em;
-      cursor: pointer;
-      border: none;
-      border-radius: 8px;
-      transition: background-color 0.3s, transform 0.2s;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-    }
-    #logout-btn:hover {
-      background-color: darkred;
-      transform: scale(1.05);
-    }
-
-    /* Grid */
+    /* Grid of days */
     .box-grid {
       display: grid;
-      grid-template-columns: repeat(8, 100px);
+      grid-template-columns: repeat(8, 90px);
       gap: 10px;
+      margin-bottom: 30px;
     }
 
     .box {
-      width: 100px;
-      height: 100px;
+      width: 90px;
+      height: 90px;
       background-color: #007BFF;
       color: white;
-      font-size: 1.5em;
+      font-size: 1.4em;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -124,6 +69,56 @@
       transform: scale(1.05);
     }
 
+    /* Buttons grid under numbers */
+    .buttons-section {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .buttons-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 200px);
+      gap: 15px;
+    }
+
+    .menu-btn {
+      height: 45px;
+      background-color: #2e7d32;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 1.1em;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    .menu-btn:hover { background-color: #1b5e20; }
+
+    #pack-btn { background-color: #ff9800; }
+    #pack-btn:hover { background-color: darkorange; }
+
+    /* Logout button */
+    #logout-btn {
+      margin-top: 25px;
+      width: 150px;
+      height: 40px;
+      background-color: red;
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      transition: background-color 0.3s, transform 0.2s;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    #logout-btn:hover {
+      background-color: darkred;
+      transform: scale(1.05);
+    }
   </style>
 </head>
 <body>
@@ -135,56 +130,57 @@
     <div id="userTokens">Jetons : 0</div>
   </div>
 
-  <div class="main-content">
+  <!-- GRID OF DAYS -->
+  <div class="box-grid">
+    <div class="box" data-game="0">0</div>
+    <div class="box" data-game="1">1</div>
+    <div class="box" data-game="2">2</div>
+    <div class="box" data-game="3">3</div>
+    <div class="box" data-game="4">4</div>
+    <div class="box" data-game="5">5</div>
+    <div class="box" data-game="6">6</div>
+    <div class="box" data-game="7">7</div>
+    <div class="box" data-game="8">8</div>
+    <div class="box" data-game="9">9</div>
+    <div class="box" data-game="10">10</div>
+    <div class="box" data-game="11">11</div>
+    <div class="box" data-game="12">12</div>
+    <div class="box" data-game="13">13</div>
+    <div class="box" data-game="14">14</div>
+    <div class="box" data-game="15">15</div>
+    <div class="box" data-game="16">16</div>
+    <div class="box" data-game="17">17</div>
+    <div class="box" data-game="18">18</div>
+    <div class="box" data-game="19">19</div>
+    <div class="box" data-game="20">20</div>
+    <div class="box" data-game="21">21</div>
+    <div class="box" data-game="22">22</div>
+    <div class="box" data-game="23">23</div>
+    <div class="box" data-game="24">24</div>
+  </div>
 
-    <!-- LEFT BUTTON COLUMN -->
-    <div class="left-buttons">
+  <!-- BUTTONS UNDER GRID -->
+  <div class="buttons-section">
+    <div class="buttons-grid">
       <div class="menu-btn" id="leaderboard">Collection</div>
       <div class="menu-btn" id="pack-btn">Ouverture de paquets</div>
-
       <div class="menu-btn" id="bonus-btn">Bonus</div>
+
       <div class="menu-btn" id="romain-btn">Romain</div>
       <div class="menu-btn" id="adrien-btn">Adrien</div>
       <div class="menu-btn" id="noemie-btn">Noémie</div>
+
       <div class="menu-btn" id="loris-btn">Loris</div>
       <div class="menu-btn" id="thaddee-btn">Thaddée</div>
       <div class="menu-btn" id="parents-btn">Parents</div>
-
-      <button id="logout-btn">Déconnexion</button>
     </div>
-
-    <!-- GRID -->
-    <div class="box-grid">
-      <div class="box" data-game="0">0</div>
-      <div class="box" data-game="1">1</div>
-      <div class="box" data-game="2">2</div>
-      <div class="box" data-game="3">3</div>
-      <div class="box" data-game="4">4</div>
-      <div class="box" data-game="5">5</div>
-      <div class="box" data-game="6">6</div>
-      <div class="box" data-game="7">7</div>
-      <div class="box" data-game="8">8</div>
-      <div class="box" data-game="9">9</div>
-      <div class="box" data-game="10">10</div>
-      <div class="box" data-game="11">11</div>
-      <div class="box" data-game="12">12</div>
-      <div class="box" data-game="13">13</div>
-      <div class="box" data-game="14">14</div>
-      <div class="box" data-game="15">15</div>
-      <div class="box" data-game="16">16</div>
-      <div class="box" data-game="17">17</div>
-      <div class="box" data-game="18">18</div>
-      <div class="box" data-game="19">19</div>
-      <div class="box" data-game="20">20</div>
-      <div class="box" data-game="21">21</div>
-      <div class="box" data-game="22">22</div>
-      <div class="box" data-game="23">23</div>
-      <div class="box" data-game="24">24</div>
-    </div>
-
   </div>
 
-  <!-- Firebase script (identique à ton code initial) -->
+  <!-- Logout -->
+  <button id="logout-btn">Déconnexion</button>
+
+
+  <!-- Firebase script -->
   <script defer type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
@@ -219,10 +215,9 @@
       }
     });
 
-    /* Navigation buttons */
+    /* Navigation */
     document.getElementById("leaderboard").onclick = () => location.href = "leaderboard.html";
     document.getElementById("pack-btn").onclick = () => location.href = "packs.html";
-
     document.getElementById("bonus-btn").onclick = () => location.href = "bonus.html";
     document.getElementById("romain-btn").onclick = () => location.href = "romain.html";
     document.getElementById("adrien-btn").onclick = () => location.href = "adrien.html";
