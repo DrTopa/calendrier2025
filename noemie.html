@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎯 Pronos – Noemie</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background-color: #fdf6e3;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      font-size: 2em;
+      text-align: center;
+      color: #b71c1c;
+      margin-bottom: 10px;
+      font-family: 'Comic Sans MS', cursive;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
+    #instructions {
+      background: rgba(255,255,255,0.9);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      max-width: 700px;
+      margin-bottom: 20px;
+      font-size: 1.1em;
+      text-align: center;
+    }
+    #pointsInfo { margin-top: 5px; font-size: 0.9em; color: #444; }
+    .question-card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 10px 0;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: 0px 6px 10px rgba(0,0,0,0.1);
+    }
+    select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #bbb; font-size: 1em; }
+    #submit-btn {
+      padding: 12px 25px;
+      font-size: 1.2em;
+      background-color: #388e3c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    #submit-btn:hover { background-color: #2e7d32; }
+    #your-answer { margin-top: 20px; font-size: 1.1em; font-weight: bold; color: #2e7d32; }
+    #answersList {
+      display: none;
+      margin-top: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
+    }
+    #answersList ul { padding-left: 0; }
+    #answersList li {
+      list-style: none;
+      padding: 8px;
+      margin: 6px 0;
+      background: #fafafa;
+      border-left: 5px solid #b71c1c;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🎯 Pronos – Noemie</h1>
+
+<div id="instructions">
+  <p>Pariez sur les deux événements suivants concernant Noemie :</p>
+  <ul style="text-align:left; display:inline-block;">
+    <li>Noemie va-t-elle rager sur le site en disant que c'est mal fait / qu'elle aurait fait mieux ?</li>
+    <li>Noemie va-t-elle donner des indications avant Noël sur comment nous comporter en présence de Carlos ?</li>
+  </ul>
+  <div id="pointsInfo">💰 <b>10 points</b> par bonne réponse</div>
+</div>
+
+<div class="question-card">
+  <strong>📌 Noemie va-t-elle rager sur le site en disant que c'est mal fait / qu'elle aurait fait mieux ?</strong><br><br>
+  <select id="q1">
+    <option value="">-- Choisir --</option>
+    <option value="oui">Oui</option>
+    <option value="non">Non</option>
+  </select>
+</div>
+
+<div class="question-card">
+  <strong>📌 Noemie va-t-elle donner des indications avant Noël sur comment nous comporter en présence de Carlos ?</strong><br><br>
+  <select id="q2">
+    <option value="">-- Choisir --</option>
+    <option value="oui">Oui</option>
+    <option value="non">Non</option>
+  </select>
+</div>
+
+<button id="submit-btn">Soumettre mes réponses</button>
+
+<div id="your-answer"></div>
+
+<div id="answersList">
+  <h3>📊 Réponses des autres joueurs :</h3>
+  <ul id="answers"></ul>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+  authDomain: "calendrier2025-3185f.firebaseapp.com",
+  projectId: "calendrier2025-3185f",
+  storageBucket: "calendrier2025-3185f.firebasestorage.app",
+  messagingSenderId: "846792576145",
+  appId: "1:846792576145:web:59028ccef4ffd5c8010330",
+  measurementId: "G-L62L4JSYMF"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+let docRef = null;
+
+// -------------------------------------------------------------
+// Auth et création immédiate de l'entrée utilisateur
+// -------------------------------------------------------------
+onAuthStateChanged(auth, async (user) => {
+  if (!user) { window.location.href = "login.html"; return; }
+  currentUser = user;
+
+  docRef = doc(db, "Predictions", "Noemie");
+  const snap = await getDoc(docRef);
+
+  if (!snap.exists()) {
+    await setDoc(docRef, {}); // Créer le document "Noemie" si inexistant
+  }
+
+  // Création du champ utilisateur avec email dès l'arrivée
+  const data = (await getDoc(docRef)).data()
