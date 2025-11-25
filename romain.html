@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎯 Pronos – Romain</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background-color: #fdf6e3;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 2em;
+      text-align: center;
+      color: #b71c1c;
+      margin-bottom: 10px;
+      font-family: 'Comic Sans MS', cursive;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
+
+    #instructions {
+      background: rgba(255,255,255,0.9);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      max-width: 700px;
+      margin-bottom: 20px;
+      font-size: 1.1em;
+      text-align: center;
+    }
+
+    #pointsInfo {
+      margin-top: 5px;
+      font-size: 0.9em;
+      color: #444;
+    }
+
+    .question-card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 10px 0;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: 0px 6px 10px rgba(0,0,0,0.1);
+    }
+
+    select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #bbb;
+      font-size: 1em;
+    }
+
+    #submit-btn {
+      padding: 12px 25px;
+      font-size: 1.2em;
+      background-color: #388e3c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    #submit-btn:hover { background-color: #2e7d32; }
+
+    #your-answer {
+      margin-top: 20px;
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #2e7d32;
+    }
+
+    #answersList {
+      display: none;
+      margin-top: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
+    }
+
+    #answersList ul { padding-left: 0; }
+    #answersList li {
+      list-style: none;
+      padding: 8px;
+      margin: 6px 0;
+      background: #fafafa;
+      border-left: 5px solid #b71c1c;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🎯 Pronos – Romain</h1>
+
+<div id="instructions">
+  <p>Pariez sur les deux événements suivants concernant Romain :</p>
+  <ul style="text-align:left; display:inline-block;">
+    <li>Va-t-il parier en moins de 30 minutes le 4 décembre ?</li>
+    <li>Va-t-il parier en moins de 30 minutes le 11 décembre ?</li>
+  </ul>
+  <div id="pointsInfo">💰 <b>15 points</b> par bonne réponse</div>
+</div>
+
+<div class="question-card">
+  <strong>📌 Romain va-t-il parier en moins de 30 minutes le <u>4 décembre</u> ?</strong><br><br>
+  <select id="q1">
+    <option value="">-- Choisir --</option>
+    <option value="oui">Oui</option>
+    <option value="non">Non</option>
+  </select>
+</div>
+
+<div class="question-card">
+  <strong>📌 Romain va-t-il parier en moins de 30 minutes le <u>11 décembre</u> ?</strong><br><br>
+  <select id="q2">
+    <option value="">-- Choisir --</option>
+    <option value="oui">Oui</option>
+    <option value="non">Non</option>
+  </select>
+</div>
+
+<button id="submit-btn">Soumettre mes réponses</button>
+
+<div id="your-answer"></div>
+
+<div id="answersList">
+  <h3>📊 Réponses des autres joueurs :</h3>
+  <ul id="answers"></ul>
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+  authDomain: "calendrier2025-3185f.firebaseapp.com",
+  projectId: "calendrier2025-3185f",
+  storageBucket: "calendrier2025-3185f.firebasestorage.app",
+  messagingSenderId: "846792576145",
+  appId: "1:846792576145:web:59028ccef4ffd5c8010330",
+  measurementId: "G-L62L4JSYMF"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+let initialDocRef = null;
+
+// -------------------------------------------------------------
+// 1️⃣ Dès l'ouverture → créer un document avec timestamp
+// -------------------------------------------------------------
+onAuthStateChanged(auth, async (user) => {
+  if (!user) { window.location.href = "login.html"; return; }
+
+  currentUser = user;
+
+  const userRef = doc(db, "Romain", user.uid);
+  const snap = await getDoc(userRef);
+
+  if (!snap.exists()) {
+    await setDoc(userRef, {
+      userId: user.uid,
+      userEmail: user.email,
+      createdAt: new Date().toISOString()
+    });
+  }
+
+  initialDocRef = userRef;
+
+  // Si déjà répondu → afficher ses réponses
+  if (snap.exists() && snap.data().answers) {
+    showUserAnswers(snap.data());
+  } else {
+    loadOtherAnswers();
+  }
+});
+
+// -------------------------------------------------------------
+// 2️⃣ Soumission des réponses
+// -------------------------------------------------------------
+document.getElementById("submit-btn").addEventListener("click", async () => {
+  if (!currentUser) return;
+
+  const q1 = document.getElementById("q1").value;
+  const q2 = document.getElementById("q2").value;
+
+  if (!q1 || !q2) {
+    alert("Veuillez répondre aux deux questions !");
+    return;
+  }
+
+  const payload = {
+    answers: {
+      q1,
+      q2
+    },
+    submittedAt: new Date().toISOString()
+  };
+
+  await updateDoc(initialDocRef, payload);
+
+  showUserAnswers({ answers: payload.answers });
+});
+
+// -------------------------------------------------------------
+// 3️⃣ Afficher les réponses du joueur
+// -------------------------------------------------------------
+function showUserAnswers(data) {
+  document.getElementById("submit-btn").style.display = "none";
+
+  document.getElementById("your-answer").innerHTML =
+    "✅ <b>Vos réponses :</b><br>" +
+    `4 décembre : <b>${data.answers.q1}</b><br>` +
+    `11 décembre : <b>${data.answers.q2}</b>`;
+
+  loadOtherAnswers();
+}
+
+// -------------------------------------------------------------
+// 4️⃣ Charger les autres joueurs
+// -------------------------------------------------------------
+async function loadOtherAnswers() {
+  const container = document.getElementById("answers");
+  const wrapper = document.getElementById("answersList");
+
+  container.innerHTML = "";
+
+  const ref = doc(db, "Romain", currentUser.uid);
+  const allSnap = await getDoc(doc(db, "Romain", currentUser.uid));
+
+  const colRef = doc(db, "Romain");
+
+  wrapper.style.display = "block";
+}
+
+</script>
+
+</body>
+</html>
