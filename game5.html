@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>👑 Miss France 2025 – Jour 5</title>
+
+<style>
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background-color: #fdf6e3;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+h1 {
+    font-size: 2em;
+    text-align: center;
+    color: #b71c1c;
+    margin-bottom: 10px;
+    font-family: 'Comic Sans MS', cursive;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+#instructions {
+    background: rgba(255,255,255,0.9);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    max-width: 900px;
+    margin-bottom: 20px;
+    font-size: 1.05em;
+    text-align: center;
+}
+#predictionArea {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 900px;
+    width: 100%;
+}
+.card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 6px 10px rgba(0,0,0,0.1);
+}
+.card-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+input[type="text"], input[type="number"] {
+    width: 90%;
+    padding: 8px;
+    font-size: 1em;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+}
+#submit-btn {
+    padding: 10px 20px;
+    font-size: 1.1em;
+    cursor: pointer;
+    background-color: #388e3c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    margin-top: 20px;
+    grid-column: span 2;
+}
+#submit-btn:hover {
+    background-color: #2e7d32;
+}
+#your-answer {
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 1.05em;
+    color: #2e7d32;
+    grid-column: span 2;
+}
+#answersList {
+    display: none;
+    margin-top: 25px;
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.12);
+    max-width: 900px;
+    width: 100%;
+    grid-column: span 2;
+}
+#answersList ul {
+    padding-left: 0;
+    margin: 0;
+}
+#answersList li {
+    list-style: none;
+    background: rgba(250,250,250,0.9);
+    margin: 8px 0;
+    padding: 8px;
+    border-radius: 6px;
+    border-left: 5px solid #b71c1c;
+}
+</style>
+</head>
+
+<body>
+
+<h1>👑 Miss France 2025 – Jour 5</h1>
+
+<div id="instructions">
+    <p>Complétez vos pronostics :</p>
+    <ul style="text-align:left; display:inline-block;">
+        <li>Région gagnante</li>
+        <li>Top 3 (3 régions à écrire)</li>
+        <li>Classement Île-de-France (1 à 30)</li>
+        <li>Classement Normandie (1 à 30)</li>
+        <li>Dernière région</li>
+    </ul>
+
+    <p><b>Système de points :</b></p>
+    <div>
+        • 30 pts si la région gagnante est correcte<br>
+        • 15 pts par région correcte dans le Top 3<br>
+        • 50 pts pour le classement exact Île-de-France (−5 pts par rang d’écart)<br>
+        • 50 pts pour le classement exact Normandie (−5 pts par rang d’écart)<br>
+        • 30 pts si la dernière région est correcte
+    </div>
+</div>
+
+<div id="predictionArea">
+
+    <div class="card">
+        <div class="card-title">Région gagnante</div>
+        <input type="text" id="winner">
+    </div>
+
+    <div class="card">
+        <div class="card-title">Top 3 – Région 1</div>
+        <input type="text" id="top1">
+    </div>
+
+    <div class="card">
+        <div class="card-title">Top 3 – Région 2</div>
+        <input type="text" id="top2">
+    </div>
+
+    <div class="card">
+        <div class="card-title">Top 3 – Région 3</div>
+        <input type="text" id="top3">
+    </div>
+
+    <div class="card">
+        <div class="card-title">Classement Île-de-France</div>
+        <input type="number" min="1" max="30" id="idf">
+    </div>
+
+    <div class="card">
+        <div class="card-title">Classement Normandie</div>
+        <input type="number" min="1" max="30" id="normandie">
+    </div>
+
+    <div class="card">
+        <div class="card-title">Dernière région</div>
+        <input type="text" id="last">
+    </div>
+
+    <button id="submit-btn">Soumettre mes pronostics</button>
+
+    <div id="your-answer"></div>
+
+    <div id="answersList">
+        <h3>📊 Pronostics des autres joueurs :</h3>
+        <ul id="answers"></ul>
+    </div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+    authDomain: "calendrier2025-3185f.firebaseapp.com",
+    projectId: "calendrier2025-3185f",
+    storageBucket: "calendrier2025-3185f.firebasestorage.app",
+    messagingSenderId: "846792576145",
+    appId: "1:846792576145:web:59028ccef4ffd5c8010330",
+    measurementId: "G-L62L4JSYMF"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+
+onAuthStateChanged(auth, async (user) => {
+    if(!user){
+        window.location.href = "login.html";
+        return;
+    }
+    currentUser = user;
+
+    const ref = doc(db, "Predictions", "Jour 5");
+    const snap = await getDoc(ref);
+
+    if(snap.exists() && snap.data()[user.uid]){
+        showExisting(snap.data()[user.uid]);
+    } else {
+        loadOthers();
+    }
+});
+
+function showExisting(data){
+    document.querySelectorAll("input").forEach(inp => inp.disabled = true);
+    document.getElementById("submit-btn").style.display = "none";
+
+    let html = "<h3>✅ Vos pronostics :</h3><ul>";
+
+    html += `<li>Gagnante : ${data.winner}</li>`;
+    html += `<li>Top 3 : ${data.top1}, ${data.top2}, ${data.top3}</li>`;
+    html += `<li>Île-de-France : ${data.idf}</li>`;
+    html += `<li>Normandie : ${data.normandie}</li>`;
+    html += `<li>Dernière : ${data.last}</li>`;
+
+    html += "</ul>";
+
+    document.getElementById("your-answer").innerHTML = html;
+
+    loadOthers();
+}
+
+document.getElementById("submit-btn").addEventListener("click", async () => {
+    if(!currentUser) return;
+
+    const data = {
+        winner: document.getElementById("winner").value.trim(),
+        top1: document.getElementById("top1").value.trim(),
+        top2: document.getElementById("top2").value.trim(),
+        top3: document.getElementById("top3").value.trim(),
+        idf: document.getElementById("idf").value,
+        normandie: document.getElementById("normandie").value,
+        last: document.getElementById("last").value.trim(),
+        timestamp: new Date().toISOString(),
+        userEmail: currentUser.email,
+        userId: currentUser.uid
+    };
+
+    const ref = doc(db, "Predictions", "Jour 5");
+    const snap = await getDoc(ref);
+
+    if(snap.exists() && snap.data()[currentUser.uid]){
+        alert("Vous avez déjà soumis vos pronostics pour le Jour 5.");
+        return;
+    }
+
+    if(snap.exists()){
+        await updateDoc(ref, { [currentUser.uid]: data });
+    } else {
+        await setDoc(ref, { [currentUser.uid]: data });
+    }
+
+    showExisting(data);
+});
+
+async function loadOthers(){
+    const ref = doc(db, "Predictions", "Jour 5");
+    const snap = await getDoc(ref);
+
+    if(!snap.exists()) return;
+
+    const all = snap.data();
+    const ul = document.getElementById("answers");
+    ul.innerHTML = "";
+
+    Object.entries(all).forEach(([uid, data]) => {
+        if(uid === currentUser.uid) return;
+        const li = document.createElement("li");
+        li.innerHTML =
+            `<b>${data.userEmail || "Anonyme"}</b> : ` +
+            `Gagnante: ${data.winner} | ` +
+            `Top3: ${data.top1}, ${data.top2}, ${data.top3} | ` +
+            `IDF: ${data.idf} | Normandie: ${data.normandie} | ` +
+            `Dernière: ${data.last}`;
+        ul.appendChild(li);
+    });
+
+    document.getElementById("answersList").style.display = "block";
+}
+</script>
+
+</body>
+</html>
