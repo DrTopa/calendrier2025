@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎯 Pronostics – Jour 3</title>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #ffebcd;
+      background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.2em;
+      margin-bottom: 10px;
+      color: #b71c1c;
+      font-family: 'Comic Sans MS', cursive;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    }
+
+    #userStatus {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.1em;
+      color: #a23636;
+    }
+
+    #instructions {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+      text-align: center;
+      max-width: 900px;
+      font-size: 1.1em;
+      color: #333;
+    }
+
+    .matchCard {
+      background: rgba(255,255,255,0.9);
+      border: 2px solid #b71c1c;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 15px 0;
+      max-width: 550px;
+      width: 100%;
+      box-shadow: 0px 8px 12px rgba(0,0,0,0.15);
+    }
+
+    select, input {
+      padding: 10px;
+      width: 85%;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: 1px solid #aaa;
+      font-size: 1.1em;
+    }
+
+    #submit-btn {
+      padding: 12px 22px;
+      font-size: 1.2em;
+      background-color: #388e3c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    #submit-btn:hover { background-color: #2e7d32; }
+
+    #answersList {
+      display: none;
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      max-width: 700px;
+      width: 90%;
+    }
+
+    #answersList li {
+      background: rgba(255,255,255,0.6);
+      margin: 6px 0;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border-left: 5px solid #b71c1c;
+      list-style: none;
+    }
+
+    #your-answer {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 1.1em;
+      color: #2e7d32;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>⚽ Pronostics – Jour 3</h1>
+
+<div id="userStatus"></div>
+
+<div id="instructions">
+  <p>Faites vos paris pour les deux matchs du jour :</p>
+  <ul style="text-align:left; display:inline-block;">
+    <li>Résultat (victoire / nul) → <b>3 pts</b></li>
+    <li>Score exact → <b>10 pts</b></li>
+    <li>Cartons jaunes → <b>10 pts (–5 pts par erreur)</b></li>
+    <li>Cartons rouges → <b>5 pts</b></li>
+  </ul>
+</div>
+
+<!-- MATCH 1 -->
+<div class="matchCard">
+  <h3>🇵🇸 Palestine vs 🇹🇳 Tunisie</h3>
+
+  <label><b>Résultat :</b></label><br>
+  <select id="m1-result">
+    <option value="">-- Choisir --</option>
+    <option value="palestine">Victoire Palestine</option>
+    <option value="nul">Nul</option>
+    <option value="tunisie">Victoire Tunisie</option>
+  </select>
+
+  <label><b>Score :</b></label><br>
+  <input type="text" id="m1-score" placeholder="ex : 1-1">
+
+  <label><b>Cartons jaunes :</b></label><br>
+  <input type="number" min="0" id="m1-yellow">
+
+  <label><b>Cartons rouges :</b></label><br>
+  <input type="number" min="0" id="m1-red">
+</div>
+
+<!-- MATCH 2 -->
+<div class="matchCard">
+  <h3>🇸🇾 Syrie vs 🇶🇦 Qatar</h3>
+
+  <label><b>Résultat :</b></label><br>
+  <select id="m2-result">
+    <option value="">-- Choisir --</option>
+    <option value="syrie">Victoire Syrie</option>
+    <option value="nul">Nul</option>
+    <option value="qatar">Victoire Qatar</option>
+  </select>
+
+  <label><b>Score :</b></label><br>
+  <input type="text" id="m2-score" placeholder="ex : 0-2">
+
+  <label><b>Cartons jaunes :</b></label><br>
+  <input type="number" min="0" id="m2-yellow">
+
+  <label><b>Cartons rouges :</b></label><br>
+  <input type="number" min="0" id="m2-red">
+</div>
+
+<button id="submit-btn">Soumettre mes paris</button>
+
+<div id="your-answer"></div>
+
+<div id="answersList">
+  <h3>📊 Pronostics des autres joueurs :</h3>
+  <ul id="answers"></ul>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+  authDomain: "calendrier2025-3185f.firebaseapp.com",
+  projectId: "calendrier2025-3185f",
+  storageBucket: "calendrier2025-3185f.firebasestorage.app",
+  messagingSenderId: "846792576145",
+  appId: "1:846792576145:web:59028ccef4ffd5c8010330",
+  measurementId: "G-L62L4JSYMF"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) { window.location.href = "login.html"; return; }
+
+  currentUser = user;
+  document.getElementById("userStatus").innerText = "Connecté : " + user.email;
+
+  const ref = doc(db, "Predictions", "Jour 3");
+  const snap = await getDoc(ref);
+
+  if (snap.exists() && snap.data()[user.uid]) {
+    showExisting(snap.data()[user.uid]);
+  }
+});
+
+// Envoi des données
+document.getElementById("submit-btn").addEventListener("click", async () => {
+
+  const m1 = {
+    result: document.getElementById("m1-result").value,
+    score: document.getElementById("m1-score").value.trim(),
+    yellow: document.getElementById("m1-yellow").value,
+    red: document.getElementById("m1-red").value
+  };
+
+  const m2 = {
+    result: document.getElementById("m2-result").value,
+    score: document.getElementById("m2-score").value.trim(),
+    yellow: document.getElementById("m2-yellow").value,
+    red: document.getElementById("m2-red").value
+  };
+
+  if (!m1.result || !m1.score || m1.yellow === "" || m1.red === "" ||
+      !m2.result || !m2.score || m2.yellow === "" || m2.red === "") {
+    alert("Merci de remplir tous les champs !");
+    return;
+  }
+
+  const ref = doc(db, "Predictions", "Jour 3");
+  const snap = await getDoc(ref);
+
+  const obj = {
+    email: currentUser.email,
+    m1, m2,
+    timestamp: new Date().toISOString()
+  };
+
+  if (snap.exists()) {
+    await updateDoc(ref, { [currentUser.uid]: obj });
+  } else {
+    await setDoc(ref, { [currentUser.uid]: obj });
+  }
+
+  showExisting(obj);
+});
+
+// Affichage si déjà rempli
+function showExisting(data) {
+  document.querySelectorAll("select,input,#submit-btn").forEach(e => e.style.display = "none");
+
+  document.getElementById("your-answer").innerHTML = `
+    <h3>✅ Vos pronostics :</h3>
+    <b>Palestine - Tunisie</b><br>
+    ${data.m1.result} | ${data.m1.score} | 🟨 ${data.m1.yellow} | 🟥 ${data.m1.red}<br><br>
+    <b>Syrie - Qatar</b><br>
+    ${data.m2.result} | ${data.m2.score} | 🟨 ${data.m2.yellow} | 🟥 ${data.m2.red}
+  `;
+
+  loadOthers();
+}
+
+// Chargement autres joueurs
+async function loadOthers() {
+  const answersUl = document.getElementById("answers");
+  answersUl.innerHTML = "";
+
+  const ref = doc(db, "Predictions", "Jour 3");
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return;
+
+  const all = snap.data();
+
+  for (const uid in all) {
+    if (uid === currentUser.uid) continue;
+    const d = all[uid];
+
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <b>${d.email}</b><br>
+      🇵🇸–🇹🇳 : ${d.m1.result} | ${d.m1.score} | 🟨 ${d.m1.yellow} | 🟥 ${d.m1.red}<br>
+      🇸🇾–🇶🇦 : ${d.m2.result} | ${d.m2.score} | 🟨 ${d.m2.yellow} | 🟥 ${d.m2.red}
+    `;
+    answersUl.appendChild(li);
+  }
+
+  document.getElementById("answersList").style.display = "block";
+}
+</script>
+
+</body>
+</html>
