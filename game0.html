@@ -113,12 +113,12 @@
   <div id="instructions">
     <p>Répondez aux quelques questions ci-dessous — vous ne pouvez soumettre qu'une seule fois pour le Jour 0.</p>
     <ul style="text-align:left; display:inline-block;">
-      <li>Neige à Paris ?</li>
-      <li>Neige au Luxembourg ?</li>
+      <li>Neige à Paris en Decembre ?</li>
+      <li>Neige au Luxembourg en  Decembre ?</li>
       <li>Squeezie sortira-t-il un nouveau concept de jeu ?</li>
       <li>Nouvelle vidéo de Choss sur Noël ?</li>
       <li>Choisis ton entreprise poulain (10 entreprises du CAC40 proposées)</li>
-      <li>Qui sera le premier à atteindre le niveau 6 ?</li>
+      <li>Qui sera le premier à avoir une carte très rare ?</li>
     </ul>
   </div>
 
@@ -126,14 +126,14 @@
 
  <div id="predictionArea">
 
-  <label><b>Neigera-t-il à Paris ?</b> <span class="small">(3 pts)</span></label><br>
+  <label><b>Neigera-t-il à Paris en Décembre ?</b> <span class="small">(3 pts)</span></label><br>
   <select id="neige-paris">
     <option value="">-- Choisissez --</option>
     <option value="oui">Oui</option>
     <option value="non">Non</option>
   </select><br>
 
-  <label><b>Neigera-t-il au Luxembourg ?</b> <span class="small">(3 pts)</span></label><br>
+  <label><b>Neigera-t-il au Luxembourg en Décembre?</b> <span class="small">(3 pts)</span></label><br>
   <select id="neige-lux">
     <option value="">-- Choisissez --</option>
     <option value="oui">Oui</option>
@@ -169,7 +169,7 @@
     <option value="Schneider Electric">Schneider Electric</option>
   </select><br>
 
-  <label><b>Qui sera le premier à avoir le niveau 6 ?</b></label> <span class="small">(20 pts)</span><br>
+  <label><b>Qui sera le premier à avoir une carte très rare ?</b></label> <span class="small">(20 pts)</span><br>
   <select id="niveau6">
     <option value="">-- Choisissez --</option>
     <option value="Adrien">Adrien</option>
@@ -253,7 +253,7 @@ function showExistingPrediction(data) {
   for (const k in fields) fields[k].style.display = 'none';
   submitBtn.style.display = 'none';
 
-  yourAnswerDiv.innerHTML = `\n    ✅ Vos prédictions :\n    <ul style="list-style:none; padding-left:0; margin:0">\n      <li><b>Neige Paris :</b> ${escapeHtml(data.paris)}</li>\n      <li><b>Neige Luxembourg :</b> ${escapeHtml(data.lux)}</li>\n      <li><b>Squeezie :</b> ${escapeHtml(data.squeezie)}</li>\n      <li><b>Choss Noël :</b> ${escapeHtml(data.choss)}</li>\n      <li><b>Entreprise :</b> ${escapeHtml(data.entreprise)}</li>\n      <li><b>Niveau 6 :</b> ${escapeHtml(data.niveau6)}</li>\n    </ul>\n  `;
+  yourAnswerDiv.innerHTML = `\n    ✅ Vos prédictions :\n    <ul style="list-style:none; padding-left:0; margin:0">\n      <li><b>Neige Paris :</b> ${escapeHtml(data.paris)}</li>\n      <li><b>Neige Luxembourg :</b> ${escapeHtml(data.lux)}</li>\n      <li><b>Squeezie :</b> ${escapeHtml(data.squeezie)}</li>\n      <li><b>Choss Noël :</b> ${escapeHtml(data.choss)}</li>\n      <li><b>Entreprise :</b> ${escapeHtml(data.entreprise)}</li>\n      <li><b>Rare :</b> ${escapeHtml(data.niveau6)}</li>\n    </ul>\n  `;
 
   answersListDiv.style.display = 'block';
   loadOtherAnswers();
@@ -334,7 +334,7 @@ async function loadOtherAnswers() {
 
     for (const [uid, data] of entries) {
       const li = document.createElement('li');
-      li.innerHTML = `<b>${escapeHtml(data.userEmail || 'Anonyme')}</b> — ${escapeHtml(data.paris)} | ${escapeHtml(data.lux)} | Squeezie:${escapeHtml(data.squeezie)} | Choss:${escapeHtml(data.choss)} | ${escapeHtml(data.entreprise)} | Niveau6:${escapeHtml(data.niveau6)} <div class="small">${escapeHtml(new Date(data.timestamp || '').toLocaleString() || '')}</div>`;
+      li.innerHTML = `<b>${escapeHtml(data.userEmail || 'Anonyme')}</b> — ${escapeHtml(data.paris)} | ${escapeHtml(data.lux)} | Squeezie:${escapeHtml(data.squeezie)} | Choss:${escapeHtml(data.choss)} | ${escapeHtml(data.entreprise)} | Rare:${escapeHtml(data.niveau6)} <div class="small">${escapeHtml(new Date(data.timestamp || '').toLocaleString() || '')}</div>`;
       answersUl.appendChild(li);
     }
     answersListDiv.style.display = 'block';
