@@ -222,6 +222,7 @@
         if (Object.keys(updates).length > 0) await updateDoc(userRef, updates);
       }
     }
+        initializeUserData(user);
 
         const userRef = doc(db, "users", user.uid);
         onSnapshot(userRef, (snap) => {
