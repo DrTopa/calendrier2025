@@ -205,6 +205,24 @@
       else {
         document.getElementById("userStatus").innerText = "Bienvenue : " + user.email;
 
+      async function initializeUserData(user) {
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        let initialData = { email: user.email, jetons: 0 };
+        for (let i = 1; i <= 92; i++) initialData[`Picture${i}`] = false;
+        await setDoc(userRef, initialData);
+      } else {
+        let updates = {};
+        const data = userSnap.data();
+        if (!("email" in data)) updates.email = user.email;
+        if (!("jetons" in data)) updates.jetons = 0;
+        for (let i = 1; i <= 92; i++) if (!( `Picture${i}` in data)) updates[`Picture${i}`] = false;
+        if (Object.keys(updates).length > 0) await updateDoc(userRef, updates);
+      }
+    }
+
         const userRef = doc(db, "users", user.uid);
         onSnapshot(userRef, (snap) => {
           if (snap.exists()) {
