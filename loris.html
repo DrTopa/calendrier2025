@@ -210,7 +210,7 @@ function showUserAnswers(data) {
   document.getElementById("your-answer").innerHTML =
     "✅ <b>Vos réponses :</b><br>" +
     `Vues prévues : <b>${data.q1}</b><br>` +
-    `Photo envoyée par Whatsapp : <b>${data.q2}</b>`;
+    `Australie : <b>${data.q2}</b>`;
 
   loadOtherAnswers();
 }
@@ -231,7 +231,7 @@ async function loadOtherAnswers(existingData = null) {
   Object.entries(allData).forEach(([uid, data]) => {
     if (uid === currentUser.uid) return;
     answersUl.innerHTML += `<li><b>${data.email || 'Anonyme'}</b>` +
-      ((data.q1 || data.q2) ? ` : Vues=${data.q1 || 'N/A'}, Photo=${data.q2 || 'N/A'}` : " (pas encore répondu)") +
+      ((data.q1 || data.q2) ? ` : Vues=${data.q1 || 'N/A'}, Australie=${data.q2 || 'N/A'}` : " (pas encore répondu)") +
       `</li>`;
   });
 
