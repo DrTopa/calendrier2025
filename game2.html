@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎯 Paris – Handball • Biathlon • Metroid 🎯</title>
+  <title>🎯 Pronostics – Jour 2</title>
+
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
       display: flex;
-      justify-content: center;
-      align-items: center;
       flex-direction: column;
+      align-items: center;
       background-color: #ffebcd;
       background-image: url('https://www.transparenttextures.com/patterns/snow.png');
       margin: 0;
@@ -34,129 +34,185 @@
     }
 
     #instructions {
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255,255,255,0.9);
       padding: 15px;
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0,0,0,0.2);
       margin-bottom: 20px;
-      text-align: center;
       max-width: 900px;
       font-size: 1.1em;
-      color: #333;
+      text-align: center;
     }
 
-    #predictionArea {
-      background: rgba(255, 255, 255, 0.85);
+    .block {
+      background: rgba(255,255,255,0.85);
       border: 2px solid #b71c1c;
       border-radius: 12px;
-      padding: 20px 30px;
+      padding: 20px;
+      width: 90%;
+      max-width: 520px;
+      margin-bottom: 25px;
       box-shadow: 0 8px 12px rgba(0,0,0,0.2);
-      text-align: center;
-      width: 100%;
-      max-width: 650px;
     }
 
     select, input {
+      width: 85%;
       padding: 10px;
-      font-size: 1.1em;
       margin: 8px 0;
+      font-size: 1.1em;
       border-radius: 6px;
       border: 1px solid #ccc;
-      width: 80%;
     }
 
     #submit-btn {
-      padding: 10px 20px;
-      font-size: 1.1em;
-      cursor: pointer;
+      padding: 12px 20px;
+      font-size: 1.2em;
       background-color: #388e3c;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
+      cursor: pointer;
       margin-top: 10px;
     }
+    #submit-btn:hover { background-color: #2e7d32; }
 
-    #submit-btn:hover {
-      background-color: #2e7d32;
+    #your-answer {
+      font-weight: bold;
+      margin-top: 10px;
+      font-size: 1.2em;
+      color: #2e7d32;
     }
 
     #answersList {
       display: none;
-      margin-top: 25px;
-      padding: 15px;
+      background: rgba(255,255,255,0.92);
+      padding: 20px;
       border-radius: 10px;
-      background: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-      max-width: 600px;
       width: 90%;
+      max-width: 650px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.25);
+      margin-top: 25px;
     }
 
     #answersList li {
       background: rgba(255,255,255,0.6);
-      margin: 6px 0;
-      padding: 6px 10px;
-      border-radius: 6px;
       border-left: 5px solid #b71c1c;
+      padding: 6px 10px;
+      margin: 6px 0;
+      border-radius: 6px;
+      list-style: none;
     }
 
-    #your-answer {
-      margin-top: 15px;
-      font-weight: bold;
-      font-size: 1.1em;
-      color: #2e7d32;
+    .validated {
+      background: #e8fce8 !important;
+      border-left: 6px solid #2e7d32 !important;
     }
-
   </style>
 </head>
 
 <body>
-  <h1>🏆 Paris du Jour – Handball • Biathlon • Metroid</h1>
+<h1>🏆 Pronostics – Jour 2</h1>
+<div id="userStatus"></div>
 
-  <div id="instructions">
-    <p>Faites vos paris du jour !</p>
-    <ul style="text-align:left; display:inline-block;">
-      <li>Handball : 6 matchs → <b>3 pts / match</b></li>
-      <li>Biathlon 20km hommes : <b>15 pts gagnant</b> + <b>10 pts nationalité</b></li>
-      <li>Note Metacritic Metroid Prime 4 : <b>10 pts (–1 par écart)</b></li>
-    </ul>
-  </div>
+<div id="instructions">
+  <p><b>Handball féminin :</b> Choisissez le résultat des 6 matchs (3 pts par bonne réponse)</p>
+  <p><b>Biathlon – 20 km hommes :</b> Trouvez le gagnant (15 pts) et sa nationalité (10 pts)</p>
+  <p><b>Metroid Prime 4 :</b> Note Metacritic public (10 pts, -1 par écart)</p>
+</div>
 
-  <div id="userStatus"></div>
+<!-- ===================== HAND ======= -->
+<div class="block">
+  <h2>🤾 Handball – 6 matchs</h2>
 
-  <div id="predictionArea">
-
-    <h3>🤾 Handball – Gagnants</h3>
-
-    <div id="handballMatches"></div>
-
-    <h3>🎿 Biathlon – Gagnant du 20km hommes</h3>
-
-    <select id="biathlonWinner">
+  <div id="handballArea">
+    <label>Danemark – Sénégal</label><br>
+    <select id="m1">
       <option value="">-- Choisissez --</option>
-      <option>Uldal</option>
-      <option>Frey</option>
-      <option>Cristiansen</option>
-      <option>Samuelsson</option>
-      <option>Nelin</option>
-      <option>Perrot</option>
-      <option>Jacquelin</option>
-      <option>Fillon Maillet</option>
-      <option>Autre</option>
-    </select>
+      <option value="danemark">Danemark</option>
+      <option value="nul">Nul</option>
+      <option value="senegal">Sénégal</option>
+    </select><br>
 
-    <input id="biathlonNation" type="text" placeholder="Nationalité du gagnant (ex: Norvège)">
+    <label>Hongrie – Roumanie</label><br>
+    <select id="m2">
+      <option value="">-- Choisissez --</option>
+      <option value="hongrie">Hongrie</option>
+      <option value="nul">Nul</option>
+      <option value="roumanie">Roumanie</option>
+    </select><br>
 
-    <h3>🎮 Metroid Prime 4 – Note Metacritic (public)</h3>
-    <input id="metroidScore" type="number" min="0" max="100" placeholder="ex : 88">
+    <label>Japon – Suisse</label><br>
+    <select id="m3">
+      <option value="">-- Choisissez --</option>
+      <option value="japon">Japon</option>
+      <option value="nul">Nul</option>
+      <option value="suisse">Suisse</option>
+    </select><br>
 
-    <button id="submit-btn">Soumettre mes paris</button>
-    <div id="your-answer"></div>
+    <label>Brésil – Corée du Sud</label><br>
+    <select id="m4">
+      <option value="">-- Choisissez --</option>
+      <option value="bresil">Brésil</option>
+      <option value="nul">Nul</option>
+      <option value="coree">Corée du Sud</option>
+    </select><br>
+
+    <label>Norvège – Suède</label><br>
+    <select id="m5">
+      <option value="">-- Choisissez --</option>
+      <option value="norvege">Norvège</option>
+      <option value="nul">Nul</option>
+      <option value="suede">Suède</option>
+    </select><br>
+
+    <label>Angola – Tchéquie</label><br>
+    <select id="m6">
+      <option value="">-- Choisissez --</option>
+      <option value="angola">Angola</option>
+      <option value="nul">Nul</option>
+      <option value="tchequie">Tchéquie</option>
+    </select><br>
   </div>
+</div>
 
-  <div id="answersList">
-    <h3>📊 Pronostics des autres joueurs :</h3>
-    <ul id="answers"></ul>
-  </div>
+<!-- ===================== BIATHLON ======= -->
+<div class="block">
+  <h2>🎿 Biathlon – 20 km hommes</h2>
+
+  <label>Choisissez le gagnant :</label><br>
+  <select id="biathlonWinner">
+    <option value="">-- Choisissez --</option>
+    <option value="Uldal">Uldal</option>
+    <option value="Frey">Frey</option>
+    <option value="Christiansen">Christiansen</option>
+    <option value="Samuelsson">Samuelsson</option>
+    <option value="Nelin">Nelin</option>
+    <option value="Perrot">Perrot</option>
+    <option value="Jacquelin">Jacquelin</option>
+    <option value="Fillon-Maillet">Fillon Maillet</option>
+    <option value="Autre">Autre</option>
+  </select><br>
+
+  <label>Nationalité du gagnant :</label><br>
+  <input id="biathlonNat" type="text" placeholder="ex : Norvège"><br>
+</div>
+
+<!-- ===================== METACRITIC ======= -->
+<div class="block">
+  <h2>🎮 Metroid Prime 4</h2>
+  <label>Note du public Metacritic (0-100)</label><br>
+  <input id="metaNote" type="number" min="0" max="100" placeholder="ex : 87">
+</div>
+
+<!-- SUBMIT -->
+<button id="submit-btn">Soumettre mes pronostics</button>
+<div id="your-answer"></div>
+
+<!-- OTHER ANSWERS -->
+<div id="answersList">
+  <h3>📊 Pronostics des autres joueurs :</h3>
+  <ul id="answers"></ul>
+</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
@@ -177,135 +233,100 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const matches = [
-  "Danemark - Sénégal",
-  "Hongrie - Roumanie",
-  "Japon - Suisse",
-  "Brésil - Corée du Sud",
-  "Norvège - Suède",
-  "Angola - Tchéquie"
-];
-
-const handballDiv = document.getElementById("handballMatches");
-matches.forEach((m, i) => {
-  handballDiv.innerHTML += `
-    <label><b>${m}</b></label><br>
-    <select id="hb${i}">
-      <option value="">-- Choisissez --</option>
-      <option>${m.split(" - ")[0]}</option>
-      <option>${m.split(" - ")[1]}</option>
-    </select><br><br>
-  `;
-});
-
-const biathlonWinner = document.getElementById("biathlonWinner");
-const biathlonNation = document.getElementById("biathlonNation");
-const metroidScore = document.getElementById("metroidScore");
-
-const submitBtn = document.getElementById("submit-btn");
-const yourAnswerDiv = document.getElementById("your-answer");
-const answersListDiv = document.getElementById("answersList");
-const answersList = document.getElementById("answers");
-
 let currentUser = null;
 
 onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    currentUser = user;
-    document.getElementById("userStatus").innerText = `Connecté : ${user.email}`;
+  if (!user) return window.location.href = "login.html";
 
-    const jourRef = doc(db, "Predictions", "Jour 2");
-    const snap = await getDoc(jourRef);
+  currentUser = user;
+  document.getElementById("userStatus").innerText = `Connecté : ${user.email}`;
 
-    if (snap.exists() && snap.data()[user.uid]) {
-      showExistingPrediction(snap.data()[user.uid]);
-    }
+  const ref = doc(db, "Predictions", "Jour 2");
+  const snap = await getDoc(ref);
 
-  } else {
-    window.location.href = "login.html";
+  if (snap.exists() && snap.data()[user.uid]) {
+    showExistingPrediction(snap.data()[user.uid]);
   }
 });
 
 function showExistingPrediction(data) {
-  document.getElementById("predictionArea").style.display = "none";
+  document.getElementById("handballArea").style.display = "none";
+  document.getElementById("biathlonWinner").style.display = "none";
+  document.getElementById("biathlonNat").style.display = "none";
+  document.getElementById("metaNote").style.display = "none";
+  document.getElementById("submit-btn").style.display = "none";
 
-  yourAnswerDiv.innerHTML = `
-    <h3>✅ Vos paris :</h3>
-    <ul style="text-align:left;">
-      <li><b>Handball :</b> ${JSON.stringify(data.handball).replace(/,/g,", ")}</li>
-      <li><b>Biathlon – Gagnant :</b> ${data.biathlonWinner}</li>
-      <li><b>Nationalité :</b> ${data.biathlonNation}</li>
-      <li><b>Note Metroid :</b> ${data.metroidScore}</li>
-    </ul>
+  const div = document.getElementById("your-answer");
+
+  div.innerHTML = `
+    <div class="validated">
+      <h3>✅ Vos pronostics :</h3>
+      <b>Handball :</b> ${JSON.stringify(data.handball)}<br>
+      <b>Biathlon :</b> ${data.biathlonWinner} (${data.biathlonNat})<br>
+      <b>Metacritic :</b> ${data.meta}
+    </div>
   `;
-  answersListDiv.style.display = "block";
+
+  document.getElementById("answersList").style.display = "block";
   loadOtherAnswers();
 }
 
-submitBtn.addEventListener("click", async () => {
+document.getElementById("submit-btn").addEventListener("click", async () => {
+  const m1 = m1.value, m2 = m2.value, m3 = m3.value, m4 = m4.value, m5 = m5.value, m6 = m6.value;
+  const biathlonWinner = document.getElementById("biathlonWinner").value;
+  const biathlonNat = document.getElementById("biathlonNat").value.trim();
+  const metaNote = document.getElementById("metaNote").value.trim();
 
-  const handball = {};
-  for (let i = 0; i < matches.length; i++) {
-    const v = document.getElementById("hb" + i).value;
-    if (!v) return alert("Merci de compléter tous les paris Handball.");
-    handball[matches[i]] = v;
+  if (!m1 || !m2 || !m3 || !m4 || !m5 || !m6 ||
+      !biathlonWinner || !biathlonNat || !metaNote) {
+    return alert("Merci de remplir tous les champs !");
   }
 
-  if (!biathlonWinner.value) return alert("Merci de sélectionner le gagnant du Biathlon.");
-  if (!biathlonNation.value.trim()) return alert("Merci d'indiquer la nationalité.");
-  if (!metroidScore.value) return alert("Merci d'indiquer la note Metacritic.");
+  const ref = doc(db, "Predictions", "Jour 2");
+  const snap = await getDoc(ref);
 
-  const jourRef = doc(db, "Predictions", "Jour 2");
-  const snap = await getDoc(jourRef);
-
-  const newPrediction = {
-    userId: currentUser.uid,
-    UserEmail: currentUser.email,
-    handball,
-    biathlonWinner: biathlonWinner.value,
-    biathlonNation: biathlonNation.value.trim(),
-    metroidScore: Number(metroidScore.value),
+  const predictions = {
+    handball: { m1, m2, m3, m4, m5, m6 },
+    biathlonWinner,
+    biathlonNat,
+    meta: parseInt(metaNote),
+    email: currentUser.email,
     timestamp: new Date()
   };
 
   if (snap.exists()) {
-    const data = snap.data();
-    if (data[currentUser.uid]) {
-      alert("Vous avez déjà soumis vos paris pour aujourd’hui.");
-      return;
-    }
-    await updateDoc(jourRef, { [currentUser.uid]: newPrediction });
+    if (snap.data()[currentUser.uid]) return alert("Vous avez déjà voté !");
+    await updateDoc(ref, { [currentUser.uid]: predictions });
   } else {
-    await setDoc(jourRef, { [currentUser.uid]: newPrediction });
+    await setDoc(ref, { [currentUser.uid]: predictions });
   }
 
-  showExistingPrediction(newPrediction);
+  showExistingPrediction(predictions);
 });
 
 async function loadOtherAnswers() {
+  const answersList = document.getElementById("answers");
   answersList.innerHTML = "";
-  const jourRef = doc(db, "Predictions", "Jour 2");
-  const snap = await getDoc(jourRef);
 
+  const ref = doc(db, "Predictions", "Jour 2");
+  const snap = await getDoc(ref);
   if (!snap.exists()) return;
 
-  const all = snap.data();
-  for (const uid in all) {
+  const data = snap.data();
+  for (const uid in data) {
     if (uid === currentUser.uid) continue;
-    const d = all[uid];
 
+    const p = data[uid];
     const li = document.createElement("li");
     li.innerHTML = `
-      <b>${d.UserEmail}</b> → 
-      Handball: ${Object.values(d.handball).join(", ")} |
-      Biathlon: ${d.biathlonWinner} (${d.biathlonNation}) |
-      Metroid: ${d.metroidScore}
+      <b>${p.email || "Anonyme"}</b> → 
+      Handball: ${JSON.stringify(p.handball)} |
+      Biathlon : ${p.biathlonWinner} |
+      Meta : ${p.meta}
     `;
     answersList.appendChild(li);
   }
 }
-
 </script>
-
 </body>
 </html>
