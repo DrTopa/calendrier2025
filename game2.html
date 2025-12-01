@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎯 Pari 1 – France vs Suède 🎯</title>
+  <title>🎯 Paris – Handball • Biathlon • Metroid 🎯</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -53,7 +53,7 @@
       box-shadow: 0 8px 12px rgba(0,0,0,0.2);
       text-align: center;
       width: 100%;
-      max-width: 500px;
+      max-width: 650px;
     }
 
     select, input {
@@ -91,11 +91,6 @@
       width: 90%;
     }
 
-    #answersList ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
     #answersList li {
       background: rgba(255,255,255,0.6);
       margin: 6px 0;
@@ -110,46 +105,53 @@
       font-size: 1.1em;
       color: #2e7d32;
     }
+
   </style>
 </head>
 
 <body>
-  <h1>⚽ Pronostic – France 🇫🇷 vs 🇸🇪 Suède</h1>
+  <h1>🏆 Paris du Jour – Handball • Biathlon • Metroid</h1>
 
   <div id="instructions">
-    <p>Faites vos paris avant le coup d’envoi !</p>
+    <p>Faites vos paris du jour !</p>
     <ul style="text-align:left; display:inline-block;">
-      <li>Résultat du match (France, Nul ou Suède)</li>
-      <li>Score final (ex: 2-1, 1-1...)</li>
-      <li>Nombre de cartons jaunes</li>
-      <li>Nombre de cartons rouges</li>
+      <li>Handball : 6 matchs → <b>3 pts / match</b></li>
+      <li>Biathlon 20km hommes : <b>15 pts gagnant</b> + <b>10 pts nationalité</b></li>
+      <li>Note Metacritic Metroid Prime 4 : <b>10 pts (–1 par écart)</b></li>
     </ul>
   </div>
 
   <div id="userStatus"></div>
 
- <div id="predictionArea">
-  <label><b>Résultat du match :</b></label> <span class="small">(5 pts)</span><br>
-  <select id="result-select">
-    <option value="">-- Choisissez --</option>
-    <option value="france">Victoire France</option>
-    <option value="nul">Nul</option>
-    <option value="suede">Victoire Suède</option>
-  </select><br>
+  <div id="predictionArea">
 
-  <label><b>Score final :</b></label> <span class="small">(20 pts)</span><br>
-  <input id="score-input" type="text" placeholder="ex : 2-1"><br>
+    <h3>🤾 Handball – Gagnants</h3>
 
-  <label><b>Cartons jaunes :</b></label> <span class="small">(20 pts, -5 pts par erreur)</span><br>
-  <input id="yellow-input" type="number" min="0" placeholder="ex : 3"><br>
+    <div id="handballMatches"></div>
 
-  <label><b>Cartons rouges :</b></label> <span class="small">(10 pts)</span><br>
-  <input id="red-input" type="number" min="0" placeholder="ex : 1"><br>
+    <h3>🎿 Biathlon – Gagnant du 20km hommes</h3>
 
-  <button id="submit-btn">Soumettre mes paris</button>
+    <select id="biathlonWinner">
+      <option value="">-- Choisissez --</option>
+      <option>Uldal</option>
+      <option>Frey</option>
+      <option>Cristiansen</option>
+      <option>Samuelsson</option>
+      <option>Nelin</option>
+      <option>Perrot</option>
+      <option>Jacquelin</option>
+      <option>Fillon Maillet</option>
+      <option>Autre</option>
+    </select>
 
-  <div id="your-answer"></div>
-</div>
+    <input id="biathlonNation" type="text" placeholder="Nationalité du gagnant (ex: Norvège)">
+
+    <h3>🎮 Metroid Prime 4 – Note Metacritic (public)</h3>
+    <input id="metroidScore" type="number" min="0" max="100" placeholder="ex : 88">
+
+    <button id="submit-btn">Soumettre mes paris</button>
+    <div id="your-answer"></div>
+  </div>
 
   <div id="answersList">
     <h3>📊 Pronostics des autres joueurs :</h3>
@@ -175,10 +177,31 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const resultSelect = document.getElementById("result-select");
-const scoreInput = document.getElementById("score-input");
-const yellowInput = document.getElementById("yellow-input");
-const redInput = document.getElementById("red-input");
+const matches = [
+  "Danemark - Sénégal",
+  "Hongrie - Roumanie",
+  "Japon - Suisse",
+  "Brésil - Corée du Sud",
+  "Norvège - Suède",
+  "Angola - Tchéquie"
+];
+
+const handballDiv = document.getElementById("handballMatches");
+matches.forEach((m, i) => {
+  handballDiv.innerHTML += `
+    <label><b>${m}</b></label><br>
+    <select id="hb${i}">
+      <option value="">-- Choisissez --</option>
+      <option>${m.split(" - ")[0]}</option>
+      <option>${m.split(" - ")[1]}</option>
+    </select><br><br>
+  `;
+});
+
+const biathlonWinner = document.getElementById("biathlonWinner");
+const biathlonNation = document.getElementById("biathlonNation");
+const metroidScore = document.getElementById("metroidScore");
+
 const submitBtn = document.getElementById("submit-btn");
 const yourAnswerDiv = document.getElementById("your-answer");
 const answersListDiv = document.getElementById("answersList");
@@ -191,99 +214,97 @@ onAuthStateChanged(auth, async (user) => {
     currentUser = user;
     document.getElementById("userStatus").innerText = `Connecté : ${user.email}`;
 
-    // Vérifier si l'utilisateur a déjà des paris dans Jour 2
-    const jour2Ref = doc(db, "Predictions", "Jour 2");
-    const jour2Snap = await getDoc(jour2Ref);
+    const jourRef = doc(db, "Predictions", "Jour 2");
+    const snap = await getDoc(jourRef);
 
-    if (jour2Snap.exists() && jour2Snap.data()[user.uid]) {
-      showExistingPrediction(jour2Snap.data()[user.uid]);
+    if (snap.exists() && snap.data()[user.uid]) {
+      showExistingPrediction(snap.data()[user.uid]);
     }
+
   } else {
     window.location.href = "login.html";
   }
 });
 
 function showExistingPrediction(data) {
-  resultSelect.style.display = "none";
-  scoreInput.style.display = "none";
-  yellowInput.style.display = "none";
-  redInput.style.display = "none";
-  submitBtn.style.display = "none";
+  document.getElementById("predictionArea").style.display = "none";
 
   yourAnswerDiv.innerHTML = `
-    ✅ Vos paris :
-    <ul style="list-style:none; padding-left:0;">
-      <li><b>Résultat :</b> ${data.result}</li>
-      <li><b>Score :</b> ${data.score}</li>
-      <li><b>Cartons jaunes :</b> ${data.yellow}</li>
-      <li><b>Cartons rouges :</b> ${data.red}</li>
+    <h3>✅ Vos paris :</h3>
+    <ul style="text-align:left;">
+      <li><b>Handball :</b> ${JSON.stringify(data.handball).replace(/,/g,", ")}</li>
+      <li><b>Biathlon – Gagnant :</b> ${data.biathlonWinner}</li>
+      <li><b>Nationalité :</b> ${data.biathlonNation}</li>
+      <li><b>Note Metroid :</b> ${data.metroidScore}</li>
     </ul>
   `;
-
   answersListDiv.style.display = "block";
   loadOtherAnswers();
 }
 
 submitBtn.addEventListener("click", async () => {
-  const result = resultSelect.value;
-  const score = scoreInput.value.trim();
-  const yellow = yellowInput.value.trim();
-  const red = redInput.value.trim();
 
-  if (!result || !score || yellow === "" || red === "") {
-    alert("Merci de remplir tous les champs !");
-    return;
+  const handball = {};
+  for (let i = 0; i < matches.length; i++) {
+    const v = document.getElementById("hb" + i).value;
+    if (!v) return alert("Merci de compléter tous les paris Handball.");
+    handball[matches[i]] = v;
   }
 
-  const jour2Ref = doc(db, "Predictions", "Jour 2");
-  const jour2Snap = await getDoc(jour2Ref);
+  if (!biathlonWinner.value) return alert("Merci de sélectionner le gagnant du Biathlon.");
+  if (!biathlonNation.value.trim()) return alert("Merci d'indiquer la nationalité.");
+  if (!metroidScore.value) return alert("Merci d'indiquer la note Metacritic.");
+
+  const jourRef = doc(db, "Predictions", "Jour 2");
+  const snap = await getDoc(jourRef);
+
   const newPrediction = {
     userId: currentUser.uid,
     UserEmail: currentUser.email,
-    result: result,
-    score: score,
-    yellow: parseInt(yellow),
-    red: parseInt(red),
+    handball,
+    biathlonWinner: biathlonWinner.value,
+    biathlonNation: biathlonNation.value.trim(),
+    metroidScore: Number(metroidScore.value),
     timestamp: new Date()
   };
 
-  if (jour2Snap.exists()) {
-    const data = jour2Snap.data();
+  if (snap.exists()) {
+    const data = snap.data();
     if (data[currentUser.uid]) {
-      alert("Vous avez déjà soumis vos paris pour Jour 2.");
+      alert("Vous avez déjà soumis vos paris pour aujourd’hui.");
       return;
     }
-    // Ajouter la prédiction sous l'UID
-    await updateDoc(jour2Ref, { [currentUser.uid]: newPrediction });
+    await updateDoc(jourRef, { [currentUser.uid]: newPrediction });
   } else {
-    // Créer le document Jour 2 et ajouter la prédiction
-    await setDoc(jour2Ref, { [currentUser.uid]: newPrediction });
+    await setDoc(jourRef, { [currentUser.uid]: newPrediction });
   }
 
   showExistingPrediction(newPrediction);
 });
 
-// Charger les paris des autres
 async function loadOtherAnswers() {
   answersList.innerHTML = "";
-  const jour2Ref = doc(db, "Predictions", "Jour 2");
-  const jour2Snap = await getDoc(jour2Ref);
+  const jourRef = doc(db, "Predictions", "Jour 2");
+  const snap = await getDoc(jourRef);
 
-  if (!jour2Snap.exists()) return;
+  if (!snap.exists()) return;
 
-  const allData = jour2Snap.data();
-  for (const uid in allData) {
+  const all = snap.data();
+  for (const uid in all) {
     if (uid === currentUser.uid) continue;
-    const data = allData[uid];
+    const d = all[uid];
+
     const li = document.createElement("li");
     li.innerHTML = `
-      <b>${data.UserEmail || "Anonyme"}</b> → 
-      ${data.result.toUpperCase()} | ${data.score} | 
-      🟨 ${data.yellow} | 🟥 ${data.red}
+      <b>${d.UserEmail}</b> → 
+      Handball: ${Object.values(d.handball).join(", ")} |
+      Biathlon: ${d.biathlonWinner} (${d.biathlonNation}) |
+      Metroid: ${d.metroidScore}
     `;
     answersList.appendChild(li);
   }
 }
+
 </script>
 
 </body>
