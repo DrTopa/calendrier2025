@@ -115,18 +115,16 @@ input[type="text"], input[type="number"] {
     <ul style="text-align:left; display:inline-block;">
         <li>Région gagnante</li>
         <li>Top 3 (3 régions à écrire)</li>
-        <li>Classement Île-de-France (1 à 30)</li>
-        <li>Classement Normandie (1 à 30)</li>
+        <li>2 régions qui <b>ne seront pas</b> dans le Top 15</li>
         <li>Pied du podium</li>
     </ul>
 
     <p><b>Système de points :</b></p>
     <div>
-        • 40 pts si la région gagnante est correcte<br>
-        • 15 pts par région correcte dans le Top 3<br>
-        • 50 pts pour le classement exact Île-de-France (−5 pts par rang d’écart)<br>
-        • 50 pts pour le classement exact Normandie (−5 pts par rang d’écart)<br>
-        • 40 pts si la région au pied du podium est correcte
+        • 30 pts si la région gagnante est correcte<br>
+        • 10 pts par région correcte dans le Top 3<br>
+        • 3 pts par région absente du Top 15 correctement devinée<br>
+        • 30 pts si la région au pied du podium est correcte
     </div>
 </div>
 
@@ -153,13 +151,13 @@ input[type="text"], input[type="number"] {
     </div>
 
     <div class="card">
-        <div class="card-title">Classement Île-de-France</div>
-        <input type="number" min="1" max="30" id="idf">
+        <div class="card-title">Région hors Top 15 – 1</div>
+        <input type="text" id="out1">
     </div>
 
     <div class="card">
-        <div class="card-title">Classement Normandie</div>
-        <input type="number" min="1" max="30" id="normandie">
+        <div class="card-title">Région hors Top 15 – 2</div>
+        <input type="text" id="out2">
     </div>
 
     <div class="card">
@@ -224,8 +222,7 @@ function showExisting(data){
 
     html += `<li>Gagnante : ${data.winner}</li>`;
     html += `<li>Top 3 : ${data.top1}, ${data.top2}, ${data.top3}</li>`;
-    html += `<li>Île-de-France : ${data.idf}</li>`;
-    html += `<li>Normandie : ${data.normandie}</li>`;
+    html += `<li>Régions hors Top 15 : ${data.out1}, ${data.out2}</li>`;
     html += `<li>Pied du podium : ${data.last}</li>`;
 
     html += "</ul>";
@@ -243,8 +240,8 @@ document.getElementById("submit-btn").addEventListener("click", async () => {
         top1: document.getElementById("top1").value.trim(),
         top2: document.getElementById("top2").value.trim(),
         top3: document.getElementById("top3").value.trim(),
-        idf: document.getElementById("idf").value,
-        normandie: document.getElementById("normandie").value,
+        out1: document.getElementById("out1").value.trim(),
+        out2: document.getElementById("out2").value.trim(),
         last: document.getElementById("last").value.trim(),
         timestamp: new Date().toISOString(),
         userEmail: currentUser.email,
@@ -285,8 +282,8 @@ async function loadOthers(){
             `<b>${data.userEmail || "Anonyme"}</b> : ` +
             `Gagnante: ${data.winner} | ` +
             `Top3: ${data.top1}, ${data.top2}, ${data.top3} | ` +
-            `IDF: ${data.idf} | Normandie: ${data.normandie} | ` +
-            `Pied du podium: ${data.last}`;
+            `Hors Top15: ${data.out1}, ${data.out2} | ` +
+            `Pied: ${data.last}`;
         ul.appendChild(li);
     });
 
