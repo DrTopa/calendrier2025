@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📊 Jour 7 – Paris multi-disciplines</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-direction: column;
+      background-color: #ffebcd;
+      background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+      margin: 0;
+      padding: 24px;
+      gap: 18px;
+    }
+    h1 {
+      font-size: 2.1em;
+      color: #b71c1c;
+      font-family: 'Comic Sans MS', cursive;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.25);
+      text-align: center;
+      margin: 0 0 8px 0;
+    }
+    .container { max-width: 920px; margin: 0 auto; width: 100%; }
+    #userStatus {
+      position: absolute; top: 12px; right: 12px;
+      font-size: 1em; color: #a23636;
+    }
+    .panel {
+      background: rgba(255,255,255,0.95);
+      border-radius: 12px; padding: 18px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+      border: 2px solid rgba(183,28,28,0.08);
+      margin-bottom: 18px;
+    }
+    .panel h2 { margin-top:0; color:#b71c1c; font-size:1.25em; }
+    label { display:block; margin-top:8px; }
+    select {
+      padding: 10px; font-size:1em; margin-top:6px;
+      border-radius:6px; border:1px solid #ccc; width:100%;
+    }
+    .small { font-size:0.9em; color:#666; margin-left:6px; }
+    #submit-btn {
+      padding: 12px 20px; font-size:1.05em;
+      cursor: pointer; background-color:#388e3c;
+      color:white; border:none; border-radius:6px;
+      margin-top:12px;
+    }
+    #submit-btn:hover { background-color:#2e7d32; }
+    #your-answer { margin-top:12px; font-weight:bold; color:#2e7d32; }
+    #answersList {
+      display:none; margin-top:18px; padding:12px;
+      border-radius:8px; background: rgba(255,255,255,0.98);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+    }
+    #answersList ul { list-style:none; padding:0; margin:0; }
+    #answersList li {
+      background:#fafafa; margin:8px 0; padding:10px;
+      border-radius:6px; border-left:5px solid #b71c1c;
+      font-size:0.95em;
+    }
+  </style>
+</head>
+<body>
+
+<div id="userStatus"></div>
+
+<div class="container">
+  <h1>📊 Jour 7 – Paris multi-disciplines</h1>
+  <div class="panel">
+    <div class="small">
+      Indication de points : ✅ Bonne réponse = +3 pts | ❌ Mauvaise = -2 pts
+    </div>
+  </div>
+
+  <!-- LEAGUE OF LEGENDS -->
+  <div class="panel">
+    <h2>🎮 League of Legends – KesPa Cup</h2>
+
+    <label>T1 vs Nongshim RedForce</label>
+    <select id="lol1"><option value="">-- Ne parie pas --</option><option>T1</option><option>Nongshim RedForce</option></select>
+
+    <label>Gen.G vs Hanwha Life</label>
+    <select id="lol2"><option value="">-- Ne parie pas --</option><option>Gen.G</option><option>Hanwha Life</option></select>
+
+    <label>Nongshim RedForce vs Japan</label>
+    <select id="lol3"><option value="">-- Ne parie pas --</option><option>Nongshim RedForce</option><option>Japan</option></select>
+
+    <label>Cloud9 vs FearX</label>
+    <select id="lol4"><option value="">-- Ne parie pas --</option><option>Cloud9</option><option>FearX</option></select>
+
+    <label>Team Liquid vs T1</label>
+    <select id="lol5"><option value="">-- Ne parie pas --</option><option>Team Liquid</option><option>T1</option></select>
+  </div>
+
+  <!-- BASEBALL MEXICAIN -->
+  <div class="panel">
+    <h2>⚾ Baseball Mexicain</h2>
+
+    <label>Caneros Mochis vs Tucson</label>
+    <select id="bb1"><option value="">-- Ne parie pas --</option><option>Caneros Mochis</option><option>Tucson</option></select>
+
+    <label>Hermosillo vs Jalisco</label>
+    <select id="bb2"><option value="">-- Ne parie pas --</option><option>Hermosillo</option><option>Jalisco</option></select>
+
+    <label>Mazatian vs Algodoneros</label>
+    <select id="bb3"><option value="">-- Ne parie pas --</option><option>Mazatian</option><option>Algodoneros</option></select>
+
+    <label>Yaquis de Obregon vs Tomateros</label>
+    <select id="bb4"><option value="">-- Ne parie pas --</option><option>Yaquis de Obregon</option><option>Tomateros</option></select>
+
+    <label>Jaguares de Nayarit vs Aguilas de Mexicali</label>
+    <select id="bb5"><option value="">-- Ne parie pas --</option><option>Jaguares de Nayarit</option><option>Aguilas de Mexicali</option></select>
+  </div>
+
+  <!-- FLOORBALL -->
+  <div class="panel">
+    <h2>🏑 Floorball – Women World Championship</h2>
+
+    <label>Lituanie vs Danemark</label>
+    <select id="fb1"><option value="">-- Ne parie pas --</option><option>Lituanie</option><option>Danemark</option><option>Nul</option></select>
+
+    <label>Allemagne vs Singapour</label>
+    <select id="fb2"><option value="">-- Ne parie pas --</option><option>Allemagne</option><option>Singapour</option><option>Nul</option></select>
+
+    <label>Pays-Bas vs Japon</label>
+    <select id="fb3"><option value="">-- Ne parie pas --</option><option>Pays-Bas</option><option>Japon</option><option>Nul</option></select>
+
+    <label>Pologne vs Finlande</label>
+    <select id="fb4"><option value="">-- Ne parie pas --</option><option>Pologne</option><option>Finlande</option><option>Nul</option></select>
+
+    <label>USA vs Estonie</label>
+    <select id="fb5"><option value="">-- Ne parie pas --</option><option>USA</option><option>Estonie</option><option>Nul</option></select>
+  </div>
+
+  <button id="submit-btn">Soumettre mes paris</button>
+  <div id="your-answer"></div>
+
+  <div id="answersList">
+    <h3>📊 Pronostics des autres joueurs</h3>
+    <ul id="answers"></ul>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+  authDomain: "calendrier2025-3185f.firebaseapp.com",
+  projectId: "calendrier2025-3185f"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) { window.location.href = "login.html"; return; }
+  currentUser = user;
+  document.getElementById("userStatus").innerText = "Connecté : " + user.email;
+});
+
+const ids = [
+  "lol1","lol2","lol3","lol4","lol5",
+  "bb1","bb2","bb3","bb4","bb5",
+  "fb1","fb2","fb3","fb4","fb5"
+];
+
+document.getElementById("submit-btn").addEventListener("click", async () => {
+  const data = {};
+  ids.forEach(id => data[id] = document.getElementById(id).value);
+
+  const payload = {
+    userId: currentUser.uid,
+    userEmail: currentUser.email,
+    bets: data,
+    timestamp: new Date().toISOString()
+  };
+
+  const ref = doc(db, "Predictions", "Jour 7");
+  const snap = await getDoc(ref);
+
+  if (snap.exists()) {
+    await updateDoc(ref, { [currentUser.uid]: payload });
+  } else {
+    await setDoc(ref, { [currentUser.uid]: payload });
+  }
+
+  document.getElementById("your-answer").innerText = "✅ Paris enregistrés !";
+});
+</script>
+</body>
+</html>
