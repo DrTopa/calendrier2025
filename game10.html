@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏓 Jour 10 – Paris Ping-Pong</title>
+
+<style>
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background-color: #fff3e0;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+h1 {
+  font-size: 2em;
+  text-align: center;
+  color: #b71c1c;
+  margin-bottom: 10px;
+  font-family: 'Comic Sans MS', cursive;
+}
+#userStatus {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #a23636;
+}
+.panel {
+  background: rgba(255,255,255,0.95);
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 6px 10px rgba(0,0,0,0.1);
+  max-width: 800px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.match {
+  margin-top: 10px;
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 10px;
+  border-left: 4px solid #b71c1c;
+}
+label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+select {
+  width: 100%;
+  padding: 8px;
+  font-size: 1em;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+#submit-btn {
+  padding: 12px 20px;
+  font-size: 1.1em;
+  background-color: #388e3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+#your-answer {
+  margin-top: 15px;
+  font-weight: bold;
+  font-size: 1.05em;
+  color: #2e7d32;
+  max-width: 800px;
+}
+#answersList {
+  display: none;
+  margin-top: 25px;
+  padding: 15px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.95);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.12);
+  max-width: 800px;
+  width: 100%;
+}
+#answersList li {
+  list-style: none;
+  background: rgba(250,250,250,0.9);
+  margin: 8px 0;
+  padding: 8px;
+  border-radius: 6px;
+  border-left: 5px solid #b71c1c;
+}
+.info {
+  font-size: 0.95em;
+  margin-bottom: 10px;
+  color: #444;
+}
+</style>
+</head>
+
+<body>
+
+<div id="userStatus"></div>
+<h1>🏓 Jour 10 – Paris Ping-Pong</h1>
+
+<div class="panel">
+  <div class="info"><b>Indication :</b> 3 points par bonne réponse</div>
+
+  <!-- MATCHES -->
+  <div class="match">
+    <label>LIANG Jingkun vs LIN Shidong</label>
+    <select id="m1">
+      <option value="">-- Choisissez le vainqueur --</option>
+      <option value="LIANG Jingkun">LIANG Jingkun</option>
+      <option value="LIN Shidong">LIN Shidong</option>
+    </select>
+  </div>
+
+  <div class="match">
+    <label>Satsuki ODO vs Honoka HASHIMOTO</label>
+    <select id="m2">
+      <option value="">-- Choisissez le vainqueur --</option>
+      <option value="Satsuki ODO">Satsuki ODO</option>
+      <option value="Honoka HASHIMOTO">Honoka HASHIMOTO</option>
+    </select>
+  </div>
+
+  <div class="match">
+    <label>AN Jaehyun vs XIANG Peng</label>
+    <select id="m3">
+      <option value="">-- Choisissez le vainqueur --</option>
+      <option value="AN Jaehyun">AN Jaehyun</option>
+      <option value="XIANG Peng">XIANG Peng</option>
+    </select>
+  </div>
+
+  <div class="match">
+    <label>Mima ITO vs Miyu NAGASAKI</label>
+    <select id="m4">
+      <option value="">-- Choisissez le vainqueur --</option>
+      <option value="Mima ITO">Mima ITO</option>
+      <option value="Miyu NAGASAKI">Miyu NAGASAKI</option>
+    </select>
+  </div>
+
+  <div class="match">
+    <label>LIN Shidong / KUAI Man vs WANG Chuqin / SUN Yingsha</label>
+    <select id="m5">
+      <option value="">-- Choisissez le vainqueur --</option>
+      <option value="LIN Shidong/KUAI Man">LIN Shidong / KUAI Man</option>
+      <option value="WANG Chuqin/SUN Yingsha">WANG Chuqin / SUN Yingsha</option>
+    </select>
+  </div>
+
+  <div class="match">
+    <label>KUAI Man vs Hina HAYATA</label>
+    <select id="m6">
+      <option value="">-- Choisissez le vainqueur --</option>
+      <option value="KUAI Man">KUAI Man</option>
+      <option value="Hina HAYATA">Hina HAYATA</option>
+    </select>
+  </div>
+
+  <div class="match">
+    <label>Tomokazu HARIMOTO vs Simon GAUZY</label>
+    <select id="m7">
+      <option value="">-- Choisissez le vainqueur --</option>
+      <option value="Tomokazu HARIMOTO">Tomokazu HARIMOTO</option>
+      <option value="Simon GAUZY">Simon GAUZY</option>
+    </select>
+  </div>
+
+  <div class="match">
+    <label>SUN Yingsha vs WANG Yidi</label>
+    <select id="m8">
+      <option value="">-- Choisissez le vainqueur --</option>
+      <option value="SUN Yingsha">SUN Yingsha</option>
+      <option value="WANG Yidi">WANG Yidi</option>
+    </select>
+  </div>
+
+  <div class="match">
+    <label>Felix LEBRUN vs Hugo CALDERANO</label>
+    <select id="m9">
+      <option value="">-- Choisissez le vainqueur --</option>
+      <option value="Felix LEBRUN">Felix LEBRUN</option>
+      <option value="Hugo CALDERANO">Hugo CALDERANO</option>
+    </select>
+  </div>
+
+  <button id="submit-btn">Soumettre mes paris</button>
+  <div id="your-answer"></div>
+</div>
+
+<div id="answersList">
+  <h3>📊 Paris des autres joueurs</h3>
+  <ul id="answers"></ul>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+  authDomain: "calendrier2025-3185f.firebaseapp.com",
+  projectId: "calendrier2025-3185f",
+  storageBucket: "calendrier2025-3185f.firebasestorage.app",
+  messagingSenderId: "846792576145",
+  appId: "1:846792576145:web:59028ccef4ffd5c8010330",
+  measurementId: "G-L62L4JSYMF"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+
+onAuthStateChanged(auth, async (user) => {
+  if(!user) return window.location.href = "login.html";
+
+  currentUser = user;
+  document.getElementById("userStatus").innerText = "Connecté : " + user.email;
+
+  const ref = doc(db, "Predictions", "Jour 10");
+  const snap = await getDoc(ref);
+
+  if(snap.exists() && snap.data()[user.uid]){
+    showExisting(snap.data()[user.uid]);
+  } else {
+    loadOthers();
+  }
+});
+
+function showExisting(data){
+  document.querySelectorAll("select").forEach(el => el.disabled = true);
+  document.getElementById("submit-btn").style.display = "none";
+
+  let html = "<h3>✅ Vos paris :</h3><ul>";
+  for(let i=1;i<=9;i++){
+    html += `<li>Match ${i} : ${data["m"+i]}</li>`;
+  }
+  html += "</ul>";
+
+  document.getElementById("your-answer").innerHTML = html;
+  loadOthers();
+}
+
+document.getElementById("submit-btn").addEventListener("click", async () => {
+  if(!currentUser) return;
+
+  const data = {
+    userEmail: currentUser.email,
+    userId: currentUser.uid,
+    timestamp: new Date().toISOString()
+  };
+
+  for(let i=1;i<=9;i++){
+    const val = document.getElementById("m"+i).value;
+    if(!val){
+      alert("Merci de remplir tous les matchs.");
+      return;
+    }
+    data["m"+i] = val;
+  }
+
+  const ref = doc(db, "Predictions", "Jour 10");
+  const snap = await getDoc(ref);
+
+  if(snap.exists() && snap.data()[currentUser.uid]){
+    alert("Vous avez déjà parié pour le Jour 10.");
+    return;
+  }
+
+  if(snap.exists()){
+    await updateDoc(ref, { [currentUser.uid]: data });
+  } else {
+    await setDoc(ref, { [currentUser.uid]: data });
+  }
+
+  showExisting(data);
+});
+
+async function loadOthers(){
+  const ref = doc(db, "Predictions", "Jour 10");
+  const snap = await getDoc(ref);
+  if(!snap.exists()) return;
+
+  const ul = document.getElementById("answers");
+  ul.innerHTML = "";
+
+  Object.entries(snap.data()).forEach(([uid, data]) => {
+    if(uid === currentUser.uid) return;
+
+    const li = document.createElement("li");
+    let txt = `<b>${data.userEmail}</b> : `;
+    for(let i=1;i<=9;i++){
+      txt += `Match ${i} (${data["m"+i]}) | `;
+    }
+    li.innerHTML = txt;
+    ul.appendChild(li);
+  });
+
+  document.getElementById("answersList").style.display = "block";
+}
+</script>
+
+</body>
+</html>
