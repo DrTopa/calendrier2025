@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎮 Game 11 – GOTY 2025 🎮</title>
+  <title>🎮 Game 11 – GOTY 2025 + Euromillions 🎮</title>
+
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -16,7 +17,6 @@
       margin: 0;
       padding: 20px;
     }
-
     h1 {
       font-size: 2.3em;
       margin-bottom: 10px;
@@ -25,68 +25,44 @@
       text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
       text-align: center;
     }
-
-    #userStatus {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 1.1em;
-      color: #a23636;
-    }
-
-    #instructions {
-      background: rgba(255,255,255,0.9);
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    #userStatus { position:absolute; top:10px; right:10px; font-size:1.1em; color:#a23636;}
+    .panel {
+      background: rgba(255,255,255,0.95);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 12px rgba(0,0,0,0.2);
       margin-bottom: 20px;
       text-align: center;
-      max-width: 900px;
-      font-size: 1.1em;
-      color: #333;
-    }
-
-    #predictionArea {
-      background: rgba(255,255,255,0.95);
-      border: 2px solid #b71c1c;
-      border-radius: 12px;
-      padding: 20px 30px;
-      box-shadow: 0 8px 12px rgba(0,0,0,0.2);
-      text-align: center;
+      max-width: 720px;
       width: 100%;
-      max-width: 700px;
     }
-
-    select {
+    select, input {
       padding: 10px;
       font-size: 1.05em;
-      margin: 10px 0;
+      margin: 8px 0;
       border-radius: 6px;
       border: 1px solid #ccc;
-      width: 90%;
+      width: 100%;
+      box-sizing: border-box;
     }
-
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
     #submit-btn {
-      padding: 10px 20px;
-      font-size: 1.1em;
+      padding: 12px 24px;
+      font-size: 1.15em;
       cursor: pointer;
       background-color: #388e3c;
       color: white;
       border: none;
-      border-radius: 5px;
-      margin-top: 15px;
+      border-radius: 6px;
+      margin-top: 10px;
     }
-
-    #submit-btn:hover { background-color: #2e7d32; }
-
+    #submit-btn:hover { background-color:#2e7d32; }
     #your-answer {
       margin-top: 15px;
       font-weight: bold;
-      font-size: 1.05em;
+      font-size: 1.1em;
       color: #2e7d32;
-      text-align: center;
     }
-
     #answersList {
       display: none;
       margin-top: 25px;
@@ -94,141 +70,77 @@
       border-radius: 10px;
       background: rgba(255,255,255,0.95);
       box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-      max-width: 700px;
-      width: 90%;
+      max-width: 720px;
+      width: 100%;
     }
-
-    #answersList ul {
-      padding-left: 0;
-      margin: 0;
-      list-style: none;
-    }
-
     #answersList li {
       background: rgba(250,250,250,0.9);
-      margin: 6px 0;
+      margin: 8px 0;
       padding: 10px;
       border-left: 5px solid #b71c1c;
       border-radius: 6px;
+      list-style:none;
     }
-
     .small { font-size:0.9em; color:#666; }
   </style>
 </head>
 
 <body>
-  <h1>🎮 Pronostics – GOTY 2025 🎮</h1>
 
-  <div id="instructions">
-    <p>Faites vos pronostics pour les catégories GOTY 2025 !</p>
-    <div>Indications de points : <span class="small">Chaque bonne réponse = 3 pts</span></div>
+<h1>🎮 Pronostics – GOTY 2025 + Euromillions 🎮</h1>
+<div id="userStatus"></div>
+
+<!-- ===== PANEL GOTY ===== -->
+<div class="panel" id="goty-panel">
+  <h2>🏆 Paris GOTY 2025</h2>
+
+  <select id="goty">
+    <option value="">GOTY</option>
+    <option>Clair Obscur: Expedition 33</option>
+    <option>Death Stranding 2: On the Beach</option>
+    <option>Hades II</option>
+    <option>Kingdom Come: Deliverance II</option>
+    <option>Hollow Knight : Silksong</option>
+  </select>
+
+  <select id="narrative"><option value="">Best Narrative</option><option>Clair Obscur: Expedition 33</option><option>Death Stranding 2: On the Beach</option><option>Ghost of Yōtei</option><option>Kingdom Come: Deliverance II</option><option>Silent Hill f</option></select>
+  <select id="audio"><option value="">Best Audio</option><option>Battlefield 6</option><option>Clair Obscur: Expedition 33</option><option>Death Stranding 2</option><option>Ghost of Yōtei</option><option>Silent Hill f</option></select>
+  <select id="indie"><option value="">Best Indie</option><option>Absolum</option><option>Ball x Pit</option><option>Blue Prince</option><option>Clair Obscur: Expedition 33</option><option>Hades II</option><option>Hollow Knight: Silksong</option></select>
+  <select id="mobile"><option value="">Best Mobile</option><option>Destiny: Rising</option><option>Persona 5: The Phantom X</option><option>Sonic Rumble</option><option>Umamusume: Pretty Derby</option><option>Wuthering Waves</option></select>
+  <select id="action"><option value="">Best Action/Adventure</option><option>Death Stranding 2</option><option>Ghost of Yōtei</option><option>Indiana Jones</option><option>Hollow Knight : Silksong</option><option>Split Fiction</option></select>
+  <select id="family"><option value="">Best Family</option><option>Donkey Kong Bananza</option><option>LEGO Party!</option><option>LEGO Voyagers</option><option>Mario Kart World</option><option>Sonic Racing</option></select>
+  <select id="sports"><option value="">Best Sports</option><option>EA Sports 26</option><option>F1 25</option><option>Mario Kart World</option><option>Remarch</option><option>Sonic Racing</option></select>
+  <select id="multiplayer"><option value="">Best Multiplayer</option><option>ARC Raiders</option><option>Battlefield 6</option><option>Elden Ring Nightreign</option><option>Peak</option><option>Split Fiction</option></select>
+</div>
+
+<!-- ===== PANEL EUROMILLIONS ===== -->
+<div class="panel">
+  <h2>💫 Euromillions</h2>
+
+  <div class="row">
+    <input id="e1" type="number" min="1" max="50" placeholder="Numéro 1 (1-50)">
+    <input id="e2" type="number" min="1" max="50" placeholder="Numéro 2 (1-50)">
   </div>
-
-  <div id="userStatus"></div>
-
-  <div id="predictionArea">
-    <label><b>GOTY 2025 :</b></label><br>
-    <select id="goty">
-      <option value="">-- Choisissez --</option>
-      <option value="Clair Obscur: Expedition 33">Clair Obscur: Expedition 33</option>
-      <option value="Death Stranding 2: On the Beach">Death Stranding 2: On the Beach</option>
-      <option value="Hades II">Hades II</option>
-      <option value="Kingdom Come: Deliverance II">Kingdom Come: Deliverance II</option>
-      <option value="Hollow Knight : Silksong">Hollow Knight : Silksong</option>
-    </select><br>
-
-    <label><b>Best Narrative :</b></label><br>
-    <select id="narrative">
-      <option value="">-- Choisissez --</option>
-      <option value="Clair Obscur: Expedition 33">Clair Obscur: Expedition 33</option>
-      <option value="Death Stranding 2: On the Beach">Death Stranding 2: On the Beach</option>
-      <option value="Ghost of Yōtei">Ghost of Yōtei</option>
-      <option value="Kingdom Come: Deliverance II">Kingdom Come: Deliverance II</option>
-      <option value="Silent Hill f">Silent Hill f</option>
-    </select><br>
-
-    <label><b>Best Audio Design :</b></label><br>
-    <select id="audio">
-      <option value="">-- Choisissez --</option>
-      <option value="Battlefield 6">Battlefield 6</option>
-      <option value="Clair Obscur: Expedition 33">Clair Obscur: Expedition 33</option>
-      <option value="Death Stranding 2: On the Beach">Death Stranding 2: On the Beach</option>
-      <option value="Ghost of Yōtei">Ghost of Yōtei</option>
-      <option value="Silent Hill f">Silent Hill f</option>
-    </select><br>
-
-    <label><b>Best Independent Game :</b></label><br>
-    <select id="indie">
-      <option value="">-- Choisissez --</option>
-      <option value="Absolum">Absolum</option>
-      <option value="Ball x Pit">Ball x Pit</option>
-      <option value="Blue Prince">Blue Prince</option>
-      <option value="Clair Obscur: Expedition 33">Clair Obscur: Expedition 33</option>
-      <option value="Hades II">Hades II</option>
-      <option value="Hollow Knight: Silksong">Hollow Knight: Silksong</option>
-    </select><br>
-
-    <label><b>Best Mobile Game :</b></label><br>
-    <select id="mobile">
-      <option value="">-- Choisissez --</option>
-      <option value="Destiny: Rising">Destiny: Rising</option>
-      <option value="Persona 5: The Phantom X">Persona 5: The Phantom X</option>
-      <option value="Sonic Rumble">Sonic Rumble</option>
-      <option value="Umamusume: Pretty Derby">Umamusume: Pretty Derby</option>
-      <option value="Wuthering Waves">Wuthering Waves</option>
-    </select><br>
-
-    <label><b>Best Action/Adventure Game :</b></label><br>
-    <select id="action">
-      <option value="">-- Choisissez --</option>
-      <option value="Death Stranding 2: On the Beach">Death Stranding 2: On the Beach</option>
-      <option value="Ghost of Yōtei">Ghost of Yōtei</option>
-      <option value="Indiana Jones & The Great Circle">Indiana Jones & The Great Circle</option>
-      <option value="Hollow Knight: Silksong">Hollow Knight: Silksong</option>
-      <option value="Split Fiction">Split Fiction</option>
-    </select><br>
-
-    <label><b>Best Family Game :</b></label><br>
-    <select id="family">
-      <option value="">-- Choisissez --</option>
-      <option value="Donkey Kong Bananza">Donkey Kong Bananza</option>
-      <option value="LEGO Party!">LEGO Party!</option>
-      <option value="LEGO Voyagers">LEGO Voyagers</option>
-      <option value="Mario Kart World">Mario Kart World</option>
-      <option value="Sonic Racing: CrossWorlds">Sonic Racing: CrossWorlds</option>
-      <option value="Split Fiction">Split Fiction</option>
-    </select><br>
-
-    <label><b>Best Sports Game :</b></label><br>
-    <select id="sports">
-      <option value="">-- Choisissez --</option>
-      <option value="EA Sports 26">EA Sports 26</option>
-      <option value="F1 25">F1 25</option>
-      <option value="Mario Kart World">Mario Kart World</option>
-      <option value="Remarch">Remarch</option>
-      <option value="Sonic Racing CrossWorlds">Sonic Racing CrossWorlds</option>
-    </select><br>
-
-    <label><b>Best Multiplayer :</b></label><br>
-    <select id="multiplayer">
-      <option value="">-- Choisissez --</option>
-      <option value="ARC Raiders">ARC Raiders</option>
-      <option value="Battlefield 6">Battlefield 6</option>
-      <option value="Elden Ring Nightreign">Elden Ring Nightreign</option>
-      <option value="Peak">Peak</option>
-      <option value="Split Fiction">Split Fiction</option>
-    </select><br>
-
-    <button id="submit-btn">Soumettre mes pronostics</button>
-
-    <div id="your-answer"></div>
+  <div class="row">
+    <input id="e3" type="number" min="1" max="50" placeholder="Numéro 3 (1-50)">
+    <input id="e4" type="number" min="1" max="50" placeholder="Numéro 4 (1-50)">
   </div>
-
-  <div id="answersList">
-    <h3>📊 Pronostics des autres joueurs :</h3>
-    <ul id="answers"></ul>
+  <input id="e5" type="number" min="1" max="50" placeholder="Numéro 5 (1-50)">
+  <div class="row">
+    <input id="s1" type="number" min="1" max="12" placeholder="Étoile 1 (1-12)">
+    <input id="s2" type="number" min="1" max="12" placeholder="Étoile 2 (1-12)">
   </div>
+</div>
 
+<button id="submit-btn">Soumettre mes paris</button>
+<div id="your-answer"></div>
+
+<div id="answersList">
+  <h3>📊 Paris des autres joueurs :</h3>
+  <ul id="answers"></ul>
+</div>
+
+<!-- ===== FIREBASE ===== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
@@ -240,132 +152,76 @@ const firebaseConfig = {
   projectId: "calendrier2025-3185f",
   storageBucket: "calendrier2025-3185f.firebasestorage.app",
   messagingSenderId: "846792576145",
-  appId: "1:846792576145:web:59028ccef4ffd5c8010330",
-  measurementId: "G-L62L4JSYMF"
+  appId: "1:846792576145:web:59028ccef4ffd5c8010330"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const fields = {
-  goty: document.getElementById('goty'),
-  narrative: document.getElementById('narrative'),
-  audio: document.getElementById('audio'),
-  indie: document.getElementById('indie'),
-  mobile: document.getElementById('mobile'),
-  action: document.getElementById('action'),
-  family: document.getElementById('family'),
-  sports: document.getElementById('sports'),
-  multiplayer: document.getElementById('multiplayer')
-};
-
-const submitBtn = document.getElementById('submit-btn');
-const yourAnswerDiv = document.getElementById('your-answer');
-const answersListDiv = document.getElementById('answersList');
-const answersUl = document.getElementById('answers');
 let currentUser = null;
 
 onAuthStateChanged(auth, async (user) => {
-  if (!user) { window.location.href = 'login.html'; return; }
+  if (!user) return window.location.href = "login.html";
   currentUser = user;
-  document.getElementById('userStatus').innerText = `Connecté : ${user.email}`;
-
-  const jourRef = doc(db, 'Predictions', 'Jour 11');
-  const jourSnap = await getDoc(jourRef);
-  if (jourSnap.exists() && jourSnap.data()[user.uid]) {
-    showExistingPrediction(jourSnap.data()[user.uid]);
-  } else {
-    loadOtherAnswers();
-  }
+  document.getElementById("userStatus").innerText = "Connecté : " + user.email;
+  loadOthers();
 });
 
-function showExistingPrediction(data) {
-  for (const k in fields) fields[k].style.display = 'none';
-  submitBtn.style.display = 'none';
-
-  yourAnswerDiv.innerHTML = `
-    ✅ Vos pronostics :
-    <ul style="list-style:none; padding-left:0; margin:0">
-      <li><b>GOTY :</b> ${escapeHtml(data.goty)}</li>
-      <li><b>Narrative :</b> ${escapeHtml(data.narrative)}</li>
-      <li><b>Audio :</b> ${escapeHtml(data.audio)}</li>
-      <li><b>Indie :</b> ${escapeHtml(data.indie)}</li>
-      <li><b>Mobile :</b> ${escapeHtml(data.mobile)}</li>
-      <li><b>Action/Adventure :</b> ${escapeHtml(data.action)}</li>
-      <li><b>Family :</b> ${escapeHtml(data.family)}</li>
-      <li><b>Sports :</b> ${escapeHtml(data.sports)}</li>
-      <li><b>Multiplayer :</b> ${escapeHtml(data.multiplayer)}</li>
-    </ul>
-  `;
-  answersListDiv.style.display = 'block';
-  loadOtherAnswers();
+function isValidEuro(nums, stars) {
+  return new Set(nums).size===5 && new Set(stars).size===2 &&
+    nums.every(n=>n>=1 && n<=50) && stars.every(s=>s>=1 && s<=12);
 }
 
-submitBtn.addEventListener('click', async () => {
-  if (!currentUser) { alert('Utilisateur non identifié.'); return; }
+document.getElementById("submit-btn").addEventListener("click", async () => {
+  const gotyFields = ["goty","narrative","audio","indie","mobile","action","family","sports","multiplayer"];
+  const data = {};
 
-  const payload = {};
-  for (const key in fields) {
-    if (!fields[key].value) { alert('Merci de remplir toutes les catégories.'); return; }
-    payload[key] = fields[key].value;
-  }
-  payload.userId = currentUser.uid;
-  payload.userEmail = currentUser.email;
-  payload.timestamp = new Date().toISOString();
-
-  const jourRef = doc(db, 'Predictions', 'Jour 11');
-  const jourSnap = await getDoc(jourRef);
-
-  if (jourSnap.exists() && jourSnap.data()[currentUser.uid]) {
-    alert('Vous avez déjà soumis vos pronostics pour Jour 11.');
-    showExistingPrediction(jourSnap.data()[currentUser.uid]);
-    return;
+  for (const f of gotyFields) {
+    const val = document.getElementById(f).value;
+    if (!val) return alert("Remplis tous les champs GOTY");
+    data[f] = val;
   }
 
-  if (jourSnap.exists()) {
-    await updateDoc(jourRef, { [currentUser.uid]: payload });
+  const nums = [+e1.value,+e2.value,+e3.value,+e4.value,+e5.value];
+  const stars = [+s1.value,+s2.value];
+  if(!isValidEuro(nums, stars)) return alert("Numéros Euromillions invalides");
+
+  data.euroNums = nums;
+  data.euroStars = stars;
+  data.email = currentUser.email;
+  data.timestamp = new Date().toISOString();
+
+  const ref = doc(db,"Predictions","Jour 11");
+  const snap = await getDoc(ref);
+
+  if (snap.exists()) {
+    await updateDoc(ref, { [currentUser.uid]: data });
   } else {
-    await setDoc(jourRef, { [currentUser.uid]: payload });
+    await setDoc(ref, { [currentUser.uid]: data });
   }
 
-  showExistingPrediction(payload);
-  yourAnswerDiv.insertAdjacentHTML('beforeend', '<div class="small">Vos réponses ont été enregistrées.</div>');
+  document.getElementById("your-answer").innerHTML = "✅ Paris enregistrés !";
+  loadOthers();
 });
 
-async function loadOtherAnswers() {
-  answersUl.innerHTML = '';
-  try {
-    const jourRef = doc(db, 'Predictions', 'Jour 11');
-    const jourSnap = await getDoc(jourRef);
-    if (!jourSnap.exists()) return;
+async function loadOthers() {
+  const ref = doc(db,"Predictions","Jour 11");
+  const snap = await getDoc(ref);
+  if(!snap.exists()) return;
 
-    const all = jourSnap.data();
-    const entries = Object.entries(all).filter(([uid]) => uid !== (currentUser && currentUser.uid));
-    if (entries.length === 0) {
-      answersUl.innerHTML = '<li class="small">Aucune autre réponse pour l’instant.</li>';
-      answersListDiv.style.display = 'block';
-      return;
-    }
+  const ul = document.getElementById("answers");
+  ul.innerHTML = "";
 
-    entries.sort((a,b) => Date.parse(b[1].timestamp || 0) - Date.parse(a[1].timestamp || 0));
-    for (const [uid, data] of entries) {
-      const li = document.createElement('li');
-      li.innerHTML = `<b>${escapeHtml(data.userEmail || 'Anonyme')}</b> — GOTY: ${escapeHtml(data.goty)}, Narrative: ${escapeHtml(data.narrative)}, Audio: ${escapeHtml(data.audio)}, Indie: ${escapeHtml(data.indie)}, Mobile: ${escapeHtml(data.mobile)}, Action: ${escapeHtml(data.action)}, Family: ${escapeHtml(data.family)}, Sports: ${escapeHtml(data.sports)}, Multiplayer: ${escapeHtml(data.multiplayer)} <div class="small">${escapeHtml(new Date(data.timestamp || '').toLocaleString() || '')}</div>`;
-      answersUl.appendChild(li);
-    }
-    answersListDiv.style.display = 'block';
-  } catch (err) {
-    console.error('Erreur lecture autres réponses :', err);
-    answersUl.innerHTML = '<li class="small">Impossible de charger les autres réponses.</li>';
-    answersListDiv.style.display = 'block';
-  }
-}
-
-function escapeHtml(str) {
-  if (str === undefined || str === null) return '';
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+  Object.entries(snap.data()).forEach(([uid,d])=>{
+    if(uid===currentUser.uid) return;
+    const li = document.createElement("li");
+    li.innerHTML = `<b>${d.email}</b><br>🎮 GOTY: ${d.goty}<br>💫 ${d.euroNums.join(", ")} ⭐ ${d.euroStars.join(", ")}`;
+    ul.appendChild(li);
+  });
+  document.getElementById("answersList").style.display="block";
 }
 </script>
+
 </body>
 </html>
