@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎮 Game 10 – GOTY 2025 🎮</title>
+  <title>🎮 Game 11 – GOTY 2025 🎮</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -271,7 +271,7 @@ onAuthStateChanged(auth, async (user) => {
   currentUser = user;
   document.getElementById('userStatus').innerText = `Connecté : ${user.email}`;
 
-  const jourRef = doc(db, 'Predictions', 'Jour 10');
+  const jourRef = doc(db, 'Predictions', 'Jour 11');
   const jourSnap = await getDoc(jourRef);
   if (jourSnap.exists() && jourSnap.data()[user.uid]) {
     showExistingPrediction(jourSnap.data()[user.uid]);
@@ -314,11 +314,11 @@ submitBtn.addEventListener('click', async () => {
   payload.userEmail = currentUser.email;
   payload.timestamp = new Date().toISOString();
 
-  const jourRef = doc(db, 'Predictions', 'Jour 10');
+  const jourRef = doc(db, 'Predictions', 'Jour 11');
   const jourSnap = await getDoc(jourRef);
 
   if (jourSnap.exists() && jourSnap.data()[currentUser.uid]) {
-    alert('Vous avez déjà soumis vos pronostics pour Jour 10.');
+    alert('Vous avez déjà soumis vos pronostics pour Jour 11.');
     showExistingPrediction(jourSnap.data()[currentUser.uid]);
     return;
   }
@@ -336,7 +336,7 @@ submitBtn.addEventListener('click', async () => {
 async function loadOtherAnswers() {
   answersUl.innerHTML = '';
   try {
-    const jourRef = doc(db, 'Predictions', 'Jour 10');
+    const jourRef = doc(db, 'Predictions', 'Jour 11');
     const jourSnap = await getDoc(jourRef);
     if (!jourSnap.exists()) return;
 
