@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>⚽ Jour 13 – Paris Football</title>
+
+<style>
+body{
+  font-family:'Segoe UI',Tahoma,sans-serif;
+  background:#ffebcd url('https://www.transparenttextures.com/patterns/snow.png');
+  padding:24px;
+}
+h1{
+  text-align:center;
+  color:#b71c1c;
+  font-family:'Comic Sans MS',cursive;
+}
+.container{max-width:950px;margin:auto}
+.panel{
+  background:white;
+  border-radius:12px;
+  padding:18px;
+  margin-bottom:18px;
+  box-shadow:0 6px 14px rgba(0,0,0,.12)
+}
+.panel h2{color:#b71c1c}
+.match{
+  margin-top:10px;
+  padding:10px;
+  background:#fffaf5;
+  border-left:4px solid #b71c1c;
+  border-radius:8px
+}
+label{font-weight:bold}
+select{
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+  border-radius:6px
+}
+#submit-btn{
+  padding:14px;
+  font-size:1.1em;
+  background:#388e3c;
+  color:white;
+  border:none;
+  border-radius:6px;
+  cursor:pointer
+}
+#answersList{display:none;margin-top:20px}
+</style>
+</head>
+
+<body>
+<div class="container">
+<h1>⚽ Jour 13 – Paris Football</h1>
+
+<div class="panel">
+<b>Indication de points :</b><br>
+✔️ +3 points par match correct<br>
+❌ 0 point sinon<br>
+🟡 Pari facultatif sur chaque match
+</div>
+
+<div class="panel">
+<h2>🇸🇿 Eswatini / 🇲🇿 Mozambique</h2>
+<div id="zone1"></div>
+</div>
+
+<div class="panel">
+<h2>🇧🇯 Bénin / 🇸🇲 Saint-Marin</h2>
+<div id="zone2"></div>
+</div>
+
+<div class="panel">
+<h2>🇧🇷 Brésil / 🇹🇼 Taïwan</h2>
+<div id="zone3"></div>
+</div>
+
+<div class="panel">
+<h2>🇳🇱 Pays-Bas / 🇯🇵 Japon</h2>
+<div id="zone4"></div>
+</div>
+
+<button id="submit-btn">Soumettre mes paris</button>
+
+<div id="your-answer"></div>
+
+<div id="answersList">
+<h3>📊 Paris des autres joueurs</h3>
+<ul id="answers"></ul>
+</div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth,onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore,doc,getDoc,setDoc,updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig={
+ apiKey:"AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+ authDomain:"calendrier2025-3185f.firebaseapp.com",
+ projectId:"calendrier2025-3185f",
+ appId:"1:846792576145:web:59028ccef4ffd5c8010330"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+const zones={
+ zone1:[
+  ["Moneni Pirates","Green Mamba"],
+  ["Malanti Chiefs","Tabankulu"],
+  ["Manzini Sea Birds","Ezulwini"],
+  ["Royal Leopards","Mbabane Highlanders"],
+  ["Baia de Pemba","Nacala"],
+  ["Black Bulls","UD Songo"],
+  ["Chingale de Tete","Ferroviario Lichinga"],
+  ["Ferroviario Nacala","Ferroviario Maputo"]
+ ],
+ zone2:[
+  ["AS Cotonou","FC Loto"],
+  ["ASPAC","Hodio"],
+  ["Dragons","ASVO"],
+  ["Krake","Coton FC"],
+  ["Cailungo","Tre Penne"],
+  ["Folgore","Juvenes Dogana"],
+  ["La Fiorita","Domagnano"],
+  ["Pennarossa","Cosmos"]
+ ],
+ zone3:[
+  ["Corinthians","Cruzeiro"],
+  ["IAPE W","Sampaio Correa W"],
+  ["Coritiba W","Toledo W"],
+  ["Corinthians W","Palmeiras W"],
+  ["AC Taipei","Taiwan Steel"],
+  ["Taichung Rock","Tatung"],
+  ["Taichung","Ming Chuan University"],
+  ["Taipower","Hang Yuen"]
+ ],
+ zone4:[
+  ["Groningen W","Excelsior W"],
+  ["Utrecht W","Heerenveen W"],
+  ["Gemert","GOES"],
+  ["Meerssen","UNA"],
+  ["Azul Claro Numazu","Reilac Shiga"],
+  ["Osaka","Tegevajaro Miyazaki"],
+  ["Sanfrecce Hiroshima W","C-Osaka W"],
+  ["Kunoichi W","INAC Kobe W"]
+ ]
+};
+
+function createMatches(containerId,matches,prefix){
+ const container=document.getElementById(containerId);
+ matches.forEach((m,i)=>{
+  container.innerHTML+=`
+  <div class="match">
+   <label>${m[0]} vs ${m[1]}</label>
+   <select id="${prefix}${i}">
+    <option value="">Ne pas parier</option>
+    <option value="${m[0]}">${m[0]}</option>
+    <option value="${m[1]}">${m[1]}</option>
+    <option value="Match nul">Match nul</option>
+   </select>
+  </div>`;
+ });
+}
+
+createMatches("zone1",zones.zone1,"z1_");
+createMatches("zone2",zones.zone2,"z2_");
+createMatches("zone3",zones.zone3,"z3_");
+createMatches("zone4",zones.zone4,"z4_");
+
+let currentUser=null;
+
+onAuthStateChanged(auth,async user=>{
+ if(!user){location.href="login.html";return;}
+ currentUser=user;
+ const ref=doc(db,"Predictions","Jour 13");
+ const snap=await getDoc(ref);
+ if(snap.exists()&&snap.data()[user.uid])showExisting(snap.data()[user.uid]);
+});
+
+function showExisting(data){
+ document.querySelectorAll("select").forEach(s=>s.disabled=true);
+ document.getElementById("submit-btn").style.display="none";
+ let html="<h3>✅ Vos paris</h3><ul>";
+ Object.entries(data.bets).forEach(([k,v])=>html+=`<li>${k} : ${v}</li>`);
+ html+="</ul>";
+ document.getElementById("your-answer").innerHTML=html;
+ loadOthers();
+}
+
+document.getElementById("submit-btn").onclick=async()=>{
+ const bets={};
+ document.querySelectorAll("select").forEach(s=>{
+  if(s.value) bets[s.previousElementSibling.innerText]=s.value;
+ });
+ const ref=doc(db,"Predictions","Jour 13");
+ const snap=await getDoc(ref);
+ const data={userEmail:currentUser.email,bets};
+ if(snap.exists()) await updateDoc(ref,{[currentUser.uid]:data});
+ else await setDoc(ref,{[currentUser.uid]:data});
+ showExisting(data);
+};
+
+async function loadOthers(){
+ const snap=await getDoc(doc(db,"Predictions","Jour 13"));
+ if(!snap.exists())return;
+ const ul=document.getElementById("answers");
+ ul.innerHTML="";
+ Object.entries(snap.data()).forEach(([uid,d])=>{
+  if(uid===currentUser.uid)return;
+  let li=document.createElement("li");
+  li.innerHTML=`<b>${d.userEmail}</b><ul>${Object.entries(d.bets).map(b=>`<li>${b[0]} : ${b[1]}</li>`).join("")}</ul>`;
+  ul.appendChild(li);
+ });
+ document.getElementById("answersList").style.display="block";
+}
+</script>
+</body>
+</html>
