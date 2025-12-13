@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>⚽ Jour 13 – Paris Football</title>
+<title>⚽ Jour 7 – Paris Football</title>
 
 <style>
 body{
@@ -54,7 +54,7 @@ select{
 
 <body>
 <div class="container">
-<h1>⚽ Jour 13 – Paris Football</h1>
+<h1>⚽ Jour 7 – Paris Football</h1>
 
 <div class="panel">
 <b>Indication de points :</b><br>
@@ -81,6 +81,12 @@ select{
 <div class="panel">
 <h2>🇳🇱 Pays-Bas / 🇯🇵 Japon</h2>
 <div id="zone4"></div>
+</div>
+
+<!-- ✅ NOUVEL ENCADRÉ -->
+<div class="panel">
+<h2>🇧🇲 Bermudes / 🇨🇭 Suisse</h2>
+<div id="zone5"></div>
 </div>
 
 <button id="submit-btn">Soumettre mes paris</button>
@@ -149,6 +155,17 @@ const zones={
   ["Osaka","Tegevajaro Miyazaki"],
   ["Sanfrecce Hiroshima W","C-Osaka W"],
   ["Kunoichi W","INAC Kobe W"]
+ ],
+ /* ✅ NOUVELLE ZONE 5 */
+ zone5:[
+  ["Dandy Town Hornets","St Georges Colts"],
+  ["Devonshire Colts","YMSC"],
+  ["X-Roads Warriors","Devonshire Cougars"],
+  ["Boulevard Blazers","PHC Zebras"],
+  ["Young Boys","Luzern"],
+  ["Basel","Lausanne"],
+  ["Lugano","Servette"],
+  ["Xamax","Bellinzona"]
  ]
 };
 
@@ -172,13 +189,14 @@ createMatches("zone1",zones.zone1,"z1_");
 createMatches("zone2",zones.zone2,"z2_");
 createMatches("zone3",zones.zone3,"z3_");
 createMatches("zone4",zones.zone4,"z4_");
+createMatches("zone5",zones.zone5,"z5_"); // ✅ ajout
 
 let currentUser=null;
 
 onAuthStateChanged(auth,async user=>{
  if(!user){location.href="login.html";return;}
  currentUser=user;
- const ref=doc(db,"Predictions","Jour 13");
+ const ref=doc(db,"Predictions","Jour 7");
  const snap=await getDoc(ref);
  if(snap.exists()&&snap.data()[user.uid])showExisting(snap.data()[user.uid]);
 });
@@ -198,7 +216,7 @@ document.getElementById("submit-btn").onclick=async()=>{
  document.querySelectorAll("select").forEach(s=>{
   if(s.value) bets[s.previousElementSibling.innerText]=s.value;
  });
- const ref=doc(db,"Predictions","Jour 13");
+ const ref=doc(db,"Predictions","Jour 7");
  const snap=await getDoc(ref);
  const data={userEmail:currentUser.email,bets};
  if(snap.exists()) await updateDoc(ref,{[currentUser.uid]:data});
@@ -207,7 +225,7 @@ document.getElementById("submit-btn").onclick=async()=>{
 };
 
 async function loadOthers(){
- const snap=await getDoc(doc(db,"Predictions","Jour 13"));
+ const snap=await getDoc(doc(db,"Predictions","Jour 7"));
  if(!snap.exists())return;
  const ul=document.getElementById("answers");
  ul.innerHTML="";
