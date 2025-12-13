@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>⚽ Jour 7 – Paris Football</title>
+<title>⚽ Jour 13 – Paris Football</title>
 
 <style>
 body{
@@ -54,7 +54,7 @@ select{
 
 <body>
 <div class="container">
-<h1>⚽ Jour 7 – Paris Football</h1>
+<h1>⚽ Jour 13 – Paris Football</h1>
 
 <div class="panel">
 <b>Indication de points :</b><br>
@@ -196,7 +196,7 @@ let currentUser=null;
 onAuthStateChanged(auth,async user=>{
  if(!user){location.href="login.html";return;}
  currentUser=user;
- const ref=doc(db,"Predictions","Jour 7");
+ const ref=doc(db,"Predictions","Jour 13");
  const snap=await getDoc(ref);
  if(snap.exists()&&snap.data()[user.uid])showExisting(snap.data()[user.uid]);
 });
@@ -216,7 +216,7 @@ document.getElementById("submit-btn").onclick=async()=>{
  document.querySelectorAll("select").forEach(s=>{
   if(s.value) bets[s.previousElementSibling.innerText]=s.value;
  });
- const ref=doc(db,"Predictions","Jour 7");
+ const ref=doc(db,"Predictions","Jour 13");
  const snap=await getDoc(ref);
  const data={userEmail:currentUser.email,bets};
  if(snap.exists()) await updateDoc(ref,{[currentUser.uid]:data});
@@ -225,7 +225,7 @@ document.getElementById("submit-btn").onclick=async()=>{
 };
 
 async function loadOthers(){
- const snap=await getDoc(doc(db,"Predictions","Jour 7"));
+ const snap=await getDoc(doc(db,"Predictions","Jour 13"));
  if(!snap.exists())return;
  const ul=document.getElementById("answers");
  ul.innerHTML="";
