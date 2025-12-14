@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏸 Pronostics – Game 16</title>
+
+<style>
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: #e3f2fd;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 { color: #0d47a1; }
+
+#userStatus {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+#instructions {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+  max-width: 700px;
+}
+
+.matchCard {
+  background: white;
+  border: 2px solid #0d47a1;
+  border-radius: 12px;
+  padding: 15px;
+  margin: 10px 0;
+  width: 100%;
+  max-width: 500px;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  font-size: 1.05em;
+}
+
+#submit-btn {
+  margin-top: 20px;
+  padding: 14px 25px;
+  font-size: 1.2em;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#your-answer {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+#answersList {
+  display: none;
+  margin-top: 25px;
+  max-width: 700px;
+  width: 100%;
+}
+
+#answersList li {
+  list-style: none;
+  background: white;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 6px;
+  border-left: 5px solid #0d47a1;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🏸 Badminton World Tour Finals 2025 – Game 16</h1>
+<div id="userStatus"></div>
+
+<div id="instructions">
+  <p><b>Principe :</b> Pariez sur le vainqueur de chaque match</p>
+  <p>🎯 <b>3 points par bonne réponse</b></p>
+</div>
+
+<div id="matches"></div>
+
+<button id="submit-btn">Soumettre mes pronostics</button>
+
+<div id="your-answer"></div>
+
+<div id="answersList">
+  <h3>📊 Pronostics des autres joueurs</h3>
+  <ul id="answers"></ul>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
+  authDomain: "calendrier2025-3185f.firebaseapp.com",
+  projectId: "calendrier2025-3185f",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const matches = [
+  ["An Se Young", "Putri Kusuma Wardani"],
+  ["Wang Zhi Yi", "Han Yue"],
+  ["Li Shi Feng", "Shi Yu Qi"],
+  ["Akane Yamaguchi", "Tomoka Miyazaki"],
+  ["Kunlavut Vitidsarn", "Jonatan Christie"],
+  ["Pornpawee Chochuwong", "Ratchanok Intanon"],
+  ["Anders Antonsen", "Christo Popov"],
+  ["Chou Tien Chen", "Kodai Naraoka"]
+];
+
+const matchesDiv = document.getElementById("matches");
+
+matches.forEach((m, i) => {
+  matchesDiv.innerHTML += `
+    <div class="matchCard">
+      <h3>${m[0]} vs ${m[1]}</h3>
+      <select id="match${i}">
+        <option value="">-- Vainqueur --</option>
+        <option value="${m[0]}">${m[0]}</option>
+        <option value="${m[1]}">${m[1]}</option>
+      </select>
+    </div>
+  `;
+});
+
+let currentUser = null;
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) { window.location.href = "login.html"; return; }
+
+  currentUser = user;
+  document.getElementById("userStatus").innerText =
+    "Connecté : " + user.email;
+
+  const ref = doc(db, "Predictions", "Game 16");
+  const snap = await getDoc(ref);
+
+  if (snap.exists() && snap.data()[user.uid]) {
+    showExisting(snap.data()[user.uid]);
+  }
+});
+
+document.getElementById("submit-btn").addEventListener("click", async () => {
+  const picks = {};
+  for (let i = 0; i < matches.length; i++) {
+    const v = document.getElementById(`match${i}`).value;
+    if (!v) {
+      alert("Merci de sélectionner tous les vainqueurs");
+      return;
+    }
+    picks[`match${i}`] = v;
+  }
+
+  const data = {
+    email: currentUser.email,
+    picks,
+    timestamp: new Date().toISOString()
+  };
+
+  const ref = doc(db, "Predictions", "Game 16");
+  const snap = await getDoc(ref);
+
+  snap.exists()
+    ? await updateDoc(ref, { [currentUser.uid]: data })
+    : await setDoc(ref, { [currentUser.uid]: data });
+
+  showExisting(data);
+});
+
+function showExisting(data) {
+  document.querySelectorAll("select,#submit-btn")
+    .forEach(e => e.style.display = "none");
+
+  let html = "<h3>✅ Vos pronostics</h3>";
+  matches.forEach((m, i) => {
+    html += `${m[0]} vs ${m[1]} → <b>${data.picks[`match${i}`]}</b><br>`;
+  });
+
+  document.getElementById("your-answer").innerHTML = html;
+  loadOthers();
+}
+
+async function loadOthers() {
+  const ul = document.getElementById("answers");
+  ul.innerHTML = "";
+
+  const ref = doc(db, "Predictions", "Game 16");
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return;
+
+  for (const uid in snap.data()) {
+    if (uid === currentUser.uid) continue;
+    const d = snap.data()[uid];
+
+    let li = `<li><b>${d.email}</b><br>`;
+    matches.forEach((m, i) => {
+      li += `${m[0]} vs ${m[1]} → ${d.picks[`match${i}`]}<br>`;
+    });
+    li += "</li>";
+    ul.innerHTML += li;
+  }
+
+  document.getElementById("answersList").style.display = "block";
+}
+</script>
+
+</body>
+</html>
