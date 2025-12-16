@@ -132,13 +132,12 @@ button:hover {
   <ul id="answers"></ul>
 </div>
 
-<!-- ===== FIREBASE ===== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-/* Firebase config */
+/* Firebase */
 const firebaseConfig = {
   apiKey: "AIzaSyDDlMXjm5ibq9FiPOjrBD1HFAIlYRnCzqA",
   authDomain: "calendrier2025-3185f.firebaseapp.com",
@@ -152,7 +151,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/* DOM elements */
+/* DOM */
 const userStatus = document.getElementById("userStatus");
 const euroPanel = document.getElementById("euro-panel");
 const submitBtn = document.getElementById("submit-btn");
@@ -160,10 +159,18 @@ const yourAnswer = document.getElementById("your-answer");
 const answers = document.getElementById("answers");
 const answersList = document.getElementById("answersList");
 
+const e1 = document.getElementById("e1");
+const e2 = document.getElementById("e2");
+const e3 = document.getElementById("e3");
+const e4 = document.getElementById("e4");
+const e5 = document.getElementById("e5");
+const s1 = document.getElementById("s1");
+const s2 = document.getElementById("s2");
+
 let currentUser = null;
 
 /* Auth */
-onAuthStateChanged(auth, async user => {
+onAuthStateChanged(auth, user => {
   if (!user) {
     window.location.href = "login.html";
     return;
@@ -173,7 +180,7 @@ onAuthStateChanged(auth, async user => {
   loadOthers();
 });
 
-/* Show / hide euro panel */
+/* Participation toggle */
 document.querySelectorAll("input[name=participation]").forEach(radio => {
   radio.addEventListener("change", () => {
     euroPanel.style.display =
@@ -202,9 +209,16 @@ submitBtn.addEventListener("click", async () => {
 
   if (choice.value === "play") {
     const nums = [
-      +e1.value, +e2.value, +e3.value, +e4.value, +e5.value
+      Number(e1.value),
+      Number(e2.value),
+      Number(e3.value),
+      Number(e4.value),
+      Number(e5.value)
     ];
-    const stars = [+s1.value, +s2.value];
+    const stars = [
+      Number(s1.value),
+      Number(s2.value)
+    ];
 
     if (!validEuro(nums, stars)) {
       return alert("Numéros Euromillions invalides");
@@ -253,6 +267,7 @@ async function loadOthers() {
   answersList.style.display = "block";
 }
 </script>
+
 
 </body>
 </html>
