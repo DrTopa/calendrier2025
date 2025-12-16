@@ -7,7 +7,7 @@
 
 <style>
 body {
-  font-family: 'Segoe UI', Tahoma, sans-serif;
+  font-family:'Segoe UI',Tahoma,sans-serif;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -57,11 +57,15 @@ button {
   border-radius:6px;
   cursor:pointer;
 }
-button:hover {
-  background:#2e7d32;
+button:disabled {
+  background:#aaa;
+  cursor:not-allowed;
+}
+.choice {
+  font-size:1.1em;
+  margin:10px 0;
 }
 #answersList {
-  display:none;
   max-width:600px;
   width:100%;
 }
@@ -73,10 +77,6 @@ button:hover {
   border-left:5px solid #b71c1c;
   border-radius:6px;
 }
-.choice {
-  font-size:1.1em;
-  margin:10px 0;
-}
 </style>
 </head>
 
@@ -85,57 +85,48 @@ button:hover {
 <h1>💫 Euromillions – Jour 18 💫</h1>
 <div id="userStatus"></div>
 
-<div class="panel">
+<div class="panel" id="form-panel">
   <h2>🎟️ Participation</h2>
 
   <div class="choice">
-    <label>
-      <input type="radio" name="participation" value="play">
-      Je participe au tirage
-    </label>
+    <label><input type="radio" name="participation" value="play"> Je participe au tirage</label>
   </div>
-
   <div class="choice">
-    <label>
-      <input type="radio" name="participation" value="skip">
-      Je ne participe pas (+15 jetons)
-    </label>
+    <label><input type="radio" name="participation" value="skip"> Je ne participe pas (+15 jetons)</label>
   </div>
+
+  <div class="panel" id="euro-panel" style="display:none;">
+    <h2>💫 Numéros Euromillions</h2>
+
+    <div class="row">
+      <input id="e1" type="number" min="1" max="50" placeholder="Numéro 1">
+      <input id="e2" type="number" min="1" max="50" placeholder="Numéro 2">
+    </div>
+    <div class="row">
+      <input id="e3" type="number" min="1" max="50" placeholder="Numéro 3">
+      <input id="e4" type="number" min="1" max="50" placeholder="Numéro 4">
+    </div>
+    <input id="e5" type="number" min="1" max="50" placeholder="Numéro 5">
+    <div class="row">
+      <input id="s1" type="number" min="1" max="12" placeholder="Étoile 1">
+      <input id="s2" type="number" min="1" max="12" placeholder="Étoile 2">
+    </div>
+  </div>
+
+  <button id="submit-btn">Valider</button>
 </div>
 
-<div class="panel" id="euro-panel" style="display:none;">
-  <h2>💫 Numéros Euromillions</h2>
-
-  <div class="row">
-    <input id="e1" type="number" min="1" max="50" placeholder="Numéro 1">
-    <input id="e2" type="number" min="1" max="50" placeholder="Numéro 2">
-  </div>
-
-  <div class="row">
-    <input id="e3" type="number" min="1" max="50" placeholder="Numéro 3">
-    <input id="e4" type="number" min="1" max="50" placeholder="Numéro 4">
-  </div>
-
-  <input id="e5" type="number" min="1" max="50" placeholder="Numéro 5">
-
-  <div class="row">
-    <input id="s1" type="number" min="1" max="12" placeholder="Étoile 1">
-    <input id="s2" type="number" min="1" max="12" placeholder="Étoile 2">
-  </div>
-</div>
-
-<button id="submit-btn">Valider</button>
-<div id="your-answer"></div>
+<div class="panel" id="your-answer" style="display:none;"></div>
 
 <div id="answersList">
-  <h3>📊 Choix des autres joueurs</h3>
+  <h3>📊 Choix des joueurs</h3>
   <ul id="answers"></ul>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 /* Firebase */
 const firebaseConfig = {
@@ -155,40 +146,13 @@ const db = getFirestore(app);
 const userStatus = document.getElementById("userStatus");
 const euroPanel = document.getElementById("euro-panel");
 const submitBtn = document.getElementById("submit-btn");
+const formPanel = document.getElementById("form-panel");
 const yourAnswer = document.getElementById("your-answer");
 const answers = document.getElementById("answers");
-const answersList = document.getElementById("answersList");
 
-const e1 = document.getElementById("e1");
-const e2 = document.getElementById("e2");
-const e3 = document.getElementById("e3");
-const e4 = document.getElementById("e4");
-const e5 = document.getElementById("e5");
-const s1 = document.getElementById("s1");
-const s2 = document.getElementById("s2");
+let currentUser;
 
-let currentUser = null;
-
-/* Auth */
-onAuthStateChanged(auth, user => {
-  if (!user) {
-    window.location.href = "login.html";
-    return;
-  }
-  currentUser = user;
-  userStatus.innerText = "Connecté : " + user.email;
-  loadOthers();
-});
-
-/* Participation toggle */
-document.querySelectorAll("input[name=participation]").forEach(radio => {
-  radio.addEventListener("change", () => {
-    euroPanel.style.display =
-      radio.value === "play" && radio.checked ? "block" : "none";
-  });
-});
-
-/* Validation */
+/* Utils */
 function validEuro(nums, stars) {
   return new Set(nums).size === 5 &&
          new Set(stars).size === 2 &&
@@ -196,8 +160,23 @@ function validEuro(nums, stars) {
          stars.every(s => s >= 1 && s <= 12);
 }
 
+/* Auth */
+onAuthStateChanged(auth, async user => {
+  if (!user) return location.href = "login.html";
+  currentUser = user;
+  userStatus.innerText = "Connecté : " + user.email;
+  await loadData();
+});
+
+/* Toggle */
+document.querySelectorAll("input[name=participation]").forEach(r => {
+  r.addEventListener("change", () => {
+    euroPanel.style.display = r.value === "play" && r.checked ? "block" : "none";
+  });
+});
+
 /* Submit */
-submitBtn.addEventListener("click", async () => {
+submitBtn.onclick = async () => {
   const choice = document.querySelector("input[name=participation]:checked");
   if (!choice) return alert("Choisis une option");
 
@@ -208,66 +187,49 @@ submitBtn.addEventListener("click", async () => {
   };
 
   if (choice.value === "play") {
-    const nums = [
-      Number(e1.value),
-      Number(e2.value),
-      Number(e3.value),
-      Number(e4.value),
-      Number(e5.value)
-    ];
-    const stars = [
-      Number(s1.value),
-      Number(s2.value)
-    ];
-
-    if (!validEuro(nums, stars)) {
-      return alert("Numéros Euromillions invalides");
-    }
-
+    const nums = [e1,e2,e3,e4,e5].map(i => Number(i.value));
+    const stars = [s1,s2].map(i => Number(i.value));
+    if (!validEuro(nums, stars)) return alert("Numéros invalides");
     data.euroNums = nums;
     data.euroStars = stars;
   } else {
     data.jetons = 15;
   }
 
-  const ref = doc(db, "Predictions", "Jour 18");
-  const snap = await getDoc(ref);
+  await setDoc(doc(db,"Predictions","Jour 18"), {
+    [currentUser.uid]: data
+  }, { merge:true });
 
-  if (snap.exists()) {
-    await updateDoc(ref, { [currentUser.uid]: data });
-  } else {
-    await setDoc(ref, { [currentUser.uid]: data });
-  }
+  await loadData();
+};
 
-  yourAnswer.innerHTML = "✅ Choix enregistré";
-  loadOthers();
-});
-
-/* Load others */
-async function loadOthers() {
-  const ref = doc(db, "Predictions", "Jour 18");
+/* Load + lock */
+async function loadData() {
+  const ref = doc(db,"Predictions","Jour 18");
   const snap = await getDoc(ref);
   if (!snap.exists()) return;
 
+  const data = snap.data();
+
   answers.innerHTML = "";
 
-  Object.entries(snap.data()).forEach(([uid, d]) => {
-    if (uid === currentUser.uid) return;
-
+  Object.entries(data).forEach(([uid,d])=>{
     const li = document.createElement("li");
     li.innerHTML =
       `<b>${d.email}</b><br>` +
-      (d.participation === "play"
+      (d.participation==="play"
         ? `💫 ${d.euroNums.join(", ")} ⭐ ${d.euroStars.join(", ")}`
         : `🎁 Ne participe pas (+15 jetons)`);
-
     answers.appendChild(li);
-  });
 
-  answersList.style.display = "block";
+    if (uid === currentUser.uid) {
+      formPanel.style.display = "none";
+      yourAnswer.style.display = "block";
+      yourAnswer.innerHTML = li.innerHTML;
+    }
+  });
 }
 </script>
-
 
 </body>
 </html>
