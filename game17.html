@@ -1,129 +1,101 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🏆 Conference League – Jour 17</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏆 Conference League – Jour 17</title>
 
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background-color: #fdf6e3;
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+<style>
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background:#fdf6e3;
+  margin:0;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
 
-    h1 {
-      font-size: 2em;
-      text-align: center;
-      color: #b71c1c;
-      margin-bottom: 10px;
-      font-family: 'Comic Sans MS', cursive;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-    }
+h1 {
+  font-size:2em;
+  color:#b71c1c;
+  font-family:'Comic Sans MS', cursive;
+  text-align:center;
+}
 
-    #instructions {
-      background: rgba(255,255,255,0.9);
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      max-width: 900px;
-      margin-bottom: 20px;
-      font-size: 1.05em;
-      text-align: center;
-    }
+#instructions {
+  background:rgba(255,255,255,0.95);
+  padding:15px;
+  border-radius:10px;
+  box-shadow:0 4px 6px rgba(0,0,0,0.1);
+  max-width:900px;
+  margin-bottom:20px;
+  text-align:center;
+}
 
-    #pointsInfo {
-      font-size: 0.9em;
-      color: #555;
-      margin-top: 5px;
-    }
+#predictionArea {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:20px;
+  max-width:900px;
+  width:100%;
+}
 
-    #predictionArea {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      max-width: 900px;
-      width: 100%;
-    }
+.match-card {
+  background:white;
+  border-radius:12px;
+  padding:15px;
+  box-shadow:0 6px 10px rgba(0,0,0,0.1);
+  text-align:center;
+}
 
-    .match-card {
-      background: rgba(255,255,255,0.95);
-      border-radius: 12px;
-      padding: 15px;
-      box-shadow: 0 6px 10px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: transform 0.2s;
-    }
+select {
+  width:90%;
+  padding:8px;
+  margin-top:6px;
+  font-size:1em;
+}
 
-    .match-card:hover {
-      transform: translateY(-3px);
-    }
+#submit-btn {
+  grid-column:span 2;
+  margin-top:20px;
+  padding:12px;
+  font-size:1.1em;
+  background:#388e3c;
+  color:white;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
 
-    .match-title {
-      font-weight: bold;
-      margin-bottom: 10px;
-      text-align: center;
-    }
+#submit-btn:hover { background:#2e7d32; }
 
-    select {
-      padding: 8px;
-      font-size: 1em;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      width: 90%;
-      margin-bottom: 8px;
-    }
+#your-answer {
+  grid-column:span 2;
+  margin-top:15px;
+  font-weight:bold;
+  color:#2e7d32;
+}
 
-    #submit-btn {
-      padding: 10px 20px;
-      font-size: 1.1em;
-      cursor: pointer;
-      background-color: #388e3c;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      margin-top: 20px;
-      grid-column: span 2;
-    }
+#answersList {
+  display:none;
+  margin-top:25px;
+  background:white;
+  padding:15px;
+  border-radius:10px;
+  box-shadow:0 4px 6px rgba(0,0,0,.12);
+  max-width:900px;
+  width:100%;
+}
 
-    #submit-btn:hover { background-color: #2e7d32; }
-
-    #your-answer {
-      margin-top: 15px;
-      font-weight: bold;
-      font-size: 1.05em;
-      color: #2e7d32;
-      grid-column: span 2;
-    }
-
-    #answersList {
-      display: none;
-      margin-top: 25px;
-      padding: 15px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.95);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.12);
-      max-width: 900px;
-      width: 100%;
-      grid-column: span 2;
-    }
-
-    #answersList li {
-      list-style: none;
-      background: #fafafa;
-      padding: 8px;
-      border-radius: 6px;
-      margin: 6px 0;
-      border-left: 5px solid #b71c1c;
-      font-size: 0.95em;
-    }
-  </style>
+#answersList li {
+  list-style:none;
+  margin:8px 0;
+  padding:8px;
+  border-left:5px solid #b71c1c;
+  background:#fafafa;
+}
+</style>
 </head>
 
 <body>
@@ -131,10 +103,7 @@
 <h1>🏆 Conference League – Jour 17</h1>
 
 <div id="instructions">
-  <p>Choisissez les matchs pour lesquels vous souhaitez parier.</p>
-  <div id="pointsInfo">
-    Points cumulés selon le nombre de bons pronostics – une erreur = 0 point.
-  </div>
+  Choisissez les matchs sur lesquels vous souhaitez parier.
 </div>
 
 <div id="predictionArea"></div>
@@ -160,43 +129,43 @@ const db = getFirestore(app);
 
 /* ⚽ MATCHS */
 const matches = [
-  ["AEK Athènes", "Universitatea Craiova"],
-  ["AEK Larnaca", "Shkëndija"],
-  ["AZ Alkmaar", "Jagiellonia Białystok"],
-  ["Crystal Palace", "KuPS Kuopio"],
-  ["Dynamo Kyiv", "FC Noah"],
-  ["Lausanne-Sport", "Fiorentina"],
-  ["Legia Warszawa", "Lincoln Red Imps"],
-  ["Mainz 05", "Samsunspor"],
-  ["NK Celje", "Shelbourne"],
-  ["Omonia Nicosia", "Raków Częstochowa"],
-  ["Rayo Vallecano", "Drita"],
-  ["Shakhtar Donetsk", "Rijeka"],
-  ["Shamrock Rovers", "Hamrun Spartans"],
-  ["Slovan Bratislava", "Häcken"],
-  ["Sparta Praha", "Aberdeen"],
-  ["Strasbourg", "Breidablik"],
-  ["Zrinjski Mostar", "Rapid Wien"],
-  ["Sigma Olomouc", "Lech Poznan"]
+  ["AEK Athènes","Universitatea Craiova"],
+  ["AEK Larnaca","Shkëndija"],
+  ["AZ Alkmaar","Jagiellonia Białystok"],
+  ["Crystal Palace","KuPS Kuopio"],
+  ["Dynamo Kyiv","FC Noah"],
+  ["Lausanne-Sport","Fiorentina"],
+  ["Legia Warszawa","Lincoln Red Imps"],
+  ["Mainz 05","Samsunspor"],
+  ["NK Celje","Shelbourne"],
+  ["Omonia Nicosia","Raków Częstochowa"],
+  ["Rayo Vallecano","Drita"],
+  ["Shakhtar Donetsk","Rijeka"],
+  ["Shamrock Rovers","Hamrun Spartans"],
+  ["Slovan Bratislava","Häcken"],
+  ["Sparta Praha","Aberdeen"],
+  ["Strasbourg","Breidablik"],
+  ["Zrinjski Mostar","Rapid Wien"],
+  ["Sigma Olomouc","Lech Poznan"]
 ];
 
 const predictionArea = document.getElementById("predictionArea");
 
 /* 🧱 Génération HTML */
-matches.forEach(([home, away]) => {
+matches.forEach(([home,away])=>{
   predictionArea.innerHTML += `
   <div class="match-card">
-    <div class="match-title">${home} - ${away}</div>
+    <b>${home} - ${away}</b><br>
     <select class="vote-select">
       <option value="">Voter ?</option>
       <option value="oui">Oui</option>
       <option value="non">Non</option>
     </select>
-    <select class="match-result" style="display:none;">
+    <select class="result-select" style="display:none;">
       <option value="">Résultat</option>
-      <option value="equipe1">Victoire ${home}</option>
+      <option value="equipe1">${home}</option>
       <option value="nul">Nul</option>
-      <option value="equipe2">Victoire ${away}</option>
+      <option value="equipe2">${away}</option>
     </select>
   </div>`;
 });
@@ -205,70 +174,102 @@ predictionArea.innerHTML += `
 <button id="submit-btn">Soumettre mes paris</button>
 <div id="your-answer"></div>
 <div id="answersList">
-  <h3>📊 Pronostics des autres joueurs :</h3>
+  <h3>📊 Pronostics des autres joueurs</h3>
   <ul id="answers"></ul>
 </div>`;
 
-/* 🎯 Logique votes */
+/* 🎯 Logique affichage */
 const voteSelects = document.querySelectorAll(".vote-select");
-const resultSelects = document.querySelectorAll(".match-result");
+const resultSelects = document.querySelectorAll(".result-select");
 
-voteSelects.forEach((vs, i) => {
-  vs.addEventListener("change", () => {
-    resultSelects[i].style.display = vs.value === "oui" ? "block" : "none";
+voteSelects.forEach((vs,i)=>{
+  vs.addEventListener("change",()=>{
+    resultSelects[i].style.display = vs.value==="oui" ? "block" : "none";
   });
 });
 
+const submitBtn = document.getElementById("submit-btn");
+const yourAnswer = document.getElementById("your-answer");
+const answersList = document.getElementById("answersList");
+const answersUl = document.getElementById("answers");
+
 let currentUser = null;
 
+/* 🔐 Auth + chargement */
 onAuthStateChanged(auth, async user => {
-  if (!user) return window.location.href = "login.html";
+  if (!user) return location.href="login.html";
   currentUser = user;
-  const ref = doc(db, "Predictions", "Jour 17");
+
+  const ref = doc(db,"Predictions","Jour 17");
   const snap = await getDoc(ref);
-  if (snap.exists() && snap.data()[user.uid]) {
-    showExistingPrediction(snap.data()[user.uid]);
+  if (!snap.exists()) return;
+
+  const data = snap.data();
+
+  if (data[user.uid]) {
+    showMyPrediction(data[user.uid]);
   }
+
+  showOtherPlayers(data);
 });
 
-/* 💾 Enregistrement */
-document.getElementById("submit-btn").addEventListener("click", async () => {
+/* 💾 Submit */
+submitBtn.onclick = async () => {
   const predictions = [];
-  matches.forEach(([h,a], i) => {
+
+  matches.forEach(([h,a],i)=>{
     predictions.push({
-      match: `${h} - ${a}`,
-      vote: voteSelects[i].value,
-      result: resultSelects[i].value
+      match:`${h} - ${a}`,
+      vote:voteSelects[i].value,
+      result:resultSelects[i].value
     });
   });
 
   const payload = {
-    userId: currentUser.uid,
     userEmail: currentUser.email,
     predictions,
     timestamp: new Date().toISOString()
   };
 
-  const ref = doc(db, "Predictions", "Jour 17");
+  const ref = doc(db,"Predictions","Jour 17");
   const snap = await getDoc(ref);
 
-  if (snap.exists())
-    await updateDoc(ref, { [currentUser.uid]: payload });
-  else
-    await setDoc(ref, { [currentUser.uid]: payload });
+  snap.exists()
+    ? await updateDoc(ref,{[currentUser.uid]:payload})
+    : await setDoc(ref,{[currentUser.uid]:payload});
 
-  showExistingPrediction(payload);
-});
+  showMyPrediction(payload);
 
-/* 👀 Affichage */
-function showExistingPrediction(data) {
-  document.getElementById("submit-btn").style.display = "none";
-  document.getElementById("your-answer").innerHTML =
+  const updated = await getDoc(ref);
+  showOtherPlayers(updated.data());
+};
+
+/* 👤 MA réponse */
+function showMyPrediction(data){
+  submitBtn.style.display="none";
+  yourAnswer.innerHTML =
     "✅ Vos pronostics :<ul>" +
     data.predictions.map(p =>
-      `<li>${p.match} : ${p.vote === "oui" ? p.result : "Non voté"}</li>`
+      `<li>${p.match} : ${p.vote==="oui" ? p.result : "Non voté"}</li>`
     ).join("") +
     "</ul>";
+}
+
+/* 👥 Autres joueurs */
+function showOtherPlayers(allData){
+  answersUl.innerHTML="";
+  Object.entries(allData).forEach(([uid,data])=>{
+    if(uid===currentUser.uid) return;
+    const li=document.createElement("li");
+    li.innerHTML =
+      `<b>${data.userEmail}</b><ul>` +
+      data.predictions.map(p =>
+        `<li>${p.match} : ${p.vote==="oui" ? p.result : "Non voté"}</li>`
+      ).join("") +
+      "</ul>";
+    answersUl.appendChild(li);
+  });
+  answersList.style.display="block";
 }
 </script>
 
